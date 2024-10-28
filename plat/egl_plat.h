@@ -9,34 +9,6 @@
 
 #include "egl_result.h"
 
-#pragma pack(push, 4)
-
-typedef struct
-{
-    uint8_t major;
-    uint8_t minor;
-    uint8_t revision;
-    char sufix[CONFIG_EGL_PLAT_INFO_VERSION_SUFIX_BUFF_SIZE];
-}egl_plat_version_t;
-
-typedef struct
-{
-    char branch[CONFIG_EGL_PLAT_INFO_GIT_BRANCH_SUFIX_BUFF_SIZE];
-    char commit[CONFIG_EGL_PLAT_INFO_GIT_HASH_SUFIX_BUFF_SIZE];
-}egl_git_t;
-
-typedef struct
-{
-    uint32_t magic;
-    uint32_t size;
-    uint32_t checksum;
-    char name[CONFIG_EGL_PLAT_INFO_NAME_BUFF_SIZE];
-    char buildtime[CONFIG_EGL_PLAT_INFO_BUILDTIME_BUFF_SIZE];
-    egl_plat_version_t version;
-    egl_git_t git;
-    uint32_t boot_number;
-}egl_plat_info_t;
-
 typedef struct
 {
     egl_result_t    (*init)(void);
@@ -44,12 +16,10 @@ typedef struct
     egl_result_t    (*boot)(unsigned int slot_idx);
     egl_result_t    (*reboot)(void);
     egl_result_t    (*shutdown)(void);
-    egl_plat_info_t *(*info)(void);
-    egl_plat_info_t *(*slot_info)(unsigned int slot_idx);
+    void            *(*info)(void);
+    void            *(*slot_info)(unsigned int slot_idx);
     uint32_t        (*clock)(void);
 }egl_platform_t;
-
-#pragma pack(pop)
 
 /**
  * @brief General platform initialization
@@ -106,7 +76,7 @@ egl_result_t egl_plat_shutdown(egl_platform_t *plat);
  *
  * @return pointer to application information
  */
-egl_plat_info_t *egl_plat_info(egl_platform_t *plat);
+void *egl_plat_info(egl_platform_t *plat);
 
 /**
  * @brief Get application information from specific slot
@@ -116,7 +86,7 @@ egl_plat_info_t *egl_plat_info(egl_platform_t *plat);
  *
  * @return pointer to application information from specific slot
  */
-egl_plat_info_t *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx);
+void *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx);
 
 /**
  * @brief Get platform clock frequency

@@ -43,7 +43,7 @@ egl_result_t egl_plat_shutdown(egl_platform_t *plat)
     return plat->shutdown();
 }
 
-egl_plat_info_t *egl_plat_info(egl_platform_t *plat)
+void *egl_plat_info(egl_platform_t *plat)
 {
     if(plat == NULL || plat->info == NULL)
     {
@@ -53,7 +53,7 @@ egl_plat_info_t *egl_plat_info(egl_platform_t *plat)
     return plat->info();
 }
 
-egl_plat_info_t *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx)
+void *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx)
 {
     if(plat == NULL || plat->slot_info == NULL)
     {
