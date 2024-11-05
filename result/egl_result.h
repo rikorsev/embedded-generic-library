@@ -28,12 +28,13 @@ typedef enum
 }egl_result_t;
 
 #define EGL_RESULT(x) egl_result_str_get((x))
-#define EGL_RESULT_FATAL()  assert(0);
 
 #if CONFIG_EGL_RESULT_CHECK_ENABLED
+#define EGL_RESULT_FATAL()  assert(0);
 #define EGL_ASSERT_CHECK(x) if(!(x)) { return EGL_ASSERT_FAIL; }
 #define EGL_RESULT_CHECK(x) if((x) != EGL_SUCCESS) { return result; }
 #else
+#define EGL_RESULT_FATAL()
 #define EGL_ASSERT_CHECK(x)
 #define EGL_RESULT_CHECK(x)
 #endif
