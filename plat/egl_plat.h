@@ -18,7 +18,6 @@ typedef struct
     egl_result_t    (*shutdown)(void);
     void            *(*info)(void);
     void            *(*slot_info)(unsigned int slot_idx);
-    uint32_t        (*clock)(void);
 }egl_platform_t;
 
 /**
@@ -87,14 +86,5 @@ void *egl_plat_info(egl_platform_t *plat);
  * @return pointer to application information from specific slot
  */
 void *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx);
-
-/**
- * @brief Get platform clock frequency
- *
- * @param plat - pointer to platform instance
- *
- * @return Clock frequency in Hz
- */
-uint32_t egl_plat_clock(egl_platform_t *plat);
 
 #endif

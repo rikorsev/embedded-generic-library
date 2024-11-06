@@ -62,13 +62,3 @@ void *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx)
 
     return plat->slot_info(slot_idx);
 }
-
-uint32_t egl_plat_clock(egl_platform_t *plat)
-{
-    if(plat == NULL || plat->clock == NULL)
-    {
-        return 0;
-    }
-
-    return plat->clock();
-}

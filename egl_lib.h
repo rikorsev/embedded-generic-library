@@ -6,3 +6,4 @@
 #include "egl_trace.h"
 #include "egl_crc.h"
 #include "egl_block.h"
+#include "egl_clock.h"
