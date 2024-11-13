@@ -12,10 +12,7 @@
 typedef struct
 {
     egl_result_t    (*init)(void);
-    egl_result_t    (*sleep)(uint32_t delay);
     egl_result_t    (*boot)(unsigned int slot_idx);
-    egl_result_t    (*reboot)(void);
-    egl_result_t    (*shutdown)(void);
     void            *(*info)(void);
     void            *(*slot_info)(unsigned int slot_idx);
 }egl_platform_t;
@@ -30,14 +27,6 @@ typedef struct
 egl_result_t egl_plat_init(egl_platform_t *plat);
 
 /**
- * @brief Sleep for specified amoutn of time
- *
- * @param plat - pointer to platform instance
- * @param delay - amount of time to sleep (ms)
- */
-egl_result_t egl_plat_sleep(egl_platform_t *plat, uint32_t delay);
-
-/**
  * @brief Boot application from specific slot
  *
  * @param plat - pointer to platform instance
@@ -47,16 +36,6 @@ egl_result_t egl_plat_sleep(egl_platform_t *plat, uint32_t delay);
  *         some nrgative result
  */
 egl_result_t egl_plat_boot(egl_platform_t *plat, unsigned int slot_idx);
-
-/**
- * @brief Perform platform reboot
- *
- * @param plat - pointer to platform instance
- *
- * @return Usualli it shouldn't return from the function. If it returns, return value will carry
- *         some nrgative result
- */
-egl_result_t egl_plat_reboot(egl_platform_t *plat);
 
 /**
  * @brief Perform platform shutdown
