@@ -1,2 +1,2 @@
 add_subdirectory(result)
-add_subdirectory(trace)
+add_subdirectory(log)
