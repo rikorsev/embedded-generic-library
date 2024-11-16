@@ -4,15 +4,7 @@ project(egl_lib LANGUAGES C)
 
 add_library(${PROJECT_NAME})
 
-add_subdirectory(interface)
-add_subdirectory(pio)
-add_subdirectory(plat)
-add_subdirectory(result)
-add_subdirectory(timer)
-add_subdirectory(trace)
-add_subdirectory(crc)
-add_subdirectory(block)
-add_subdirectory(clock)
-add_subdirectory(pm)
+add_subdirectory(components)
+add_subdirectory(hal)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})

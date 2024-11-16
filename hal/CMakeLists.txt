@@ -1,0 +1,8 @@
+add_subdirectory(interface)
+add_subdirectory(pio)
+add_subdirectory(plat)
+add_subdirectory(timer)
+add_subdirectory(crc)
+add_subdirectory(block)
+add_subdirectory(clock)
+add_subdirectory(pm)
