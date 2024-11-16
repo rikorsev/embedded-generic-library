@@ -3,8 +3,8 @@
 
 egl_result_t egl_clock_init(egl_clock_t *clock, uint32_t profile)
 {
-    EGL_ASSERT_CHECK(clock);
-    EGL_ASSERT_CHECK(clock->init(profile));
+    EGL_ASSERT_CHECK(clock, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(clock->init, EGL_NOT_SUPPORTED);
 
     return clock->init(profile);
 }

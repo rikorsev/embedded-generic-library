@@ -20,8 +20,8 @@ static egl_trace_t *default_tracer = NULL;
 
 egl_result_t egl_trace_init(egl_trace_t *trace, egl_interface_t *iface, egl_timer_t *timer)
 {
-    EGL_ASSERT_CHECK(trace);
-    EGL_ASSERT_CHECK(iface);
+    EGL_ASSERT_CHECK(trace, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(iface, EGL_ASSERT_FAIL);
 
     trace->iface = iface;
     trace->timer = timer;
@@ -46,38 +46,38 @@ egl_result_t egl_trace(egl_trace_t *trace, egl_trace_level_t lvl, char *module, 
     unsigned int offset = 0;
     int result;
 
-    EGL_ASSERT_CHECK(trace);
-    EGL_ASSERT_CHECK(format);
-    EGL_ASSERT_CHECK(lvl < EGL_TRACE_LEVEL_LAST);
-    EGL_ASSERT_CHECK(trace->iface);
+    EGL_ASSERT_CHECK(trace, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(format, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(lvl < EGL_TRACE_LEVEL_LAST, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(trace->iface, EGL_ASSERT_FAIL);
 
     if(trace->timer)
     {
         result = snprintf(trace->buff, sizeof(trace->buff),"[%08u]",
                                             (unsigned int)egl_timer_get(trace->timer));
-        EGL_ASSERT_CHECK(result > 0);
+        EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
         offset += result;
     }
 
     result = snprintf(trace->buff + offset, sizeof(trace->buff) - offset, "[%s]", m_level_str[lvl]);
-    EGL_ASSERT_CHECK(result > 0);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
     offset += result;
 
     if(module != NULL)
     {
         result = snprintf(trace->buff + offset, sizeof(trace->buff) - offset, "%s: ", module);
-        EGL_ASSERT_CHECK(result > 0);
+        EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
         offset += result;
     }
 
     va_start(arg, format);
     result = vsnprintf(trace->buff + offset, sizeof(trace->buff) - offset, format, arg);
-    EGL_ASSERT_CHECK(result > 0);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
     offset += result;
     va_end(arg);
 
     result = snprintf(trace->buff + offset, sizeof(trace->buff) - offset, "\r\n");
-    EGL_ASSERT_CHECK(result > 0);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
     offset += result;
 
     return egl_itf_write(trace->iface, trace->buff, &offset);
