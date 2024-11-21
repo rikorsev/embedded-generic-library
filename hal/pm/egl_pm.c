@@ -1,6 +1,14 @@
 #include "egl_result.h"
 #include "egl_pm.h"
 
+egl_result_t egl_pm_init(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->init, EGL_NOT_SUPPORTED);
+
+    return pm->init();
+}
+
 egl_result_t egl_pm_poweron(egl_pm_t *pm)
 {
     EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
@@ -39,4 +47,12 @@ egl_result_t egl_pm_shutdown(egl_pm_t *pm)
     EGL_ASSERT_CHECK(pm->shutdown, EGL_NOT_SUPPORTED);
 
     return pm->shutdown();
+}
+
+egl_result_t egl_pm_deinit(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->deinit, EGL_NOT_SUPPORTED);
+
+    return pm->deinit();
 }

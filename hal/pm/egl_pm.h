@@ -11,12 +11,23 @@
 
 typedef struct
 {
+    egl_result_t (*init)(void);
     egl_result_t (*poweron)(void);
     egl_result_t (*profile_set)(uint32_t profile);
     egl_result_t (*sleep)(uint32_t delay);
     egl_result_t (*reset)(void);
     egl_result_t (*shutdown)(void);
+    egl_result_t (*deinit)(void);
 }egl_pm_t;
+
+/**
+ * @brief Init specific power unit
+ *
+ * @param pm - pointer to PM instance
+ *
+ * @return EGL_SUCCESS in case of successful initialization
+ */
+egl_result_t egl_pm_init(egl_pm_t *pm);
 
 /**
  * @brief Power On specific unit
@@ -64,5 +75,14 @@ egl_result_t egl_pm_reset(egl_pm_t *pm);
  * @return EGL_SUCCESS in case of successful shutdown
  */
 egl_result_t egl_pm_shutdown(egl_pm_t *pm);
+
+/**
+ * @brief Denit specific power unit
+ *
+ * @param pm - pointer to PM instance
+ *
+ * @return EGL_SUCCESS in case of successful deinitialization
+ */
+egl_result_t egl_pm_deinit(egl_pm_t *pm);
 
 #endif
