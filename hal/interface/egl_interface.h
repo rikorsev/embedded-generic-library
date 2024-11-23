@@ -12,8 +12,10 @@ typedef struct
 {
   egl_result_t     (*init)          (void);
   egl_result_t     (*open)          (void);
-  size_t           (*write)         (void* data, size_t len);
-  size_t           (*read)          (void* data, size_t len);
+  size_t           (*write)         (void *data, size_t len);
+  size_t           (*read)          (void *data, size_t len);
+  size_t           (*write_addr)    (uint32_t addr, void *data, size_t len);
+  size_t           (*read_addr)     (uint32_t addr, void *data, size_t len);
   egl_result_t     (*ioctl)         (uint8_t opcode, void* data, size_t len);
   egl_result_t     (*close)         (void);
   egl_result_t     (*deinit)        (void);
@@ -26,7 +28,7 @@ typedef struct
  *
  * @return EGL_SUCCESS in case of successful initialization
  */
-egl_result_t egl_itf_init  (egl_interface_t *itf);
+egl_result_t egl_itf_init(egl_interface_t *itf);
 
 /**
  * @brief Open serial interface
@@ -35,7 +37,7 @@ egl_result_t egl_itf_init  (egl_interface_t *itf);
  *
  * @return EGL_SUCCESS in case of successful opening
  */
-egl_result_t egl_itf_open  (egl_interface_t *itf);
+egl_result_t egl_itf_open(egl_interface_t *itf);
 
 /**
  * @brief Write to serial interface
@@ -46,7 +48,19 @@ egl_result_t egl_itf_open  (egl_interface_t *itf);
  *
  * @return EGL_SUCCESS in case of successfull write
  */
-egl_result_t egl_itf_write (egl_interface_t *itf, void *buff, size_t *len);
+egl_result_t egl_itf_write(egl_interface_t *itf, void *buff, size_t *len);
+
+/**
+ * @brief Write to serial interface by address/register
+ *
+ * @param itf - pionter to serial interface to write
+ * @param addr - address/register of serial device to write
+ * @param buff - pointer to data to write
+ * @param len - size of data to write in bytes
+ *
+ * @return EGL_SUCCESS in case of successfull write
+ */
+egl_result_t efl_itf_write_addr(egl_interface_t *itf, uint32_t addr, void *buff, size_t *len);
 
 /**
  * @brief Perform IOCTL operation
@@ -58,7 +72,7 @@ egl_result_t egl_itf_write (egl_interface_t *itf, void *buff, size_t *len);
  *
  * @return EGL_SUCCESS in case of success
  */
-egl_result_t egl_itf_ioctl (egl_interface_t *itf, uint8_t opcode, void *data, size_t len);
+egl_result_t egl_itf_ioctl(egl_interface_t *itf, uint8_t opcode, void *data, size_t len);
 
 /**
  * @brief Read from serial interface
@@ -69,7 +83,19 @@ egl_result_t egl_itf_ioctl (egl_interface_t *itf, uint8_t opcode, void *data, si
  *
  * @return EGL_SUCCESS in case of successful read
  */
-egl_result_t egl_itf_read  (egl_interface_t *itf, void *buff, size_t *len);
+egl_result_t egl_itf_read(egl_interface_t *itf, void *buff, size_t *len);
+
+/**
+ * @brief Read from serial interface by address/register
+ *
+ * @param itf - pointer to serial interface to read from
+ * @param addr - address/register of sertal device to read from
+ * @param buff - pointer to buffer to store read data
+ * @param len - len of buffer/len of read data
+ *
+ * @return EGL_SUCCESS in case of successful read
+ */
+egl_result_t egl_itf_read_addr(egl_interface_t *itf, uint32_t addr, void *buff, size_t *len);
 
 /**
  * @brief Close serial interface
@@ -78,7 +104,7 @@ egl_result_t egl_itf_read  (egl_interface_t *itf, void *buff, size_t *len);
  *
  * @return EGL_SUCCESS in case if successful closeing
  */
-egl_result_t egl_itf_close (egl_interface_t *itf);
+egl_result_t egl_itf_close(egl_interface_t *itf);
 
 /**
  * @brief Deinit serial interface
