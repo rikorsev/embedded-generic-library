@@ -1,6 +1,7 @@
 #include "egl_rfm69.h"
 #include "egl_result.h"
 #include "egl_log.h"
+#include "egl_interface.h"
 
 #define EGL_MODULE_NAME "egl_rfm69"
 
@@ -103,6 +104,18 @@ egl_result_t egl_rfm69_read_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t *value)
     result = egl_itf_read_addr(rfm->iface, (uint32_t)addr, value, &len);
     EGL_RESULT_CHECK(result);
     EGL_ASSERT_CHECK(len == sizeof(*value), EGL_FAIL);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_write_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t value)
+{
+    egl_result_t result;
+    size_t len = sizeof(value);
+
+    result = egl_itf_write_addr(rfm->iface, (uint32_t)addr, &value, &len);
+    EGL_RESULT_CHECK(result);
+    EGL_ASSERT_CHECK(len == sizeof(value), EGL_FAIL);
 
     return result;
 }

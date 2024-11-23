@@ -29,7 +29,7 @@ egl_result_t egl_itf_write(egl_interface_t *itf, void *buff, size_t *len)
     return EGL_SUCCESS;
 }
 
-egl_result_t efl_itf_write_addr(egl_interface_t *itf, uint32_t addr, void *buff, size_t *len)
+egl_result_t egl_itf_write_addr(egl_interface_t *itf, uint32_t addr, void *buff, size_t *len)
 {
     EGL_ASSERT_CHECK(itf, EGL_ASSERT_FAIL);
     EGL_ASSERT_CHECK(buff, EGL_ASSERT_FAIL);

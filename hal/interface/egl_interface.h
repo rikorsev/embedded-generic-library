@@ -60,7 +60,7 @@ egl_result_t egl_itf_write(egl_interface_t *itf, void *buff, size_t *len);
  *
  * @return EGL_SUCCESS in case of successfull write
  */
-egl_result_t efl_itf_write_addr(egl_interface_t *itf, uint32_t addr, void *buff, size_t *len);
+egl_result_t egl_itf_write_addr(egl_interface_t *itf, uint32_t addr, void *buff, size_t *len);
 
 /**
  * @brief Perform IOCTL operation

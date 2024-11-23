@@ -6,7 +6,9 @@
 #include "egl_pio.h"
 #include "egl_interface.h"
 
-#define EGL_RFM69_REG_VERSION (0x10)
+#define EGL_RFM69_REG_BITRATE_LSB (0x03)
+#define EGL_RFM69_REG_BITRATE_MSB (0x04)
+#define EGL_RFM69_REG_VERSION     (0x10)
 
 typedef struct
 {
@@ -22,5 +24,6 @@ typedef struct
 
 egl_result_t egl_rfm69_init(egl_rfm69_t *rfm);
 egl_result_t egl_rfm69_read_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t *value);
+egl_result_t egl_rfm69_write_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t value);
 
 #endif
