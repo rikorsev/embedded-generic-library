@@ -158,3 +158,24 @@ egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate)
 
     return result;
 }
+
+egl_result_t egl_rfm69_mode_set(egl_rfm69_t *rfm, egl_rfm_mode_t mode)
+{
+    /* Convert mode to mode register value */
+    uint8_t mode_val = ((uint8_t)mode << EGL_RFM69_MODE_SHIFT) & EGL_RFM69_MODE_MASK;
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, mode_val);
+}
+
+egl_result_t egl_rfm69_mode_get(egl_rfm69_t *rfm, egl_rfm_mode_t *mode)
+{
+    egl_result_t result;
+    uint8_t mode_val;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &mode_val);
+    EGL_RESULT_CHECK(result);
+
+    /* Convert mode register valur to mode */
+    *mode = (egl_rfm_mode_t)((mode_val & EGL_RFM69_MODE_MASK) >> EGL_RFM69_MODE_SHIFT);
+
+    return result;
+}

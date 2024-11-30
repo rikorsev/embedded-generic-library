@@ -7,9 +7,23 @@
 #include "egl_interface.h"
 #include "egl_clock.h"
 
+
+#define EGL_RFM69_MODE_MASK       (0x1C)
+#define EGL_RFM69_MODE_SHIFT      (2U)
+
+#define EGL_RFM69_REG_MODE        (0x01)
 #define EGL_RFM69_REG_BITRATE_LSB (0x03)
 #define EGL_RFM69_REG_BITRATE_MSB (0x04)
 #define EGL_RFM69_REG_VERSION     (0x10)
+
+typedef enum
+{
+    EGL_RFM69_SLEEP_MODE,
+    EGL_RFM69_STANDBY_MODE,
+    EGL_RFM69_FS_MODE,
+    EGL_RFM69_TX_MODE,
+    EGL_RFM69_RX_MODE
+}egl_rfm_mode_t;
 
 typedef struct
 {
@@ -31,6 +45,7 @@ egl_result_t egl_rfm69_write_burst(egl_rfm69_t *rfm, uint8_t addr, void *data, s
 egl_result_t egl_rfm69_read_burst(egl_rfm69_t *rfm, uint8_t addr, void *data, size_t len);
 egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate);
 egl_result_t egl_rfm69_bitrate_set(egl_rfm69_t *rfm, uint32_t bitrate);
-
+egl_result_t egl_rfm69_mode_set(egl_rfm69_t *rfm, egl_rfm_mode_t mode);
+egl_result_t egl_rfm69_mode_get(egl_rfm69_t *rfm, egl_rfm_mode_t *mode);
 
 #endif
