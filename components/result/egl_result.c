@@ -5,22 +5,21 @@
 static char *egl_result_str[] =
 {
     "EGL_SUCCESS",
+    "EGL_SET",
     "EGL_UNKNOWN",
     "EGL_FAIL",
-    "EGL_SET",
-    "EGL_RESET",
     "EGL_PROCESS",
     "EGL_NOT_SUPPORTED",
     "EGL_OUT_OF_BOUNDARY",
     "EGL_INVALID_PARAM",
     "EGL_INVALID_STATE",
     "EGL_ASSERT_FAIL",
-    "EGL_TIMEOUT",
+    "EGL_TIMEOUT"
 };
 
 char *egl_result_str_get(egl_result_t result)
 {
-  assert(result < EGL_LAST);
+    assert(result < EGL_LAST);
 
-  return egl_result_str[result];
+    return egl_result_str[result];
 }
