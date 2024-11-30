@@ -1,7 +1,6 @@
 #include "egl_rfm69.h"
-#include "egl_result.h"
 #include "egl_log.h"
-#include "egl_interface.h"
+#include "egl_util.h"
 
 #define EGL_MODULE_NAME "egl_rfm69"
 
@@ -79,6 +78,13 @@ static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
         return result;
     }
 
+    result = egl_clock_init(rfm->clock, 0);
+    if(result != EGL_SUCCESS)
+    {
+        EGL_LOG_ERROR("Fail to init clock rfm69. Result: %s", EGL_RESULT(result));
+        return result;
+    }
+
     return result;
 }
 
@@ -116,6 +122,39 @@ egl_result_t egl_rfm69_write_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t value)
     result = egl_itf_write_addr(rfm->iface, (uint32_t)addr, &value, &len);
     EGL_RESULT_CHECK(result);
     EGL_ASSERT_CHECK(len == sizeof(value), EGL_FAIL);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_write_burst(egl_rfm69_t *rfm, uint8_t addr, void *data, size_t len)
+{
+    return egl_itf_write_addr(rfm->iface, (uint32_t)addr, data, &len);
+}
+
+egl_result_t egl_rfm69_read_burst(egl_rfm69_t *rfm, uint8_t addr, void *data, size_t len)
+{
+    return egl_itf_read_addr(rfm->iface, (uint32_t)addr, data, &len);
+}
+
+egl_result_t egl_rfm69_bitrate_set(egl_rfm69_t *rfm, uint32_t bitrate)
+{
+    /* Calculate bitrate value */
+    uint16_t bitrate_val = egl_swap16((uint16_t)(egl_clock_get(rfm->clock) / bitrate));
+
+    /* Write bautrate value */
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_BITRATE_LSB, (uint8_t *)&bitrate_val, sizeof(bitrate_val));
+}
+
+egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate)
+{
+    egl_result_t result;
+    uint16_t bitrate_val;
+
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_BITRATE_LSB, &bitrate_val, sizeof(bitrate_val));
+    EGL_RESULT_CHECK(result);
+
+    /* Calculate bitrate in bits per second */
+    *bitrate = egl_clock_get(rfm->clock) / egl_swap16(bitrate_val);
 
     return result;
 }
