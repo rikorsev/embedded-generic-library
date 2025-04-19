@@ -4,6 +4,16 @@
 
 #define EGL_MODULE_NAME "egl_rfm69"
 
+#define EGL_RFM69_FSTEP_COEF                (524288U)
+#define EGL_RFM69_MODE_MASK                 (0x1C)
+#define EGL_RFM69_MODE_SHIFT                (2U)
+
+#define EGL_RFM69_MODULATION_SHAPING_MASK   (0x03)
+#define EGL_RFM69_MODULATION_TYPE_MASK      (0x18)
+#define EGL_RFM69_MODULATION_TYPE_SHIFT     (3U)
+#define EGL_RFM69_DATA_MODE_MASK            (0x60)
+#define EGL_RFM69_DATA_MODE_SHIFT           (5U)
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -261,3 +271,25 @@ egl_result_t egl_rfm69_data_mode_get(egl_rfm69_t *rfm, egl_rfm69_data_mode_t *mo
     return result;
 }
 
+egl_result_t egl_rfm69_deviation_set(egl_rfm69_t *rfm, uint32_t deviation)
+{
+    uint16_t deviation_val;
+
+    deviation_val = egl_swap16((uint16_t)(((uint64_t)deviation * EGL_RFM69_FSTEP_COEF) / egl_clock_get(rfm->clock)));
+
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_DEVIATION_LSB, (uint8_t *)&deviation_val, sizeof(deviation_val));
+}
+
+egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation)
+{
+    egl_result_t result;
+    uint16_t deviation_val;
+
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_DEVIATION_LSB, &deviation_val, sizeof(deviation_val));
+    EGL_RESULT_CHECK(result);
+
+    /* Calculate bitrate in bits per second */
+    *deviation = (uint32_t)(((uint64_t)egl_swap16(deviation_val) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF);
+
+    return result;
+}

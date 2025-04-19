@@ -7,20 +7,12 @@
 #include "egl_interface.h"
 #include "egl_clock.h"
 
-
-#define EGL_RFM69_MODE_MASK                 (0x1C)
-#define EGL_RFM69_MODE_SHIFT                (2U)
-
-#define EGL_RFM69_MODULATION_SHAPING_MASK   (0x03)
-#define EGL_RFM69_MODULATION_TYPE_MASK      (0x18)
-#define EGL_RFM69_MODULATION_TYPE_SHIFT     (3U)
-#define EGL_RFM69_DATA_MODE_MASK            (0x60)
-#define EGL_RFM69_DATA_MODE_SHIFT           (5U)
-
 #define EGL_RFM69_REG_MODE                  (0x01)
 #define EGL_RFM69_REG_DATA_MODUL            (0x02)
 #define EGL_RFM69_REG_BITRATE_LSB           (0x03)
 #define EGL_RFM69_REG_BITRATE_MSB           (0x04)
+#define EGL_RFM69_REG_DEVIATION_LSB         (0x05)
+#define EGL_RFM69_REG_DEVIATION_MSB         (0x06)
 #define EGL_RFM69_REG_VERSION               (0x10)
 
 typedef enum
@@ -81,5 +73,7 @@ egl_result_t egl_rfm69_modulation_type_set(egl_rfm69_t *rfm, egl_rfm69_modulatio
 egl_result_t egl_rfm69_modulation_type_get(egl_rfm69_t *rfm, egl_rfm69_modulation_type_t *modtype);
 egl_result_t egl_rfm69_data_mode_set(egl_rfm69_t *rfm, egl_rfm69_data_mode_t mode);
 egl_result_t egl_rfm69_data_mode_get(egl_rfm69_t *rfm, egl_rfm69_data_mode_t *mode);
+egl_result_t egl_rfm69_deviation_set(egl_rfm69_t *rfm, uint32_t deviation);
+egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation);
 
 #endif
