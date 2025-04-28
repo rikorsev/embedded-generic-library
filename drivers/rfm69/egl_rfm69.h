@@ -16,6 +16,7 @@
 #define EGL_RFM69_REG_FREQUENCY_MSB         (0x07)
 #define EGL_RFM69_REG_FREQUENCY_MID         (0x08)
 #define EGL_RFM69_REG_FREQUENCY_LSB         (0x09)
+#define EGL_RFM69_REG_OSC1                  (0x0A)
 #define EGL_RFM69_REG_VERSION               (0x10)
 
 typedef enum
@@ -47,6 +48,12 @@ typedef enum
     EGL_RFM69_DATA_MODE_CONTINIOUS_W_SYNC = 2,
     EGL_RFM69_DATA_MODE_CONTINIOUS_WO_SYNC
 }egl_rfm69_data_mode_t;
+
+typedef enum
+{
+    EGL_RFM69_RC_CALIB_STATE_IN_PROGRESS,
+    EGL_RFM69_RC_CALIB_STATE_DONE
+}egl_rfm69_rc_calib_state_t;
 
 typedef struct
 {
@@ -80,5 +87,7 @@ egl_result_t egl_rfm69_deviation_set(egl_rfm69_t *rfm, uint32_t deviation);
 egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation);
 egl_result_t egl_rfm69_frequency_set(egl_rfm69_t *rfm, uint32_t frequency);
 egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency);
+egl_result_t egl_rfm_rc_calib_start(egl_rfm69_t *rfm);
+egl_result_t egl_rfm_rc_calib_state_get(egl_rfm69_t *rfm, egl_rfm69_rc_calib_state_t *state);
 
 #endif
