@@ -9,10 +9,13 @@
 
 #define EGL_RFM69_REG_MODE                  (0x01)
 #define EGL_RFM69_REG_DATA_MODUL            (0x02)
-#define EGL_RFM69_REG_BITRATE_LSB           (0x03)
-#define EGL_RFM69_REG_BITRATE_MSB           (0x04)
-#define EGL_RFM69_REG_DEVIATION_LSB         (0x05)
-#define EGL_RFM69_REG_DEVIATION_MSB         (0x06)
+#define EGL_RFM69_REG_BITRATE_MSB           (0x03)
+#define EGL_RFM69_REG_BITRATE_LSB           (0x04)
+#define EGL_RFM69_REG_DEVIATION_MSB         (0x05)
+#define EGL_RFM69_REG_DEVIATION_LSB         (0x06)
+#define EGL_RFM69_REG_FREQUENCY_MSB         (0x07)
+#define EGL_RFM69_REG_FREQUENCY_MID         (0x08)
+#define EGL_RFM69_REG_FREQUENCY_LSB         (0x09)
 #define EGL_RFM69_REG_VERSION               (0x10)
 
 typedef enum
@@ -75,5 +78,7 @@ egl_result_t egl_rfm69_data_mode_set(egl_rfm69_t *rfm, egl_rfm69_data_mode_t mod
 egl_result_t egl_rfm69_data_mode_get(egl_rfm69_t *rfm, egl_rfm69_data_mode_t *mode);
 egl_result_t egl_rfm69_deviation_set(egl_rfm69_t *rfm, uint32_t deviation);
 egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation);
+egl_result_t egl_rfm69_frequency_set(egl_rfm69_t *rfm, uint32_t frequency);
+egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency);
 
 #endif

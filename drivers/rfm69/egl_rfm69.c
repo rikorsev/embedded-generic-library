@@ -152,7 +152,7 @@ egl_result_t egl_rfm69_bitrate_set(egl_rfm69_t *rfm, uint32_t bitrate)
     uint16_t bitrate_val = egl_swap16((uint16_t)(egl_clock_get(rfm->clock) / bitrate));
 
     /* Write bautrate value */
-    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_BITRATE_LSB, (uint8_t *)&bitrate_val, sizeof(bitrate_val));
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_BITRATE_MSB, (uint8_t *)&bitrate_val, sizeof(bitrate_val));
 }
 
 egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate)
@@ -160,7 +160,7 @@ egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate)
     egl_result_t result;
     uint16_t bitrate_val;
 
-    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_BITRATE_LSB, &bitrate_val, sizeof(bitrate_val));
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_BITRATE_MSB, &bitrate_val, sizeof(bitrate_val));
     EGL_RESULT_CHECK(result);
 
     /* Calculate bitrate in bits per second */
@@ -277,7 +277,7 @@ egl_result_t egl_rfm69_deviation_set(egl_rfm69_t *rfm, uint32_t deviation)
 
     deviation_val = egl_swap16((uint16_t)(((uint64_t)deviation * EGL_RFM69_FSTEP_COEF) / egl_clock_get(rfm->clock)));
 
-    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_DEVIATION_LSB, (uint8_t *)&deviation_val, sizeof(deviation_val));
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_DEVIATION_MSB, (uint8_t *)&deviation_val, sizeof(deviation_val));
 }
 
 egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation)
@@ -285,11 +285,40 @@ egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation)
     egl_result_t result;
     uint16_t deviation_val;
 
-    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_DEVIATION_LSB, &deviation_val, sizeof(deviation_val));
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_DEVIATION_MSB, &deviation_val, sizeof(deviation_val));
     EGL_RESULT_CHECK(result);
 
     /* Calculate bitrate in bits per second */
     *deviation = (uint32_t)(((uint64_t)egl_swap16(deviation_val) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_frequency_set(egl_rfm69_t *rfm, uint32_t frequency)
+{
+    uint8_t freq_val[3];
+    frequency = (((uint64_t)frequency * EGL_RFM69_FSTEP_COEF) / egl_clock_get(rfm->clock));
+
+    freq_val[0] = frequency >> 16 & 0xFF;
+    freq_val[1] = frequency >> 8 & 0xFF;
+    freq_val[2] = frequency & 0xFF;
+
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_FREQUENCY_MSB, freq_val, sizeof(freq_val));
+}
+
+egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency)
+{
+    egl_result_t result;
+    uint8_t freq_val[3];
+
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_FREQUENCY_MSB, &freq_val, sizeof(freq_val));
+    EGL_RESULT_CHECK(result);
+
+    *frequency = 0;
+    *frequency |= freq_val[0] << 16;
+    *frequency |= freq_val[1] << 8;
+    *frequency |= freq_val[3];
+    *frequency = ((uint64_t)(*frequency) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF;
 
     return result;
 }
