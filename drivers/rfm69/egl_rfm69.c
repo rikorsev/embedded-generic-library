@@ -8,11 +8,17 @@
 #define EGL_RFM69_MODE_MASK                 (0x1C)
 #define EGL_RFM69_MODE_SHIFT                (2U)
 
-#define EGL_RFM69_MODULATION_SHAPING_MASK   (0x03)
-#define EGL_RFM69_MODULATION_TYPE_MASK      (0x18)
-#define EGL_RFM69_MODULATION_TYPE_SHIFT     (3U)
-#define EGL_RFM69_DATA_MODE_MASK            (0x60)
-#define EGL_RFM69_DATA_MODE_SHIFT           (5U)
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t modulation_shaping : 2;
+        uint8_t reserved           : 1;
+        uint8_t modulation_type    : 2;
+        uint8_t data_mode          : 2;
+    }bitfield;
+}egl_rfm69_reg_data_modul_t;
 
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
@@ -191,26 +197,25 @@ egl_result_t egl_rfm69_mode_get(egl_rfm69_t *rfm, egl_rfm69_mode_t *mode)
 egl_result_t egl_rfm69_modulation_shaping_set(egl_rfm69_t *rfm, egl_rfm69_modulation_shaping_t modsh)
 {
     egl_result_t result;
-    uint8_t regval;
+    egl_rfm69_reg_data_modul_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    regval &= ~EGL_RFM69_MODULATION_SHAPING_MASK;
-    regval |= (uint8_t)modsh;
+    regval.bitfield.modulation_shaping = modsh;
 
-    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DATA_MODUL, regval);
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DATA_MODUL, regval.raw);
 }
 
 egl_result_t egl_rfm69_modulation_shaping_get(egl_rfm69_t *rfm, egl_rfm69_modulation_shaping_t *modsh)
 {
     egl_result_t result;
-    uint8_t regval;
+    egl_rfm69_reg_data_modul_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    *modsh = (egl_rfm69_modulation_shaping_t)(regval & EGL_RFM69_MODULATION_SHAPING_MASK);
+    *modsh = regval.bitfield.modulation_shaping;
 
     return result;
 }
@@ -218,27 +223,25 @@ egl_result_t egl_rfm69_modulation_shaping_get(egl_rfm69_t *rfm, egl_rfm69_modula
 egl_result_t egl_rfm69_modulation_type_set(egl_rfm69_t *rfm, egl_rfm69_modulation_type_t modtype)
 {
     egl_result_t result;
-    uint8_t regval;
+    egl_rfm69_reg_data_modul_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    regval &= ~EGL_RFM69_MODULATION_TYPE_MASK;
-    regval |= ((uint8_t)modtype) << EGL_RFM69_MODULATION_TYPE_SHIFT;
+    regval.bitfield.modulation_type = modtype;
 
-    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DATA_MODUL, regval);
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DATA_MODUL, regval.raw);
 }
 
 egl_result_t egl_rfm69_modulation_type_get(egl_rfm69_t *rfm, egl_rfm69_modulation_type_t *modtype)
 {
     egl_result_t result;
-    uint8_t regval;
+    egl_rfm69_reg_data_modul_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    *modtype = (egl_rfm69_modulation_type_t)((regval & EGL_RFM69_MODULATION_TYPE_MASK) >>
-                                                       EGL_RFM69_MODULATION_TYPE_SHIFT);
+    *modtype = regval.bitfield.modulation_type;
 
     return result;
 }
@@ -246,27 +249,25 @@ egl_result_t egl_rfm69_modulation_type_get(egl_rfm69_t *rfm, egl_rfm69_modulatio
 egl_result_t egl_rfm69_data_mode_set(egl_rfm69_t *rfm, egl_rfm69_data_mode_t mode)
 {
     egl_result_t result;
-    uint8_t regval;
+    egl_rfm69_reg_data_modul_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    regval &= ~EGL_RFM69_DATA_MODE_MASK;
-    regval |= ((uint8_t)mode) << EGL_RFM69_DATA_MODE_SHIFT;
+    regval.bitfield.data_mode = mode;
 
-    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DATA_MODUL, regval);
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DATA_MODUL, regval.raw);
 }
 
 egl_result_t egl_rfm69_data_mode_get(egl_rfm69_t *rfm, egl_rfm69_data_mode_t *mode)
 {
     egl_result_t result;
-    uint8_t regval;
+    egl_rfm69_reg_data_modul_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, &regval);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DATA_MODUL, (uint8_t *)&regval);
     EGL_RESULT_CHECK(result);
 
-    *mode = (egl_rfm69_data_mode_t)((regval & EGL_RFM69_DATA_MODE_MASK) >>
-                                              EGL_RFM69_DATA_MODE_SHIFT);
+    *mode = regval.bitfield.data_mode;
 
     return result;
 }
