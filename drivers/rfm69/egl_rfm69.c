@@ -41,6 +41,19 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_afc_ctrl_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 1;
+        uint8_t listen_end : 2;
+        uint8_t listen_criteria : 1;
+        uint8_t listen_resol_rx : 2;
+        uint8_t listen_resol_idle : 2;
+    }bitfield;
+}egl_rfm69_reg_listen1_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -385,6 +398,110 @@ egl_result_t egl_rfm69_afc_routine_get(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t
     EGL_RESULT_CHECK(result);
 
     *routine = regval.bitfield.afc_low_beta_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_listen_end_set(egl_rfm69_t *rfm, egl_rfm69_listen_end_t end_action)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.listen_end = end_action;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LISTEN1, regval.raw);
+}
+
+egl_result_t egl_rfm69_listen_end_get(egl_rfm69_t *rfm, egl_rfm69_listen_end_t *end_action)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *end_action = regval.bitfield.listen_end;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_listen_criteria_set(egl_rfm69_t *rfm, egl_rfm69_listen_criteria_t criteria)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.listen_criteria = criteria;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LISTEN1, regval.raw);
+}
+
+egl_result_t egl_rfm69_listen_criteria_get(egl_rfm69_t *rfm, egl_rfm69_listen_criteria_t *criteria)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *criteria = regval.bitfield.listen_criteria;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_listen_rx_resolution_set(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t resolution)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.listen_resol_rx = resolution;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LISTEN1, regval.raw);
+}
+
+egl_result_t egl_rfm69_listen_rx_resolution_get(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t *resolution)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *resolution = regval.bitfield.listen_resol_rx;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_listen_idle_resolution_set(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t resolution)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.listen_resol_idle = resolution;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LISTEN1, regval.raw);
+}
+
+egl_result_t egl_rfm69_listen_idle_resolution_get(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t *resolution)
+{
+    egl_result_t result;
+    egl_rfm69_reg_listen1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *resolution = regval.bitfield.listen_resol_idle;
 
     return result;
 }

@@ -18,6 +18,7 @@
 #define EGL_RFM69_REG_FREQUENCY_LSB         (0x09)
 #define EGL_RFM69_REG_OSC1                  (0x0A)
 #define EGL_RFM69_REG_AFC_CTRL              (0x0B)
+#define EGL_RFM69_REG_LISTEN1               (0x0D)
 #define EGL_RFM69_REG_VERSION               (0x10)
 
 typedef enum
@@ -62,6 +63,26 @@ typedef enum
     EGL_RFM69_AFC_ROUTINE_IMPROVED
 }egl_rfm69_afc_routine_t;
 
+typedef enum
+{
+    EGL_RFM69_LISTEN_STAY_RX,
+    EGL_RFM69_LISTEN_STAY_RX_THEN_STOP,
+    EGL_RFM69_LISTEN_STAY_RX_THEN_IDLE
+}egl_rfm69_listen_end_t;
+
+typedef enum
+{
+    EGL_RFM69_LISTEN_CRITERIA_ABOVE_RSSI,
+    EGL_RFM69_LISTEN_CRITERIA_ABOVE_RSSI_AND_SYNC_ADDR
+}egl_rfm69_listen_criteria_t;
+
+typedef enum
+{
+    EGL_RFM69_LISTEN_RESOL_64US = 1,
+    EGL_RFM69_LISTEN_RESOL_4_1MS,
+    EGL_RFM69_LISTEN_RESOL_262MS
+}egl_rfm69_listen_resolution_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -98,5 +119,13 @@ egl_result_t egl_rfm_rc_calib_start(egl_rfm69_t *rfm);
 egl_result_t egl_rfm_rc_calib_state_get(egl_rfm69_t *rfm, egl_rfm69_rc_calib_state_t *state);
 egl_result_t egl_rfm69_afc_routine_set(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t routine);
 egl_result_t egl_rfm69_afc_routine_get(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t *routine);
+egl_result_t egl_rfm69_listen_end_set(egl_rfm69_t *rfm, egl_rfm69_listen_end_t end_action);
+egl_result_t egl_rfm69_listen_end_get(egl_rfm69_t *rfm, egl_rfm69_listen_end_t *end_action);
+egl_result_t egl_rfm69_listen_criteria_set(egl_rfm69_t *rfm, egl_rfm69_listen_criteria_t criteria);
+egl_result_t egl_rfm69_listen_criteria_get(egl_rfm69_t *rfm, egl_rfm69_listen_criteria_t *criteria);
+egl_result_t egl_rfm69_listen_rx_resolution_set(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t resolution);
+egl_result_t egl_rfm69_listen_rx_resolution_get(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t *resolution);
+egl_result_t egl_rfm69_listen_idle_resolution_set(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t resolution);
+egl_result_t egl_rfm69_listen_idle_resolution_get(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t *resolution);
 
 #endif
