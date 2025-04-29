@@ -29,7 +29,17 @@ typedef union __attribute__((packed, aligned(1)))
         uint8_t calib_state : 1;
         uint8_t calib_start : 1;
     }bitfield;
-}egl_rfm_reg_osc1_t;
+}egl_rfm69_reg_osc1_t;
+
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 5;
+        uint8_t afc_low_beta_on : 1;
+    }bitfield;
+}egl_rfm69_reg_afc_ctrl_t;
 
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
@@ -337,7 +347,7 @@ egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency)
 
 egl_result_t egl_rfm_rc_calib_start(egl_rfm69_t *rfm)
 {
-    egl_rfm_reg_osc1_t regval;
+    egl_rfm69_reg_osc1_t regval;
 
     regval.bitfield.calib_start = true;
 
@@ -347,12 +357,34 @@ egl_result_t egl_rfm_rc_calib_start(egl_rfm69_t *rfm)
 egl_result_t egl_rfm_rc_calib_state_get(egl_rfm69_t *rfm, egl_rfm69_rc_calib_state_t *state)
 {
     egl_result_t result;
-    egl_rfm_reg_osc1_t regval;
+    egl_rfm69_reg_osc1_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OSC1, &regval.raw);
     EGL_RESULT_CHECK(result);
 
     *state = regval.bitfield.calib_state;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_afc_routine_set(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t routine)
+{
+    egl_rfm69_reg_afc_ctrl_t regval;
+
+    regval.bitfield.afc_low_beta_on = routine;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AFC_CTRL, regval.raw);
+}
+
+egl_result_t egl_rfm69_afc_routine_get(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t *routine)
+{
+    egl_result_t result;
+    egl_rfm69_reg_afc_ctrl_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_CTRL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *routine = regval.bitfield.afc_low_beta_on;
 
     return result;
 }

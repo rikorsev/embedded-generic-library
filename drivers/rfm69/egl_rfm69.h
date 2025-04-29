@@ -17,6 +17,7 @@
 #define EGL_RFM69_REG_FREQUENCY_MID         (0x08)
 #define EGL_RFM69_REG_FREQUENCY_LSB         (0x09)
 #define EGL_RFM69_REG_OSC1                  (0x0A)
+#define EGL_RFM69_REG_AFC_CTRL              (0x0B)
 #define EGL_RFM69_REG_VERSION               (0x10)
 
 typedef enum
@@ -55,6 +56,12 @@ typedef enum
     EGL_RFM69_RC_CALIB_STATE_DONE
 }egl_rfm69_rc_calib_state_t;
 
+typedef enum
+{
+    EGL_RFM69_AFC_ROUTINE_STANDART,
+    EGL_RFM69_AFC_ROUTINE_IMPROVED
+}egl_rfm69_afc_routine_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -89,5 +96,7 @@ egl_result_t egl_rfm69_frequency_set(egl_rfm69_t *rfm, uint32_t frequency);
 egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency);
 egl_result_t egl_rfm_rc_calib_start(egl_rfm69_t *rfm);
 egl_result_t egl_rfm_rc_calib_state_get(egl_rfm69_t *rfm, egl_rfm69_rc_calib_state_t *state);
+egl_result_t egl_rfm69_afc_routine_set(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t routine);
+egl_result_t egl_rfm69_afc_routine_get(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t *routine);
 
 #endif
