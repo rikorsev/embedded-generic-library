@@ -24,9 +24,14 @@
 #define EGL_RFM69_REG_VERSION               (0x10)
 #define EGL_RFM69_REG_PA_LEVEL              (0x11)
 #define EGL_RFM69_REG_PA_RAMP               (0x12)
+#define EGL_RFM69_REG_OCP                   (0x13)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
+
+#define EGL_RFM69_MAX_OCP_MA                (120)
+#define EGL_RFM69_MIN_OCP_MA                (45)
+#define EGL_RFM69_OCP_STEP                  (5)
 
 typedef enum
 {
@@ -168,5 +173,9 @@ egl_result_t egl_rfm69_pa2_set(egl_rfm69_t *rfm, bool state);
 egl_result_t egl_rfm69_pa2_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_power_ramp_set(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t ramp);
 egl_result_t egl_rfm69_power_ramp_get(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t *ramp);
+egl_result_t egl_rfm69_ocp_trim_set(egl_rfm69_t *rfm, uint8_t ma);
+egl_result_t egl_rfm69_ocp_trim_get(egl_rfm69_t *rfm, uint8_t *ma);
+egl_result_t egl_rfm69_ocp_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_ocp_state_get(egl_rfm69_t *rfm, bool *state);
 
 #endif

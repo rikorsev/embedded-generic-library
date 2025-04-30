@@ -66,6 +66,16 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_pa_level_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t ocp_trim : 4;
+        uint8_t ocp_on : 1;
+    }bitfield;
+}egl_rfm69_reg_ocp_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -654,4 +664,60 @@ egl_result_t egl_rfm69_power_ramp_set(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t r
 egl_result_t egl_rfm69_power_ramp_get(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t *ramp)
 {
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_RAMP, (uint8_t *)ramp);
+}
+
+egl_result_t egl_rfm69_ocp_trim_set(egl_rfm69_t *rfm, uint8_t ma)
+{
+    EGL_ASSERT_CHECK(ma >= EGL_RFM69_MIN_OCP_MA &&
+        ma <= EGL_RFM69_MAX_OCP_MA,
+        EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_ocp_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ocp_trim = (ma - EGL_RFM69_MIN_OCP_MA) / EGL_RFM69_OCP_STEP;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_OCP, regval.raw);
+}
+
+egl_result_t egl_rfm69_ocp_trim_get(egl_rfm69_t *rfm, uint8_t *ma)
+{
+    egl_result_t result;
+    egl_rfm69_reg_ocp_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *ma = EGL_RFM69_MIN_OCP_MA + EGL_RFM69_OCP_STEP * regval.bitfield.ocp_trim;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_ocp_state_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_ocp_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ocp_on = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_OCP, regval.raw);
+}
+
+egl_result_t egl_rfm69_ocp_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_ocp_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.ocp_on;
+
+    return result;
 }
