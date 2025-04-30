@@ -54,6 +54,18 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_listen1_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t out_power : 5;
+        uint8_t pa2_enable : 1;
+        uint8_t pa1_enable : 1;
+        uint8_t pa0_enable : 1;
+    }bitfield;
+}egl_rfm69_reg_pa_level_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -524,4 +536,112 @@ egl_result_t egl_rfm69_listen_rx_coef_set(egl_rfm69_t *rfm, uint8_t coef)
 egl_result_t egl_rfm69_listen_rx_coef_get(egl_rfm69_t *rfm, uint8_t *coef)
 {
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN3, coef);
+}
+
+egl_result_t egl_rfm69_power_set(egl_rfm69_t *rfm, int8_t db)
+{
+    EGL_ASSERT_CHECK(db >= EGL_RFM69_MIN_POWER_DB &&
+                     db <= EGL_RFM69_MAX_POWER_DB,
+                     EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.out_power = db - EGL_RFM69_MIN_POWER_DB;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PA_LEVEL, regval.raw);
+}
+
+egl_result_t egl_rfm69_power_get(egl_rfm69_t *rfm, int8_t *db)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *db = regval.bitfield.out_power + EGL_RFM69_MIN_POWER_DB;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_pa0_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa0_enable = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PA_LEVEL, regval.raw);
+}
+
+egl_result_t egl_rfm69_pa0_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.pa0_enable;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_pa1_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa1_enable = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PA_LEVEL, regval.raw);
+}
+
+egl_result_t egl_rfm69_pa1_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.pa1_enable;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_pa2_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa2_enable = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PA_LEVEL, regval.raw);
+}
+
+egl_result_t egl_rfm69_pa2_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_pa_level_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_LEVEL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.pa2_enable;
+
+    return result;
 }

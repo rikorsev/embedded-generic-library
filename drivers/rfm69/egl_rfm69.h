@@ -22,6 +22,10 @@
 #define EGL_RFM69_REG_LISTEN2               (0x0E)
 #define EGL_RFM69_REG_LISTEN3               (0x0F)
 #define EGL_RFM69_REG_VERSION               (0x10)
+#define EGL_RFM69_REG_PA_LEVEL              (0x11)
+
+#define EGL_RFM69_MAX_POWER_DB              (13)
+#define EGL_RFM69_MIN_POWER_DB              (-18)
 
 typedef enum
 {
@@ -133,5 +137,14 @@ egl_result_t egl_rfm69_listen_idle_coef_set(egl_rfm69_t *rfm, uint8_t coef);
 egl_result_t egl_rfm69_listen_idle_coef_get(egl_rfm69_t *rfm, uint8_t *coef);
 egl_result_t egl_rfm69_listen_rx_coef_set(egl_rfm69_t *rfm, uint8_t coef);
 egl_result_t egl_rfm69_listen_rx_coef_get(egl_rfm69_t *rfm, uint8_t *coef);
+egl_result_t egl_rfm69_power_set(egl_rfm69_t *rfm, int8_t db);
+egl_result_t egl_rfm69_power_get(egl_rfm69_t *rfm, int8_t *db);
+egl_result_t egl_rfm69_pa0_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_pa0_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_pa1_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_pa1_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_pa2_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_pa2_get(egl_rfm69_t *rfm, bool *state);
+
 
 #endif
