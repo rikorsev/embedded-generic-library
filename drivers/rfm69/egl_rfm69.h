@@ -19,6 +19,8 @@
 #define EGL_RFM69_REG_OSC1                  (0x0A)
 #define EGL_RFM69_REG_AFC_CTRL              (0x0B)
 #define EGL_RFM69_REG_LISTEN1               (0x0D)
+#define EGL_RFM69_REG_LISTEN2               (0x0E)
+#define EGL_RFM69_REG_LISTEN3               (0x0F)
 #define EGL_RFM69_REG_VERSION               (0x10)
 
 typedef enum
@@ -127,5 +129,9 @@ egl_result_t egl_rfm69_listen_rx_resolution_set(egl_rfm69_t *rfm, egl_rfm69_list
 egl_result_t egl_rfm69_listen_rx_resolution_get(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t *resolution);
 egl_result_t egl_rfm69_listen_idle_resolution_set(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t resolution);
 egl_result_t egl_rfm69_listen_idle_resolution_get(egl_rfm69_t *rfm, egl_rfm69_listen_resolution_t *resolution);
+egl_result_t egl_rfm69_listen_idle_coef_set(egl_rfm69_t *rfm, uint8_t coef);
+egl_result_t egl_rfm69_listen_idle_coef_get(egl_rfm69_t *rfm, uint8_t *coef);
+egl_result_t egl_rfm69_listen_rx_coef_set(egl_rfm69_t *rfm, uint8_t coef);
+egl_result_t egl_rfm69_listen_rx_coef_get(egl_rfm69_t *rfm, uint8_t *coef);
 
 #endif

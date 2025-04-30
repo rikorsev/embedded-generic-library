@@ -505,3 +505,23 @@ egl_result_t egl_rfm69_listen_idle_resolution_get(egl_rfm69_t *rfm, egl_rfm69_li
 
     return result;
 }
+
+egl_result_t egl_rfm69_listen_idle_coef_set(egl_rfm69_t *rfm, uint8_t coef)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LISTEN2, coef);
+}
+
+egl_result_t egl_rfm69_listen_idle_coef_get(egl_rfm69_t *rfm, uint8_t *coef)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN2, coef);
+}
+
+egl_result_t egl_rfm69_listen_rx_coef_set(egl_rfm69_t *rfm, uint8_t coef)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LISTEN3, coef);
+}
+
+egl_result_t egl_rfm69_listen_rx_coef_get(egl_rfm69_t *rfm, uint8_t *coef)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LISTEN3, coef);
+}
