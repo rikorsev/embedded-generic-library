@@ -645,3 +645,13 @@ egl_result_t egl_rfm69_pa2_get(egl_rfm69_t *rfm, bool *state)
 
     return result;
 }
+
+egl_result_t egl_rfm69_power_ramp_set(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t ramp)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PA_RAMP, (uint8_t)ramp);
+}
+
+egl_result_t egl_rfm69_power_ramp_get(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t *ramp)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PA_RAMP, (uint8_t *)ramp);
+}

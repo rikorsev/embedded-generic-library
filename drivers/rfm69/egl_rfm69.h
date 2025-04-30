@@ -23,6 +23,7 @@
 #define EGL_RFM69_REG_LISTEN3               (0x0F)
 #define EGL_RFM69_REG_VERSION               (0x10)
 #define EGL_RFM69_REG_PA_LEVEL              (0x11)
+#define EGL_RFM69_REG_PA_RAMP               (0x12)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -89,6 +90,26 @@ typedef enum
     EGL_RFM69_LISTEN_RESOL_262MS
 }egl_rfm69_listen_resolution_t;
 
+typedef enum
+{
+    EGL_RFM69_POWER_RAMP_3_4_MS,
+    EGL_RFM69_POWER_RAMP_2_MS,
+    EGL_RFM69_POWER_RAMP_1_MS,
+    EGL_RFM69_POWER_RAMP_500_US,
+    EGL_RFM69_POWER_RAMP_250_US,
+    EGL_RFM69_POWER_RAMP_125_US,
+    EGL_RFM69_POWER_RAMP_100_US,
+    EGL_RFM69_POWER_RAMP_62_US,
+    EGL_RFM69_POWER_RAMP_50_US,
+    EGL_RFM69_POWER_RAMP_40_US,
+    EGL_RFM69_POWER_RAMP_31_US,
+    EGL_RFM69_POWER_RAMP_25_US,
+    EGL_RFM69_POWER_RAMP_20_US,
+    EGL_RFM69_POWER_RAMP_15_US,
+    EGL_RFM69_POWER_RAMP_12_US,
+    EGL_RFM69_POWER_RAMP_10_US,
+}egl_rfm69_power_ramp_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -145,6 +166,7 @@ egl_result_t egl_rfm69_pa1_set(egl_rfm69_t *rfm, bool state);
 egl_result_t egl_rfm69_pa1_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_pa2_set(egl_rfm69_t *rfm, bool state);
 egl_result_t egl_rfm69_pa2_get(egl_rfm69_t *rfm, bool *state);
-
+egl_result_t egl_rfm69_power_ramp_set(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t ramp);
+egl_result_t egl_rfm69_power_ramp_get(egl_rfm69_t *rfm, egl_rfm69_power_ramp_t *ramp);
 
 #endif
