@@ -25,6 +25,7 @@
 #define EGL_RFM69_REG_PA_LEVEL              (0x11)
 #define EGL_RFM69_REG_PA_RAMP               (0x12)
 #define EGL_RFM69_REG_OCP                   (0x13)
+#define EGL_RFM69_REG_LNA                   (0x18)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -115,6 +116,23 @@ typedef enum
     EGL_RFM69_POWER_RAMP_10_US,
 }egl_rfm69_power_ramp_t;
 
+typedef enum
+{
+    EGL_RFM69_LNA_GAIN_AGC,
+    EGL_RFM69_LNA_GAIN_HIGHEST,
+    EGL_RFM69_LNA_GAIN_HIGHEST_MINUS_6_DB,
+    EGL_RFM69_LNA_GAIN_HIGHEST_MINUS_12_DB,
+    EGL_RFM69_LNA_GAIN_HIGHEST_MINUS_24_DB,
+    EGL_RFM69_LNA_GAIN_HIGHEST_MINUS_36_DB,
+    EGL_RFM69_LNA_GAIN_HIGHEST_MINUS_48_DB,
+}egl_rfm69_lna_gain_t;
+
+typedef enum
+{
+    EGL_RFM69_LNA_ZIN_50_OHMS,
+    EGL_RFM69_LNA_ZIN_200_OHMS
+}egl_rfm69_lna_zin_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -177,5 +195,10 @@ egl_result_t egl_rfm69_ocp_trim_set(egl_rfm69_t *rfm, uint8_t ma);
 egl_result_t egl_rfm69_ocp_trim_get(egl_rfm69_t *rfm, uint8_t *ma);
 egl_result_t egl_rfm69_ocp_state_set(egl_rfm69_t *rfm, bool state);
 egl_result_t egl_rfm69_ocp_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_lna_select_gain_set(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t gain);
+egl_result_t egl_rfm69_lna_select_gain_get(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t *gain);
+egl_result_t egl_rfm69_lna_current_gain_get(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t *gain);
+egl_result_t egl_rfm69_lna_zin_set(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t zin);
+egl_result_t egl_rfm69_lna_zin_get(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t *zin);
 
 #endif

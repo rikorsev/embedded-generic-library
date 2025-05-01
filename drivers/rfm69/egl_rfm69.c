@@ -76,6 +76,18 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_ocp_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t lna_gain_select : 3;
+        uint8_t lna_current_gain : 3;
+        uint8_t reserved : 1;
+        uint8_t lna_zin : 1;
+    }bitfield;
+}egl_rfm69_reg_lna_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -718,6 +730,71 @@ egl_result_t egl_rfm69_ocp_state_get(egl_rfm69_t *rfm, bool *state)
     EGL_RESULT_CHECK(result);
 
     *state = regval.bitfield.ocp_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_lna_select_gain_set(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t gain)
+{
+    egl_result_t result;
+    egl_rfm69_reg_lna_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.lna_gain_select = gain;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LNA, regval.raw);
+}
+
+egl_result_t egl_rfm69_lna_select_gain_get(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t *gain)
+{
+    egl_result_t result;
+    egl_rfm69_reg_lna_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *gain = regval.bitfield.lna_gain_select;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_lna_current_gain_get(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t *gain)
+{
+    egl_result_t result;
+    egl_rfm69_reg_lna_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *gain = regval.bitfield.lna_current_gain;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_lna_zin_set(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t zin)
+{
+    egl_result_t result;
+    egl_rfm69_reg_lna_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.lna_zin = zin;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_LNA, regval.raw);
+}
+
+egl_result_t egl_rfm69_lna_zin_get(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t *zin)
+{
+    egl_result_t result;
+    egl_rfm69_reg_lna_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *zin = regval.bitfield.lna_zin;
 
     return result;
 }
