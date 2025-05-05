@@ -28,6 +28,7 @@
 #define EGL_RFM69_REG_LNA                   (0x18)
 #define EGL_RFM69_REG_RX_BW                 (0x19)
 #define EGL_RFM69_REG_AFC_BW                (0x1A)
+#define EGL_RFM69_REG_OOK_PEAK              (0x1B)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -142,6 +143,37 @@ typedef enum
     EGL_RFM69_BW_MANT_24
 }egl_rfm69_bw_mant_t;
 
+typedef enum
+{
+    EGL_RFM69_OOK_THRESH_DEC_ONCE_PER_CHIP,
+    EGL_RFM69_OOK_THRESH_DEC_ONCE_PER_2_CHIPS,
+    EGL_RFM69_OOK_THRESH_DEC_ONCE_PER_4_CHIPS,
+    EGL_RFM69_OOK_THRESH_DEC_ONCE_PER_8_CHIPS,
+    EGL_RFM69_OOK_THRESH_DEC_TWICE_IN_EACH_CHIP,
+    EGL_RFM69_OOK_THRESH_DEC_4_TIMES_IN_EACH_CHIP,
+    EGL_RFM69_OOK_THRESH_DEC_8_TIMES_IN_EACH_CHIP,
+    EGL_RFM69_OOK_THRESH_DEC_16_TIMES_IN_EACH_CHIP
+}egl_rfm_ook_thresh_dec_t;
+
+typedef enum
+{
+    EGL_RFM69_OOK_THRESH_STEP_0_5_DB,
+    EGL_RFM69_OOK_THRESH_STEP_1_0_DB,
+    EGL_RFM69_OOK_THRESH_STEP_1_5_DB,
+    EGL_RFM69_OOK_THRESH_STEP_2_0_DB,
+    EGL_RFM69_OOK_THRESH_STEP_3_0_DB,
+    EGL_RFM69_OOK_THRESH_STEP_4_0_DB,
+    EGL_RFM69_OOK_THRESH_STEP_5_0_DB,
+    EGL_RFM69_OOK_THRESH_STEP_6_0_DB,
+}egl_rfm69_ook_thresh_step_t;
+
+typedef enum
+{
+    EGL_RFM69_OOK_THRESH_TYPE_FIXED,
+    EGL_RFM69_OOK_THRESH_TYPE_AVERAGE,
+    EGL_RFM69_OOK_THRESH_TYPE_PEAK
+}egl_rfm69_ook_thresh_type_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -221,5 +253,11 @@ egl_result_t egl_rfm69_afc_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t man
 egl_result_t egl_rfm69_afc_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant);
 egl_result_t egl_rfm69_afc_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq);
 egl_result_t egl_rfm69_afc_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq);
+egl_result_t egl_rfm69_ook_peak_thresh_dec_set(egl_rfm69_t *rfm, egl_rfm_ook_thresh_dec_t dec);
+egl_result_t egl_rfm69_ook_peak_thresh_dec_get(egl_rfm69_t *rfm, egl_rfm_ook_thresh_dec_t *dec);
+egl_result_t egl_rfm69_ook_peak_thresh_step_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_step_t step);
+egl_result_t egl_rfm69_ook_peak_thresh_step_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_step_t *step);
+egl_result_t egl_rfm69_ook_thresh_type_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_type_t type);
+egl_result_t egl_rfm69_ook_thresh_type_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_type_t *type);
 
 #endif
