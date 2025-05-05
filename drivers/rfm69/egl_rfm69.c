@@ -88,6 +88,17 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_lna_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t bw_exp : 3;
+        uint8_t bw_mant : 2;
+        uint8_t dcc_freq : 3;
+    }bitfield;
+}egl_rfm69_reg_bw_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -795,6 +806,170 @@ egl_result_t egl_rfm69_lna_zin_get(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t *zin)
     EGL_RESULT_CHECK(result);
 
     *zin = regval.bitfield.lna_zin;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_rx_bw_exp_set(egl_rfm69_t *rfm, uint8_t exp)
+{
+    EGL_ASSERT_CHECK(exp < 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_exp = exp;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_RX_BW, regval.raw);
+}
+
+egl_result_t egl_rfm69_rx_bw_exp_get(egl_rfm69_t *rfm, uint8_t *exp)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *exp = regval.bitfield.bw_exp;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_rx_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t mant)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_mant = mant;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_RX_BW, regval.raw);
+}
+
+egl_result_t egl_rfm69_rx_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mant = regval.bitfield.bw_mant;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_rx_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq)
+{
+    EGL_ASSERT_CHECK(freq < 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dcc_freq = freq;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_RX_BW, regval.raw);
+}
+
+egl_result_t egl_rfm69_rx_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *freq = regval.bitfield.dcc_freq;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_afc_bw_exp_set(egl_rfm69_t *rfm, uint8_t exp)
+{
+    EGL_ASSERT_CHECK(exp < 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_exp = exp;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AFC_BW, regval.raw);
+}
+
+egl_result_t egl_rfm69_afc_bw_exp_get(egl_rfm69_t *rfm, uint8_t *exp)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *exp = regval.bitfield.bw_exp;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_afc_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t mant)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_mant = mant;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AFC_BW, regval.raw);
+}
+
+egl_result_t egl_rfm69_afc_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mant = regval.bitfield.bw_mant;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_afc_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq)
+{
+    EGL_ASSERT_CHECK(freq < 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dcc_freq = freq;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AFC_BW, regval.raw);
+}
+
+egl_result_t egl_rfm69_afc_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq)
+{
+    egl_result_t result;
+    egl_rfm69_reg_bw_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *freq = regval.bitfield.dcc_freq;
 
     return result;
 }

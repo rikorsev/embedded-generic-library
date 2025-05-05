@@ -26,6 +26,8 @@
 #define EGL_RFM69_REG_PA_RAMP               (0x12)
 #define EGL_RFM69_REG_OCP                   (0x13)
 #define EGL_RFM69_REG_LNA                   (0x18)
+#define EGL_RFM69_REG_RX_BW                 (0x19)
+#define EGL_RFM69_REG_AFC_BW                (0x1A)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -133,6 +135,13 @@ typedef enum
     EGL_RFM69_LNA_ZIN_200_OHMS
 }egl_rfm69_lna_zin_t;
 
+typedef enum
+{
+    EGL_RFM69_BW_MANT_16,
+    EGL_RFM69_BW_MANT_20,
+    EGL_RFM69_BW_MANT_24
+}egl_rfm69_bw_mant_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -200,5 +209,17 @@ egl_result_t egl_rfm69_lna_select_gain_get(egl_rfm69_t *rfm, egl_rfm69_lna_gain_
 egl_result_t egl_rfm69_lna_current_gain_get(egl_rfm69_t *rfm, egl_rfm69_lna_gain_t *gain);
 egl_result_t egl_rfm69_lna_zin_set(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t zin);
 egl_result_t egl_rfm69_lna_zin_get(egl_rfm69_t *rfm, egl_rfm69_lna_zin_t *zin);
+egl_result_t egl_rfm69_rx_bw_exp_set(egl_rfm69_t *rfm, uint8_t exp);
+egl_result_t egl_rfm69_rx_bw_exp_get(egl_rfm69_t *rfm, uint8_t *exp);
+egl_result_t egl_rfm69_rx_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t mant);
+egl_result_t egl_rfm69_rx_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant);
+egl_result_t egl_rfm69_rx_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq);
+egl_result_t egl_rfm69_rx_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq);
+egl_result_t egl_rfm69_afc_bw_exp_set(egl_rfm69_t *rfm, uint8_t exp);
+egl_result_t egl_rfm69_afc_bw_exp_get(egl_rfm69_t *rfm, uint8_t *exp);
+egl_result_t egl_rfm69_afc_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t mant);
+egl_result_t egl_rfm69_afc_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant);
+egl_result_t egl_rfm69_afc_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq);
+egl_result_t egl_rfm69_afc_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq);
 
 #endif
