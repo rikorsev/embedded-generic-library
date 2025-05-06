@@ -26,11 +26,21 @@ typedef struct
 }egl_log_t;
 
 #if CONFIG_EGL_LOG_ENABLED
-#define EGL_LOG_DEBUG(fmt, ...) egl_log(egl_log_default_get(), EGL_LOG_LEVEL_DEBUG, EGL_MODULE_NAME, fmt, ##__VA_ARGS__)
-#define EGL_LOG_INFO(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_INFO,  EGL_MODULE_NAME, fmt, ##__VA_ARGS__)
-#define EGL_LOG_WARN(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_WARN,  EGL_MODULE_NAME, fmt, ##__VA_ARGS__)
-#define EGL_LOG_ERROR(fmt, ...) egl_log(egl_log_default_get(), EGL_LOG_LEVEL_ERROR, EGL_MODULE_NAME, fmt, ##__VA_ARGS__)
-#define EGL_LOG_FAIL(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_FAIL,  EGL_MODULE_NAME, fmt, ##__VA_ARGS__)
+#define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
+
+#define EGL_LOG_DEBUG(fmt, ...) egl_log(egl_log_default_get(), EGL_LOG_LEVEL_DEBUG, __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_INFO(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_INFO,  __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_WARN(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_WARN,  __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_ERROR(fmt, ...) egl_log(egl_log_default_get(), EGL_LOG_LEVEL_ERROR, __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_FAIL(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_FAIL,  __FILENAME__, fmt, ##__VA_ARGS__)
+
+#define EGL_LOG_RESULT_FMT "line %u: Result: %s"
+
+#define EGL_LOG_RESULT_DEBUG(result) EGL_LOG_DEBUG(EGL_LOG_RESULT_FMT, __LINE__, EGL_RESULT(result))
+#define EGL_LOG_RESULT_INFO(result) EGL_LOG_INFO(EGL_LOG_RESULT_FMT, __LINE__, EGL_RESULT(result))
+#define EGL_LOG_RESULT_WARN(result) EGL_LOG_WARN(EGL_LOG_RESULT_FMT, __LINE__, EGL_RESULT(result))
+#define EGL_LOG_RESULT_ERROR(result) EGL_LOG_ERROR(EGL_LOG_RESULT_FMT, __LINE__, EGL_RESULT(result))
+#define EGL_LOG_RESULT_FAIL(result) EGL_LOG_FAIL(EGL_LOG_RESULT_FMT, __LINE__, EGL_RESULT(result))
 
 /**
  * @brief init log module

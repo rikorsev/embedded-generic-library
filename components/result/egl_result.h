@@ -30,9 +30,17 @@ typedef enum
 #define EGL_RESULT(x) egl_result_str_get((x))
 
 #if CONFIG_EGL_RESULT_CHECK_ENABLED
+
+#if CONFIG_EGL_RESULT_LOG_ENABLED && defined(EGL_MODULE_NAME)
+#include "egl_log.h"
+#define __LOG(result) EGL_LOG_RESULT_ERROR(result)
+#else
+#define __LOG(result)
+#endif
+
 #define EGL_RESULT_FATAL()  assert(0);
 #define EGL_ASSERT_CHECK(x, retval) if(!(x)) { return (retval); }
-#define EGL_RESULT_CHECK(x) if((x) != EGL_SUCCESS) { return result; }
+#define EGL_RESULT_CHECK(x) if((x) != EGL_SUCCESS) { __LOG(x); return result; }
 #else
 #define EGL_RESULT_FATAL()
 #define EGL_ASSERT_CHECK(x, retval)
