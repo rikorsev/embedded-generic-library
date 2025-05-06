@@ -7,13 +7,31 @@
 #include "egl_result.h"
 #include "egl_log.h"
 
+#if CONFIG_EGL_LOG_COLOR_ENABLED
+#define RESET   "\x1b[0m"
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define WHITE   "\x1b[37m"
+#define BOLD    "\x1b[1m"
+#else
+#define RESET
+#define RED
+#define GREEN
+#define YELLOW
+#define BLUE
+#define WHITE
+#define BOLD
+#endif
+
 static const char *m_level_str[] =
 {
-    "DEBUG",
-    "INFO",
-    "WARN",
-    "ERROR",
-    "FAIL"
+    BLUE   "DEBUG" WHITE,
+    GREEN  "INFO"  WHITE,
+    YELLOW "WARN"  WHITE,
+    RED    "ERROR" WHITE,
+    RED    "FAIL"  WHITE
 };
 
 static egl_log_t *default_logger = NULL;
@@ -53,22 +71,19 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
 
     if(log->timer)
     {
-        result = snprintf(log->buff, sizeof(log->buff),"[%08u]",
+        result = snprintf(log->buff, sizeof(log->buff), BOLD "[%08u]",
                                             (unsigned int)egl_timer_get(log->timer));
         EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
         offset += result;
     }
 
-    result = snprintf(log->buff + offset, sizeof(log->buff) - offset, "[%s]", m_level_str[lvl]);
+    result = snprintf(log->buff + offset, sizeof(log->buff) - offset, BOLD "[%s]", m_level_str[lvl]);
     EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
     offset += result;
 
-    if(module != NULL)
-    {
-        result = snprintf(log->buff + offset, sizeof(log->buff) - offset, "%s: ", module);
-        EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
-        offset += result;
-    }
+    result = snprintf(log->buff + offset, sizeof(log->buff) - offset, "%s: " RESET, module);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+    offset += result;
 
     va_start(arg, format);
     result = vsnprintf(log->buff + offset, sizeof(log->buff) - offset, format, arg);
