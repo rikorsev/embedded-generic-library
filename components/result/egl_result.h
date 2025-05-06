@@ -31,7 +31,7 @@ typedef enum
 
 #if CONFIG_EGL_RESULT_CHECK_ENABLED
 
-#if CONFIG_EGL_RESULT_LOG_ENABLED && defined(EGL_MODULE_NAME)
+#if CONFIG_EGL_RESULT_LOG_ENABLED
 #include "egl_log.h"
 #define __LOG(result) EGL_LOG_RESULT_ERROR(result)
 #else
