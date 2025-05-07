@@ -2,8 +2,6 @@
 #include "egl_log.h"
 #include "egl_util.h"
 
-#define EGL_MODULE_NAME "egl_rfm69"
-
 #define EGL_RFM69_FSTEP_COEF                (524288U)
 #define EGL_RFM69_MODE_MASK                 (0x1C)
 #define EGL_RFM69_MODE_SHIFT                (2U)
