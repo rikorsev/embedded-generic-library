@@ -29,6 +29,8 @@
 #define EGL_RFM69_REG_RX_BW                 (0x19)
 #define EGL_RFM69_REG_AFC_BW                (0x1A)
 #define EGL_RFM69_REG_OOK_PEAK              (0x1B)
+#define EGL_RFM69_REG_OOK_AVG               (0x1C)
+#define EGL_RFM69_REG_OOK_FIX               (0x1D)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -174,6 +176,14 @@ typedef enum
     EGL_RFM69_OOK_THRESH_TYPE_PEAK
 }egl_rfm69_ook_thresh_type_t;
 
+typedef enum
+{
+    EGL_RFM69_OOK_CHIP_RATE_DIV_32P,
+    EGL_RFM69_OOK_CHIP_RATE_DIV_8P,
+    EGL_RFM69_OOK_CHIP_RATE_DIV_4P,
+    EGL_RFM69_OOK_CHIP_RATE_DIV_2P
+}egl_rfm69_ook_thresh_avg_filt_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -259,5 +269,9 @@ egl_result_t egl_rfm69_ook_peak_thresh_step_set(egl_rfm69_t *rfm, egl_rfm69_ook_
 egl_result_t egl_rfm69_ook_peak_thresh_step_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_step_t *step);
 egl_result_t egl_rfm69_ook_thresh_type_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_type_t type);
 egl_result_t egl_rfm69_ook_thresh_type_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_type_t *type);
+egl_result_t egl_rfm69_ook_thresh_avg_filt_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_avg_filt_t filt);
+egl_result_t egl_rfm69_ook_thresh_avg_filt_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_avg_filt_t *filt);
+egl_result_t egl_rfm69_ook_thresh_fixed_set(egl_rfm69_t *rfm, uint8_t db);
+egl_result_t egl_rfm69_ook_thresh_fixed_get(egl_rfm69_t *rfm, uint8_t *db);
 
 #endif

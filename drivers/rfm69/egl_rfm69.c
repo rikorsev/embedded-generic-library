@@ -108,6 +108,16 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_ook_peak_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 6;
+        uint8_t ook_average_thresh_filt : 2;
+    }bitfield;
+}egl_rfm69_reg_ook_avg_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -1059,4 +1069,40 @@ egl_result_t egl_rfm69_ook_thresh_type_get(egl_rfm69_t *rfm, egl_rfm69_ook_thres
     *type = regval.bitfield.ook_thresh_type;
 
     return result;
+}
+
+egl_result_t egl_rfm69_ook_thresh_avg_filt_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_avg_filt_t filt)
+{
+    egl_result_t result;
+    egl_rfm69_reg_ook_avg_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ook_average_thresh_filt = filt;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_OOK_AVG, regval.raw);
+}
+
+egl_result_t egl_rfm69_ook_thresh_avg_filt_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_avg_filt_t *filt)
+{
+    egl_result_t result;
+    egl_rfm69_reg_ook_avg_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *filt = regval.bitfield.ook_average_thresh_filt;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_ook_thresh_fixed_set(egl_rfm69_t *rfm, uint8_t db)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_OOK_FIX, db);
+}
+
+egl_result_t egl_rfm69_ook_thresh_fixed_get(egl_rfm69_t *rfm, uint8_t *db)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_OOK_FIX, db);
 }
