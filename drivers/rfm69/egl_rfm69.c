@@ -1238,3 +1238,29 @@ egl_result_t egl_rfm69_fei_state_get(egl_rfm69_t *rfm, bool *state)
 
     return result;
 }
+
+egl_result_t egl_rfm69_afc_get(egl_rfm69_t *rfm, int16_t *hz)
+{
+    egl_result_t result;
+    uint16_t raw;
+
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_AFC_MSB, &raw, sizeof(raw));
+    EGL_RESULT_CHECK(result);
+
+    *hz = (int16_t)((((uint64_t)egl_swap16(raw)) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_fei_get(egl_rfm69_t *rfm, int16_t *hz)
+{
+    egl_result_t result;
+    uint16_t raw;
+
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_FEI_MSB, &raw, sizeof(raw));
+    EGL_RESULT_CHECK(result);
+
+    *hz = (int16_t)((((uint64_t)egl_swap16(raw)) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF);
+
+    return result;
+}
