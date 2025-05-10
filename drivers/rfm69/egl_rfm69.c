@@ -1511,3 +1511,8 @@ egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out)
 
     return result;
 }
+
+egl_result_t egl_rfm69_flags_get(egl_rfm69_t *rfm, egl_rfm69_irq_flags_t *flags)
+{
+    return egl_rfm69_read_burst(rfm, EGL_RFM69_REG_IRQ_FALGS1, &flags->raw, sizeof(*flags));
+}

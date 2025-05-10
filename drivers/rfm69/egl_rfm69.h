@@ -40,6 +40,8 @@
 #define EGL_RFM69_REG_RSSI_VALUE            (0x24)
 #define EGL_RFM69_REG_DIO_MAP1              (0x25)
 #define EGL_RFM69_REG_DIO_MAP2              (0x26)
+#define EGL_RFM69_REG_IRQ_FALGS1            (0x27)
+#define EGL_RFM69_REG_IRQ_FLAGS2            (0x28)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -213,6 +215,30 @@ typedef enum
     EGL_RFM69_CLK_OUT_OFF
 }egl_rfm69_clk_out_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint16_t raw;
+    struct
+    {
+        uint16_t sync_addr_match : 1;
+        uint16_t auto_mode : 1;
+        uint16_t timeout : 1;
+        uint16_t rssi : 1;
+        uint16_t pll_lock : 1;
+        uint16_t tx_ready : 1;
+        uint16_t rx_ready : 1;
+        uint16_t mode_ready : 1;
+        uint16_t reserved : 1;
+        uint16_t crc_ok : 1;
+        uint16_t payload_ready : 1;
+        uint16_t packet_sent : 1;
+        uint16_t fifo_overrun : 1;
+        uint16_t fifo_level : 1;
+        uint16_t fifo_not_empty : 1;
+        uint16_t fifo_full : 1;
+    }bitfield;
+}egl_rfm69_irq_flags_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -330,5 +356,7 @@ egl_result_t egl_rfm69_dio5_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode
 egl_result_t egl_rfm69_dio5_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
 egl_result_t egl_rfm69_clk_out_set(egl_rfm69_t *rfm, egl_rfm69_clk_out_t out);
 egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out);
+egl_result_t egl_rfm69_flags_get(egl_rfm69_t *rfm, egl_rfm69_irq_flags_t *flags);
+
 
 #endif
