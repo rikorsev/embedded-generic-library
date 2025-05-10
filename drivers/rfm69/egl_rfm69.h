@@ -38,6 +38,8 @@
 #define EGL_RFM69_REG_FEI_LSB               (0x22)
 #define EGL_RFM69_REG_RSSI_CONFIG           (0x23)
 #define EGL_RFM69_REG_RSSI_VALUE            (0x24)
+#define EGL_RFM69_REG_DIO_MAP1              (0x25)
+#define EGL_RFM69_REG_DIO_MAP2              (0x26)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -191,6 +193,26 @@ typedef enum
     EGL_RFM69_OOK_CHIP_RATE_DIV_2P
 }egl_rfm69_ook_thresh_avg_filt_t;
 
+typedef enum
+{
+    EGL_RFM69_DIO_MODE_0,
+    EGL_RFM69_DIO_MODE_1,
+    EGL_RFM69_DIO_MODE_2,
+    EGL_RFM69_DIO_MODE_3,
+}egl_rfm69_dio_mode_t;
+
+typedef enum
+{
+    EGL_RFM69_CLK_OUT_FXOSC,
+    EGL_RFM69_CLK_OUT_FXOSC_DIV_2,
+    EGL_RFM69_CLK_OUT_FXOSC_DIV_4,
+    EGL_RFM69_CLK_OUT_FXOSC_DIV_8,
+    EGL_RFM69_CLK_OUT_FXOSC_DIV_16,
+    EGL_RFM69_CLK_OUT_FXOSC_DIV_32,
+    EGL_RFM69_CLK_OUT_RC,
+    EGL_RFM69_CLK_OUT_OFF
+}egl_rfm69_clk_out_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -294,5 +316,19 @@ egl_result_t egl_rfm69_fei_get(egl_rfm69_t *rfm, int16_t *hz);
 egl_result_t egl_rfm69_rssi_start(egl_rfm69_t *rfm);
 egl_result_t egl_rfm69_rssi_state_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_rssi_get(egl_rfm69_t *rfm, int8_t *db);
+egl_result_t egl_rfm69_dio0_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode);
+egl_result_t egl_rfm69_dio0_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
+egl_result_t egl_rfm69_dio1_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode);
+egl_result_t egl_rfm69_dio1_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
+egl_result_t egl_rfm69_dio2_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode);
+egl_result_t egl_rfm69_dio2_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
+egl_result_t egl_rfm69_dio3_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode);
+egl_result_t egl_rfm69_dio3_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
+egl_result_t egl_rfm69_dio4_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode);
+egl_result_t egl_rfm69_dio4_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
+egl_result_t egl_rfm69_dio5_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode);
+egl_result_t egl_rfm69_dio5_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode);
+egl_result_t egl_rfm69_clk_out_set(egl_rfm69_t *rfm, egl_rfm69_clk_out_t out);
+egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out);
 
 #endif

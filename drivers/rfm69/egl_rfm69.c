@@ -143,6 +143,30 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_rssi_config_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t dio3 : 2;
+        uint8_t dio2 : 2;
+        uint8_t dio1 : 2;
+        uint8_t dio0 : 2;
+    }bitfield;
+}egl_rfm69_reg_dio_map1_t;
+
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t clk_out : 3;
+        uint8_t reserved : 1;
+        uint8_t dio5 : 2;
+        uint8_t dio4 : 2;
+    }bitfield;
+}egl_rfm69_reg_dio_map2_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -1304,4 +1328,186 @@ egl_result_t egl_rfm69_rssi_state_get(egl_rfm69_t *rfm, bool *state)
 egl_result_t egl_rfm69_rssi_get(egl_rfm69_t *rfm, int8_t *db)
 {
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_VALUE, (uint8_t *)db);
+}
+
+egl_result_t egl_rfm69_dio0_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio0 = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm69_dio0_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio0;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_dio1_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio1 = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm69_dio1_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio1;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_dio2_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio2 = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm69_dio2_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio2;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_dio3_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio3 = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm69_dio3_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio3;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_dio4_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map2_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio4 = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP2, regval.raw);
+}
+
+egl_result_t egl_rfm69_dio4_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map2_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio4;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_dio5_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map2_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio5 = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP2, regval.raw);
+}
+
+egl_result_t egl_rfm69_dio5_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map2_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio5;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_clk_out_set(egl_rfm69_t *rfm, egl_rfm69_clk_out_t out)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map2_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.clk_out = out;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_DIO_MAP2, regval.raw);
+}
+
+egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out)
+{
+    egl_result_t result;
+    egl_rfm69_reg_dio_map2_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *out = regval.bitfield.clk_out;
+
+    return result;
 }
