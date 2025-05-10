@@ -133,6 +133,16 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_afc_fet_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t rssi_start : 1;
+        uint8_t rssi_done : 1;
+    }bitfield;
+}egl_rfm69_reg_rssi_config_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -1263,4 +1273,35 @@ egl_result_t egl_rfm69_fei_get(egl_rfm69_t *rfm, int16_t *hz)
     *hz = (int16_t)((((uint64_t)egl_swap16(raw)) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF);
 
     return result;
+}
+
+egl_result_t egl_rfm69_rssi_start(egl_rfm69_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm69_reg_rssi_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.rssi_start = true;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_RSSI_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm69_rssi_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_rssi_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.rssi_done;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_rssi_get(egl_rfm69_t *rfm, int8_t *db)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_VALUE, (uint8_t *)db);
 }

@@ -36,6 +36,8 @@
 #define EGL_RFM69_REG_AFC_LSB               (0x20)
 #define EGL_RFM69_REG_FEI_MSB               (0x21)
 #define EGL_RFM69_REG_FEI_LSB               (0x22)
+#define EGL_RFM69_REG_RSSI_CONFIG           (0x23)
+#define EGL_RFM69_REG_RSSI_VALUE            (0x24)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -289,6 +291,8 @@ egl_result_t egl_rfm69_afc_get(egl_rfm69_t *rfm, int16_t *hz);
 egl_result_t egl_rfm69_fei_start(egl_rfm69_t *rfm);
 egl_result_t egl_rfm69_fei_state_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_fei_get(egl_rfm69_t *rfm, int16_t *hz);
-
+egl_result_t egl_rfm69_rssi_start(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_rssi_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_rssi_get(egl_rfm69_t *rfm, int8_t *db);
 
 #endif
