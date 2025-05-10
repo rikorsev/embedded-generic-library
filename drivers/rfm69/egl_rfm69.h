@@ -31,6 +31,7 @@
 #define EGL_RFM69_REG_OOK_PEAK              (0x1B)
 #define EGL_RFM69_REG_OOK_AVG               (0x1C)
 #define EGL_RFM69_REG_OOK_FIX               (0x1D)
+#define EGL_RFM69_REG_AFC_FEI               (0x1E)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -216,8 +217,8 @@ egl_result_t egl_rfm69_deviation_set(egl_rfm69_t *rfm, uint32_t deviation);
 egl_result_t egl_rfm69_deviation_get(egl_rfm69_t *rfm, uint32_t *deviation);
 egl_result_t egl_rfm69_frequency_set(egl_rfm69_t *rfm, uint32_t frequency);
 egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency);
-egl_result_t egl_rfm_rc_calib_start(egl_rfm69_t *rfm);
-egl_result_t egl_rfm_rc_calib_state_get(egl_rfm69_t *rfm, egl_rfm69_rc_calib_state_t *state);
+egl_result_t egl_rfm69_rc_calib_start(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_rc_calib_state_get(egl_rfm69_t *rfm, egl_rfm69_rc_calib_state_t *state);
 egl_result_t egl_rfm69_afc_routine_set(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t routine);
 egl_result_t egl_rfm69_afc_routine_get(egl_rfm69_t *rfm, egl_rfm69_afc_routine_t *routine);
 egl_result_t egl_rfm69_listen_end_set(egl_rfm69_t *rfm, egl_rfm69_listen_end_t end_action);
@@ -273,5 +274,15 @@ egl_result_t egl_rfm69_ook_thresh_avg_filt_set(egl_rfm69_t *rfm, egl_rfm69_ook_t
 egl_result_t egl_rfm69_ook_thresh_avg_filt_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_avg_filt_t *filt);
 egl_result_t egl_rfm69_ook_thresh_fixed_set(egl_rfm69_t *rfm, uint8_t db);
 egl_result_t egl_rfm69_ook_thresh_fixed_get(egl_rfm69_t *rfm, uint8_t *db);
+egl_result_t egl_rfm69_afc_start(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_afc_clear(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_afc_auto_start_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_afc_auto_start_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_afc_auto_clear_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_afc_auto_clear_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_afc_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_fei_start(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_fei_state_get(egl_rfm69_t *rfm, bool *state);
+
 
 #endif
