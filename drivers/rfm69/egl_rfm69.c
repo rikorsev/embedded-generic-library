@@ -1516,3 +1516,21 @@ egl_result_t egl_rfm69_flags_get(egl_rfm69_t *rfm, egl_rfm69_irq_flags_t *flags)
 {
     return egl_rfm69_read_burst(rfm, EGL_RFM69_REG_IRQ_FALGS1, &flags->raw, sizeof(*flags));
 }
+
+egl_result_t egl_rfm69_rssi_thresh_set(egl_rfm69_t *rfm, int8_t db)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_RSSI_THRESH, (uint8_t)(-db * 2));
+}
+
+egl_result_t egl_rfm69_rssi_thresh_get(egl_rfm69_t *rfm, int8_t *db)
+{
+    egl_result_t result;
+    uint8_t raw;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_THRESH, &raw);
+    EGL_RESULT_CHECK(result);
+
+    *db = -((int8_t)(raw / 2));
+
+    return result;
+}

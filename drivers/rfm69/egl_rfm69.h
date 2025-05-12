@@ -42,6 +42,7 @@
 #define EGL_RFM69_REG_DIO_MAP2              (0x26)
 #define EGL_RFM69_REG_IRQ_FALGS1            (0x27)
 #define EGL_RFM69_REG_IRQ_FLAGS2            (0x28)
+#define EGL_RFM69_REG_RSSI_THRESH           (0x29)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -357,6 +358,9 @@ egl_result_t egl_rfm69_dio5_mode_get(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t *mod
 egl_result_t egl_rfm69_clk_out_set(egl_rfm69_t *rfm, egl_rfm69_clk_out_t out);
 egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out);
 egl_result_t egl_rfm69_flags_get(egl_rfm69_t *rfm, egl_rfm69_irq_flags_t *flags);
+egl_result_t egl_rfm69_rssi_thresh_set(egl_rfm69_t *rfm, int8_t db);
+egl_result_t egl_rfm69_rssi_thresh_get(egl_rfm69_t *rfm, int8_t *db);
+
 
 
 #endif
