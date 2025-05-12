@@ -1534,3 +1534,24 @@ egl_result_t egl_rfm69_rssi_thresh_get(egl_rfm69_t *rfm, int8_t *db)
 
     return result;
 }
+
+egl_result_t egl_rfm69_timeout_rx_start_set(egl_rfm69_t *rfm, uint8_t tout)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TIMEOUT1, tout);
+}
+
+egl_result_t egl_rfm69_timeout_rx_start_get(egl_rfm69_t *rfm, uint8_t *tout)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TIMEOUT1, tout);
+}
+
+egl_result_t egl_rfm69_timeout_rssi_thresh_set(egl_rfm69_t *rfm, uint8_t tout)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TIMEOUT2, tout);
+}
+
+egl_result_t egl_rfm69_timeout_rssi_thresh_get(egl_rfm69_t *rfm, uint8_t *tout)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TIMEOUT2, tout);
+}
+

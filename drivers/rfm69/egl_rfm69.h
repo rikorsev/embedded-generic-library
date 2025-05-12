@@ -43,6 +43,8 @@
 #define EGL_RFM69_REG_IRQ_FALGS1            (0x27)
 #define EGL_RFM69_REG_IRQ_FLAGS2            (0x28)
 #define EGL_RFM69_REG_RSSI_THRESH           (0x29)
+#define EGL_RFM69_REG_TIMEOUT1              (0x2A)
+#define EGL_RFM69_REG_TIMEOUT2              (0x2B)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -360,7 +362,9 @@ egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out);
 egl_result_t egl_rfm69_flags_get(egl_rfm69_t *rfm, egl_rfm69_irq_flags_t *flags);
 egl_result_t egl_rfm69_rssi_thresh_set(egl_rfm69_t *rfm, int8_t db);
 egl_result_t egl_rfm69_rssi_thresh_get(egl_rfm69_t *rfm, int8_t *db);
-
-
+egl_result_t egl_rfm69_timeout_rx_start_set(egl_rfm69_t *rfm, uint8_t tout);
+egl_result_t egl_rfm69_timeout_rx_start_get(egl_rfm69_t *rfm, uint8_t *tout);
+egl_result_t egl_rfm69_timeout_rssi_thresh_set(egl_rfm69_t *rfm, uint8_t tout);
+egl_result_t egl_rfm69_timeout_rssi_thresh_get(egl_rfm69_t *rfm, uint8_t *tout);
 
 #endif
