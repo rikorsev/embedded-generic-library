@@ -48,6 +48,14 @@
 #define EGL_RFM69_REG_PREAMBLE_MSB          (0x2C)
 #define EGL_RFM69_REG_PREAMBLE_LSB          (0x2D)
 #define EGL_RFM69_REG_SYNC_CONFIG           (0x2E)
+#define EGL_RFM69_REG_SYNC_VALUE1           (0x2F)
+#define EGL_RFM69_REG_SYNC_VALUE2           (0x30)
+#define EGL_RFM69_REG_SYNC_VALUE3           (0x31)
+#define EGL_RFM69_REG_SYNC_VALUE4           (0x32)
+#define EGL_RFM69_REG_SYNC_VALUE5           (0x33)
+#define EGL_RFM69_REG_SYNC_VALUE6           (0x34)
+#define EGL_RFM69_REG_SYNC_VALUE7           (0x35)
+#define EGL_RFM69_REG_SYNC_VALUE8           (0x36)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -55,6 +63,8 @@
 #define EGL_RFM69_MAX_OCP_MA                (120)
 #define EGL_RFM69_MIN_OCP_MA                (45)
 #define EGL_RFM69_OCP_STEP                  (5)
+
+#define EGL_RFM69_SYNC_MAX_SIZE             (8)
 
 typedef enum
 {
@@ -385,5 +395,7 @@ egl_result_t egl_rfm69_fifo_fill_cond_set(egl_rfm69_t *rfm, egl_rfm69_fifo_fill_
 egl_result_t egl_rfm69_fifo_fill_cond_get(egl_rfm69_t *rfm, egl_rfm69_fifo_fill_cont_t *cond);
 egl_result_t egl_rfm69_sync_state_set(egl_rfm69_t *rfm, bool state);
 egl_result_t egl_rfm69_sync_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_sync_set(egl_rfm69_t *rfm, uint8_t *sync, uint8_t size);
+egl_result_t egl_rfm69_sync_get(egl_rfm69_t *rfm, uint8_t *sync, uint8_t *size);
 
 #endif

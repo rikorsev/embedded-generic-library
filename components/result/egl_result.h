@@ -23,6 +23,7 @@ typedef enum
     EGL_INVALID_STATE,     /// The instance is in invalid state
     EGL_ASSERT_FAIL,       /// Assertion fail
     EGL_TIMEOUT,           /// Operation timeout
+    EGL_NULL_POINTER,      /// NULL pointer fail
 
     EGL_LAST
 }egl_result_t;

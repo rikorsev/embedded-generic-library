@@ -1693,3 +1693,26 @@ egl_result_t egl_rfm69_sync_state_get(egl_rfm69_t *rfm, bool *state)
 
     return result;
 }
+
+egl_result_t egl_rfm69_sync_set(egl_rfm69_t *rfm, uint8_t *sync, uint8_t size)
+{
+    egl_result_t result;
+
+    EGL_ASSERT_CHECK(size <= 8, EGL_OUT_OF_BOUNDARY);
+    EGL_ASSERT_CHECK(sync != NULL, EGL_NULL_POINTER);
+
+    result = egl_rfm69_sync_size_set(rfm, size);
+    EGL_RESULT_CHECK(result);
+
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_SYNC_VALUE1, sync, size);
+}
+
+egl_result_t egl_rfm69_sync_get(egl_rfm69_t *rfm, uint8_t *sync, uint8_t *size)
+{
+    egl_result_t result;
+
+    result = egl_rfm69_sync_size_get(rfm, size);
+    EGL_RESULT_CHECK(result);
+
+    return egl_rfm69_read_burst(rfm, EGL_RFM69_REG_SYNC_VALUE1, sync, *size);
+}
