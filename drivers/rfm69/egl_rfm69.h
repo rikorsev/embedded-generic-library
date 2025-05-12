@@ -47,6 +47,7 @@
 #define EGL_RFM69_REG_TIMEOUT2              (0x2B)
 #define EGL_RFM69_REG_PREAMBLE_MSB          (0x2C)
 #define EGL_RFM69_REG_PREAMBLE_LSB          (0x2D)
+#define EGL_RFM69_REG_SYNC_CONFIG           (0x2E)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -220,6 +221,12 @@ typedef enum
     EGL_RFM69_CLK_OUT_OFF
 }egl_rfm69_clk_out_t;
 
+typedef enum
+{
+    EGL_RFM69_FIFO_FILL_COND_SYNC_ADDR_IRQ,
+    EGL_RFM69_FIFO_FILL_COND_AS_LONG_AS_SET
+}egl_rfm69_fifo_fill_cont_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -370,5 +377,13 @@ egl_result_t egl_rfm69_timeout_rssi_thresh_set(egl_rfm69_t *rfm, uint8_t tout);
 egl_result_t egl_rfm69_timeout_rssi_thresh_get(egl_rfm69_t *rfm, uint8_t *tout);
 egl_result_t egl_rfm69_preamble_set(egl_rfm69_t *rfm, uint16_t len);
 egl_result_t egl_rfm69_preamble_get(egl_rfm69_t *rfm, uint16_t *len);
+egl_result_t egl_rfm69_sync_tol_set(egl_rfm69_t *rfm, uint8_t tol);
+egl_result_t egl_rfm69_sync_tol_get(egl_rfm69_t *rfm, uint8_t *tol);
+egl_result_t egl_rfm69_sync_size_set(egl_rfm69_t *rfm, uint8_t size);
+egl_result_t egl_rfm69_sync_size_get(egl_rfm69_t *rfm, uint8_t *size);
+egl_result_t egl_rfm69_fifo_fill_cond_set(egl_rfm69_t *rfm, egl_rfm69_fifo_fill_cont_t cond);
+egl_result_t egl_rfm69_fifo_fill_cond_get(egl_rfm69_t *rfm, egl_rfm69_fifo_fill_cont_t *cond);
+egl_result_t egl_rfm69_sync_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_sync_state_get(egl_rfm69_t *rfm, bool *state);
 
 #endif

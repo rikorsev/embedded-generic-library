@@ -167,6 +167,18 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_dio_map2_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t sync_tol : 3;
+        uint8_t sync_size : 3;
+        uint8_t fifo_fill_condition : 1;
+        uint8_t sync_on : 1;
+    }bitfield;
+}egl_rfm69_reg_sync_config_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -1570,6 +1582,114 @@ egl_result_t egl_rfm69_preamble_get(egl_rfm69_t *rfm, uint16_t *len)
     EGL_RESULT_CHECK(result);
 
     *len = egl_swap16(regval);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_sync_tol_set(egl_rfm69_t *rfm, uint8_t tol)
+{
+    EGL_ASSERT_CHECK(tol < 8, EGL_OUT_OF_BOUNDARY);
+    
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sync_tol = tol;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm69_sync_tol_get(egl_rfm69_t *rfm, uint8_t *tol)
+{
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *tol = regval.bitfield.sync_tol;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_sync_size_set(egl_rfm69_t *rfm, uint8_t size)
+{
+    EGL_ASSERT_CHECK(size <= 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sync_size = size - 1;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm69_sync_size_get(egl_rfm69_t *rfm, uint8_t *size)
+{
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *size = regval.bitfield.sync_size + 1;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_fifo_fill_cond_set(egl_rfm69_t *rfm, egl_rfm69_fifo_fill_cont_t cond)
+{
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.fifo_fill_condition = cond;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm69_fifo_fill_cond_get(egl_rfm69_t *rfm, egl_rfm69_fifo_fill_cont_t *cond)
+{
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *cond = regval.bitfield.fifo_fill_condition;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_sync_state_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sync_on = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm69_sync_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_sync_config_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.sync_on;
 
     return result;
 }
