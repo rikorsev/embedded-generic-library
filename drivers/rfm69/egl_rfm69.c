@@ -1555,3 +1555,21 @@ egl_result_t egl_rfm69_timeout_rssi_thresh_get(egl_rfm69_t *rfm, uint8_t *tout)
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TIMEOUT2, tout);
 }
 
+egl_result_t egl_rfm69_preamble_set(egl_rfm69_t *rfm, uint16_t len)
+{
+    uint16_t regval = egl_swap16(len);
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_PREAMBLE_MSB, (uint8_t *)&regval, sizeof(regval));
+}
+
+egl_result_t egl_rfm69_preamble_get(egl_rfm69_t *rfm, uint16_t *len)
+{
+    egl_result_t result;
+    uint16_t regval;
+
+    result = egl_rfm69_read_burst(rfm, EGL_RFM69_REG_PREAMBLE_MSB, &regval, sizeof(regval));
+    EGL_RESULT_CHECK(result);
+
+    *len = egl_swap16(regval);
+
+    return result;
+}

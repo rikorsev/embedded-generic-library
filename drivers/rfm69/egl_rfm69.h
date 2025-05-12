@@ -45,6 +45,8 @@
 #define EGL_RFM69_REG_RSSI_THRESH           (0x29)
 #define EGL_RFM69_REG_TIMEOUT1              (0x2A)
 #define EGL_RFM69_REG_TIMEOUT2              (0x2B)
+#define EGL_RFM69_REG_PREAMBLE_MSB          (0x2C)
+#define EGL_RFM69_REG_PREAMBLE_LSB          (0x2D)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -366,5 +368,7 @@ egl_result_t egl_rfm69_timeout_rx_start_set(egl_rfm69_t *rfm, uint8_t tout);
 egl_result_t egl_rfm69_timeout_rx_start_get(egl_rfm69_t *rfm, uint8_t *tout);
 egl_result_t egl_rfm69_timeout_rssi_thresh_set(egl_rfm69_t *rfm, uint8_t tout);
 egl_result_t egl_rfm69_timeout_rssi_thresh_get(egl_rfm69_t *rfm, uint8_t *tout);
+egl_result_t egl_rfm69_preamble_set(egl_rfm69_t *rfm, uint16_t len);
+egl_result_t egl_rfm69_preamble_get(egl_rfm69_t *rfm, uint16_t *len);
 
 #endif
