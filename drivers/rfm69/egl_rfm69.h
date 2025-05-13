@@ -56,6 +56,7 @@
 #define EGL_RFM69_REG_SYNC_VALUE6           (0x34)
 #define EGL_RFM69_REG_SYNC_VALUE7           (0x35)
 #define EGL_RFM69_REG_SYNC_VALUE8           (0x36)
+#define EGL_RFM69_REG_PACKET_CONFIG1        (0x37)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -237,6 +238,26 @@ typedef enum
     EGL_RFM69_FIFO_FILL_COND_AS_LONG_AS_SET
 }egl_rfm69_fifo_fill_cont_t;
 
+typedef enum
+{
+    EGL_RFM69_ADDRESS_FILTERING_NONE,
+    EGL_RFM69_ADDRESS_FILTERING_NODE,
+    EGL_RFM69_ADDRESS_GILTERING_NODE_AND_BROADCAST
+}egl_rfm69_address_filtering_t;
+
+typedef enum
+{
+    EGL_RFM69_DC_FREE_NONE,
+    EGL_RFM69_DC_FREE_MANCHESTER,
+    EGL_RFM69_DC_FREE_WHITENING
+}egl_rfm69_dc_free_t;
+
+typedef enum
+{
+    EGL_RFM69_PACKET_FORMAT_FIXED_LENGTH,
+    EGL_RFM69_PACKET_FORMAT_VARIABLE_LENGTH
+}egl_rfm69_packet_format_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -397,5 +418,15 @@ egl_result_t egl_rfm69_sync_state_set(egl_rfm69_t *rfm, bool state);
 egl_result_t egl_rfm69_sync_state_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_sync_set(egl_rfm69_t *rfm, uint8_t *sync, uint8_t size);
 egl_result_t egl_rfm69_sync_get(egl_rfm69_t *rfm, uint8_t *sync, uint8_t *size);
+egl_result_t egl_rfm69_address_filtering_set(egl_rfm69_t *rfm, egl_rfm69_address_filtering_t filtering);
+egl_result_t egl_rfm69_address_filtering_get(egl_rfm69_t *rfm, egl_rfm69_address_filtering_t *filtering);
+egl_result_t egl_rfm69_crc_auto_clear_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_crc_auto_clear_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_crc_check_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_crc_check_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_dc_free_set(egl_rfm69_t *rfm, egl_rfm69_dc_free_t type);
+egl_result_t egl_rfm69_dc_free_get(egl_rfm69_t *rfm, egl_rfm69_dc_free_t *type);
+egl_result_t egl_rfm69_packet_format_set(egl_rfm69_t *rfm, egl_rfm69_packet_format_t format);
+egl_result_t egl_rfm69_packet_format_get(egl_rfm69_t *rfm, egl_rfm69_packet_format_t *format);
 
 #endif

@@ -179,6 +179,20 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_sync_config_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 1;
+        uint8_t address_filtering : 2;
+        uint8_t crc_auto_clear_off : 1;
+        uint8_t crc_on : 1;
+        uint8_t dc_free : 2;
+        uint8_t packet_format : 1;
+    }bitfield;
+}egl_rfm69_reg_packet_config1_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -1715,4 +1729,134 @@ egl_result_t egl_rfm69_sync_get(egl_rfm69_t *rfm, uint8_t *sync, uint8_t *size)
     EGL_RESULT_CHECK(result);
 
     return egl_rfm69_read_burst(rfm, EGL_RFM69_REG_SYNC_VALUE1, sync, *size);
+}
+
+egl_result_t egl_rfm69_address_filtering_set(egl_rfm69_t *rfm, egl_rfm69_address_filtering_t filtering)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.address_filtering = filtering;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm69_address_filtering_get(egl_rfm69_t *rfm, egl_rfm69_address_filtering_t *filtering)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *filtering = regval.bitfield.address_filtering;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_crc_auto_clear_state_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.crc_auto_clear_off = !state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm69_crc_auto_clear_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = !regval.bitfield.crc_auto_clear_off;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_crc_check_state_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.crc_on = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm69_crc_check_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.crc_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_dc_free_set(egl_rfm69_t *rfm, egl_rfm69_dc_free_t type)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dc_free = type;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm69_dc_free_get(egl_rfm69_t *rfm, egl_rfm69_dc_free_t *type)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *type = regval.bitfield.dc_free;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_packet_format_set(egl_rfm69_t *rfm, egl_rfm69_packet_format_t format)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.packet_format = format;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm69_packet_format_get(egl_rfm69_t *rfm, egl_rfm69_packet_format_t *format)
+{
+    egl_result_t result;
+    egl_rfm69_reg_packet_config1_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PACKET_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *format = regval.bitfield.packet_format;
+
+    return result;
 }
