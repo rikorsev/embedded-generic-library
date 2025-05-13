@@ -60,6 +60,7 @@
 #define EGL_RFM69_REG_PAYLOAD_LENGTH        (0x38)
 #define EGL_RFM69_REG_NODE_ADDRESS          (0x39)
 #define EGL_RFM69_REG_BROADCAST_ADDRESS     (0x3A)
+#define EGL_RFM69_REG_AUTO_MODES            (0x3B)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -261,6 +262,38 @@ typedef enum
     EGL_RFM69_PACKET_FORMAT_VARIABLE_LENGTH
 }egl_rfm69_packet_format_t;
 
+typedef enum
+{
+    EGL_RFM69_INTERMEDIATE_MODE_SLEEP,
+    EGL_RFM69_INTERMEDIATE_MODE_STDBY,
+    EGL_RFM69_INTERMEDIATE_MODE_RX,
+    EGL_RFM69_INTERMEDIATE_MODE_TX
+}egl_rfm69_intermediate_mode_t;
+
+typedef enum
+{
+    EGL_RFM69_EXIT_CONDITION_NONE,
+    EGL_RFM69_EXIT_CONDITION_FALL_EDGE_FIFO_NOT_EMPTY,
+    EGL_RFM69_EXIT_CONDITION_RISE_EDGE_FIFO_LEVEL,
+    EGL_RFM69_EXIT_CONDITION_RISE_EDGE_CRC_OK,
+    EGL_RFM69_EXIT_CONDITION_RISE_EDGE_PAYLOAD_READY,
+    EGL_RFM69_EXIT_CONDITION_RISE_EDGE_SYNC_ADDRESS,
+    EGL_RFM69_EXIT_CONDITION_RISE_EDGE_PACKET_SENT,
+    EGL_RFM69_EXIT_CONDITION_RISE_TIMEOUT
+}egl_rfm69_exit_condition_t;
+
+typedef enum
+{
+    EGL_RFM69_ENTER_CONDITION_NONE,
+    EGL_RFM69_ENTER_CONDITION_RISE_EDGE_FIFO_NOT_EMPTY,
+    EGL_RFM69_ENTER_CONDITION_RISE_EDGE_FIFO_LEVEL,
+    EGL_RFM69_ENTER_CONDITION_RISE_CRC_OK,
+    EGL_RFM69_ENTER_CONDITION_PAYLOAD_READY,
+    EGL_RFM69_ENTER_CONDITION_SYNC_ADDRESS,
+    EGL_RFM69_ENTER_CONDITION_PACKET_SENT,
+    EGL_RFM69_ENTER_CONDITION_FAL_EDGE_FIFO_NOT_EMPTY
+}egl_rfm69_enter_condition_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -437,5 +470,11 @@ egl_result_t egl_rfm69_node_address_set(egl_rfm69_t *rfm, uint8_t addr);
 egl_result_t egl_rfm69_node_address_get(egl_rfm69_t *rfm, uint8_t *addr);
 egl_result_t egl_rfm69_broadcast_address_set(egl_rfm69_t *rfm, uint8_t addr);
 egl_result_t egl_rfm69_broadcast_address_get(egl_rfm69_t *rfm, uint8_t *addr);
+egl_result_t egl_rfm69_intermediate_mode_set(egl_rfm69_t *rfm, egl_rfm69_intermediate_mode_t mode);
+egl_result_t egl_rfm69_intermediate_mode_get(egl_rfm69_t *rfm, egl_rfm69_intermediate_mode_t *mode);
+egl_result_t egl_rfm69_exit_condition_set(egl_rfm69_t *rfm, egl_rfm69_exit_condition_t cond);
+egl_result_t egl_rfm69_exit_condition_get(egl_rfm69_t *rfm, egl_rfm69_exit_condition_t *cond);
+egl_result_t egl_rfm69_enter_condition_set(egl_rfm69_t *rfm, egl_rfm69_enter_condition_t cond);
+egl_result_t egl_rfm69_enter_condition_get(egl_rfm69_t *rfm, egl_rfm69_enter_condition_t *cond);
 
 #endif

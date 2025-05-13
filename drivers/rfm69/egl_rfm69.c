@@ -193,6 +193,17 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_packet_config1_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t intermediate_mode : 2;
+        uint8_t exit_condition : 3;
+        uint8_t enter_condition : 3;
+    }bitfield;
+}egl_rfm69_reg_auto_modes_t;
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -1889,4 +1900,82 @@ egl_result_t egl_rfm69_broadcast_address_set(egl_rfm69_t *rfm, uint8_t addr)
 egl_result_t egl_rfm69_broadcast_address_get(egl_rfm69_t *rfm, uint8_t *addr)
 {
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_BROADCAST_ADDRESS, addr);
+}
+
+egl_result_t egl_rfm69_intermediate_mode_set(egl_rfm69_t *rfm, egl_rfm69_intermediate_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_auto_modes_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AUTO_MODES, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.intermediate_mode = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AUTO_MODES, regval.raw);
+}
+
+egl_result_t egl_rfm69_intermediate_mode_get(egl_rfm69_t *rfm, egl_rfm69_intermediate_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm69_reg_auto_modes_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AUTO_MODES, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.intermediate_mode;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_exit_condition_set(egl_rfm69_t *rfm, egl_rfm69_exit_condition_t cond)
+{
+    egl_result_t result;
+    egl_rfm69_reg_auto_modes_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AUTO_MODES, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.exit_condition = cond;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AUTO_MODES, regval.raw);
+}
+
+egl_result_t egl_rfm69_exit_condition_get(egl_rfm69_t *rfm, egl_rfm69_exit_condition_t *cond)
+{
+    egl_result_t result;
+    egl_rfm69_reg_auto_modes_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AUTO_MODES, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *cond = regval.bitfield.exit_condition;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_enter_condition_set(egl_rfm69_t *rfm, egl_rfm69_enter_condition_t cond)
+{
+    egl_result_t result;
+    egl_rfm69_reg_auto_modes_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AUTO_MODES, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.enter_condition = cond;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_AUTO_MODES, regval.raw);
+}
+
+egl_result_t egl_rfm69_enter_condition_get(egl_rfm69_t *rfm, egl_rfm69_enter_condition_t *cond)
+{
+    egl_result_t result;
+    egl_rfm69_reg_auto_modes_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AUTO_MODES, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *cond = regval.bitfield.enter_condition;
+
+    return result;
 }
