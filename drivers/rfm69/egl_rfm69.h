@@ -57,6 +57,9 @@
 #define EGL_RFM69_REG_SYNC_VALUE7           (0x35)
 #define EGL_RFM69_REG_SYNC_VALUE8           (0x36)
 #define EGL_RFM69_REG_PACKET_CONFIG1        (0x37)
+#define EGL_RFM69_REG_PAYLOAD_LENGTH        (0x38)
+#define EGL_RFM69_REG_NODE_ADDRESS          (0x39)
+#define EGL_RFM69_REG_BROADCAST_ADDRESS     (0x3A)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -428,5 +431,11 @@ egl_result_t egl_rfm69_dc_free_set(egl_rfm69_t *rfm, egl_rfm69_dc_free_t type);
 egl_result_t egl_rfm69_dc_free_get(egl_rfm69_t *rfm, egl_rfm69_dc_free_t *type);
 egl_result_t egl_rfm69_packet_format_set(egl_rfm69_t *rfm, egl_rfm69_packet_format_t format);
 egl_result_t egl_rfm69_packet_format_get(egl_rfm69_t *rfm, egl_rfm69_packet_format_t *format);
+egl_result_t egl_rfm69_payload_length_set(egl_rfm69_t *rfm, uint8_t len);
+egl_result_t egl_rfm69_payload_length_get(egl_rfm69_t *rfm, uint8_t *len);
+egl_result_t egl_rfm69_node_address_set(egl_rfm69_t *rfm, uint8_t addr);
+egl_result_t egl_rfm69_node_address_get(egl_rfm69_t *rfm, uint8_t *addr);
+egl_result_t egl_rfm69_broadcast_address_set(egl_rfm69_t *rfm, uint8_t addr);
+egl_result_t egl_rfm69_broadcast_address_get(egl_rfm69_t *rfm, uint8_t *addr);
 
 #endif

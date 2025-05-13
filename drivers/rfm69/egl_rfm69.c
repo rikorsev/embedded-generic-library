@@ -1860,3 +1860,33 @@ egl_result_t egl_rfm69_packet_format_get(egl_rfm69_t *rfm, egl_rfm69_packet_form
 
     return result;
 }
+
+egl_result_t egl_rfm69_payload_length_set(egl_rfm69_t *rfm, uint8_t len)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PAYLOAD_LENGTH, len);
+}
+
+egl_result_t egl_rfm69_payload_length_get(egl_rfm69_t *rfm, uint8_t *len)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PAYLOAD_LENGTH, len);
+}
+
+egl_result_t egl_rfm69_node_address_set(egl_rfm69_t *rfm, uint8_t addr)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_NODE_ADDRESS, addr);
+}
+
+egl_result_t egl_rfm69_node_address_get(egl_rfm69_t *rfm, uint8_t *addr)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_NODE_ADDRESS, addr);
+}
+
+egl_result_t egl_rfm69_broadcast_address_set(egl_rfm69_t *rfm, uint8_t addr)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_BROADCAST_ADDRESS, addr);
+}
+
+egl_result_t egl_rfm69_broadcast_address_get(egl_rfm69_t *rfm, uint8_t *addr)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_BROADCAST_ADDRESS, addr);
+}
