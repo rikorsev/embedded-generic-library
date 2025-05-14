@@ -62,17 +62,16 @@
 #define EGL_RFM69_REG_BROADCAST_ADDRESS     (0x3A)
 #define EGL_RFM69_REG_AUTO_MODES            (0x3B)
 #define EGL_RFM69_REG_FIFO_THRESH           (0x3C)
+#define EGL_RFM69_REG_PACKET_CONFIG2        (0x3D)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
-
 #define EGL_RFM69_MAX_OCP_MA                (120)
 #define EGL_RFM69_MIN_OCP_MA                (45)
 #define EGL_RFM69_OCP_STEP                  (5)
-
 #define EGL_RFM69_SYNC_MAX_SIZE             (8)
-
 #define EGL_RFM69_FIFO_THRESH_MAX           (127)
+#define EGL_RFM69_INTERPACKET_DELAY_MAX     (15)
 
 typedef enum
 {
@@ -489,5 +488,12 @@ egl_result_t egl_rfm69_fifo_thresh_set(egl_rfm69_t *rfm, uint8_t thresh);
 egl_result_t egl_rfm69_fifo_thresh_get(egl_rfm69_t *rfm, uint8_t *thresh);
 egl_result_t egl_rfm69_tx_start_cond_set(egl_rfm69_t *rfm, egl_rfm69_tx_start_cond_t cond);
 egl_result_t egl_rfm69_tx_start_cond_get(egl_rfm69_t *rfm, egl_rfm69_tx_start_cond_t *cond);
+egl_result_t egl_rfm69_aes_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_aes_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_auto_rx_restart_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_auto_rx_restart_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_rx_restart(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_interpacket_delay_set(egl_rfm69_t *rfm, uint8_t delay);
+egl_result_t egl_rfm69_interpacket_delay_get(egl_rfm69_t *rfm, uint8_t *delay);
 
 #endif
