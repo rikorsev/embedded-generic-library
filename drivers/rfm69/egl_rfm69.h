@@ -61,6 +61,7 @@
 #define EGL_RFM69_REG_NODE_ADDRESS          (0x39)
 #define EGL_RFM69_REG_BROADCAST_ADDRESS     (0x3A)
 #define EGL_RFM69_REG_AUTO_MODES            (0x3B)
+#define EGL_RFM69_REG_FIFO_THRESH           (0x3C)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -70,6 +71,8 @@
 #define EGL_RFM69_OCP_STEP                  (5)
 
 #define EGL_RFM69_SYNC_MAX_SIZE             (8)
+
+#define EGL_RFM69_FIFO_THRESH_MAX           (127)
 
 typedef enum
 {
@@ -294,6 +297,12 @@ typedef enum
     EGL_RFM69_ENTER_CONDITION_FAL_EDGE_FIFO_NOT_EMPTY
 }egl_rfm69_enter_condition_t;
 
+typedef enum
+{
+    EGL_RFM69_TX_START_CONDITION_FIFO_LEVEL,
+    EGL_RFM69_TX_START_CONDITION_FIFO_NOT_EMPTY
+}egl_rfm69_tx_start_cond_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -476,5 +485,9 @@ egl_result_t egl_rfm69_exit_condition_set(egl_rfm69_t *rfm, egl_rfm69_exit_condi
 egl_result_t egl_rfm69_exit_condition_get(egl_rfm69_t *rfm, egl_rfm69_exit_condition_t *cond);
 egl_result_t egl_rfm69_enter_condition_set(egl_rfm69_t *rfm, egl_rfm69_enter_condition_t cond);
 egl_result_t egl_rfm69_enter_condition_get(egl_rfm69_t *rfm, egl_rfm69_enter_condition_t *cond);
+egl_result_t egl_rfm69_fifo_thresh_set(egl_rfm69_t *rfm, uint8_t thresh);
+egl_result_t egl_rfm69_fifo_thresh_get(egl_rfm69_t *rfm, uint8_t *thresh);
+egl_result_t egl_rfm69_tx_start_cond_set(egl_rfm69_t *rfm, egl_rfm69_tx_start_cond_t cond);
+egl_result_t egl_rfm69_tx_start_cond_get(egl_rfm69_t *rfm, egl_rfm69_tx_start_cond_t *cond);
 
 #endif
