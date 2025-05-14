@@ -2149,3 +2149,11 @@ egl_result_t egl_rfm69_interpacket_delay_get(egl_rfm69_t *rfm, uint8_t *delay)
 
     return result;
 }
+
+egl_result_t egl_rfm69_aes_key_set(egl_rfm69_t *rfm, uint8_t *key, size_t size)
+{
+    EGL_ASSERT_CHECK(size == EGL_RFM69_AES_KEY_SIZE, EGL_INVALID_PARAM);
+    EGL_ASSERT_CHECK(key != NULL, EGL_NULL_POINTER);
+
+    return egl_rfm69_write_burst(rfm, EGL_RFM69_REG_AES_KEY1, key, size);
+}

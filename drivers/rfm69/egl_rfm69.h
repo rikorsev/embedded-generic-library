@@ -63,6 +63,22 @@
 #define EGL_RFM69_REG_AUTO_MODES            (0x3B)
 #define EGL_RFM69_REG_FIFO_THRESH           (0x3C)
 #define EGL_RFM69_REG_PACKET_CONFIG2        (0x3D)
+#define EGL_RFM69_REG_AES_KEY1              (0x3E)
+#define EGL_RFM69_REG_AES_KEY2              (0x3F)
+#define EGL_RFM69_REG_AES_KEY3              (0x40)
+#define EGL_RFM69_REG_AES_KEY4              (0x41)
+#define EGL_RFM69_REG_AES_KEY5              (0x42)
+#define EGL_RFM69_REG_AES_KEY6              (0x43)
+#define EGL_RFM69_REG_AES_KEY7              (0x44)
+#define EGL_RFM69_REG_AES_KEY8              (0x45)
+#define EGL_RFM69_REG_AES_KEY9              (0x46)
+#define EGL_RFM69_REG_AES_KEY10             (0x47)
+#define EGL_RFM69_REG_AES_KEY11             (0x48)
+#define EGL_RFM69_REG_AES_KEY12             (0x49)
+#define EGL_RFM69_REG_AES_KEY13             (0x4A)
+#define EGL_RFM69_REG_AES_KEY14             (0x4B)
+#define EGL_RFM69_REG_AES_KEY15             (0x4C)
+#define EGL_RFM69_REG_AES_KEY16             (0x4D)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -72,6 +88,7 @@
 #define EGL_RFM69_SYNC_MAX_SIZE             (8)
 #define EGL_RFM69_FIFO_THRESH_MAX           (127)
 #define EGL_RFM69_INTERPACKET_DELAY_MAX     (15)
+#define EGL_RFM69_AES_KEY_SIZE              (16)
 
 typedef enum
 {
@@ -495,5 +512,6 @@ egl_result_t egl_rfm69_auto_rx_restart_state_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_rx_restart(egl_rfm69_t *rfm);
 egl_result_t egl_rfm69_interpacket_delay_set(egl_rfm69_t *rfm, uint8_t delay);
 egl_result_t egl_rfm69_interpacket_delay_get(egl_rfm69_t *rfm, uint8_t *delay);
+egl_result_t egl_rfm69_aes_key_set(egl_rfm69_t *rfm, uint8_t *key, size_t size);
 
 #endif
