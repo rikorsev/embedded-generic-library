@@ -79,6 +79,8 @@
 #define EGL_RFM69_REG_AES_KEY14             (0x4B)
 #define EGL_RFM69_REG_AES_KEY15             (0x4C)
 #define EGL_RFM69_REG_AES_KEY16             (0x4D)
+#define EGL_RFM69_REG_TEMP1                 (0x4E)
+#define EGL_RFM69_REG_TEMP2                 (0x4F)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -513,5 +515,8 @@ egl_result_t egl_rfm69_rx_restart(egl_rfm69_t *rfm);
 egl_result_t egl_rfm69_interpacket_delay_set(egl_rfm69_t *rfm, uint8_t delay);
 egl_result_t egl_rfm69_interpacket_delay_get(egl_rfm69_t *rfm, uint8_t *delay);
 egl_result_t egl_rfm69_aes_key_set(egl_rfm69_t *rfm, uint8_t *key, size_t size);
+egl_result_t egl_rfm69_temp_meas_start(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_temp_meas_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_temp_get(egl_rfm69_t *rfm, int8_t *temp);
 
 #endif
