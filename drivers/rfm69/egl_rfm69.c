@@ -7,7 +7,8 @@
 #define EGL_RFM69_MODE_SHIFT                (2U)
 #define EGL_RFM69_AFC_OFFSET_COEF           (488U)
 
-typedef union __attribute__((packed, aligned(1)))
+#pragma pack(push, 1)
+typedef union
 {
     uint8_t raw;
     struct
@@ -20,7 +21,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_op_mode_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -32,7 +33,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_data_modul_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -43,7 +44,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_osc1_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -53,7 +54,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_afc_ctrl_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -66,7 +67,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_listen1_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -78,7 +79,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_pa_level_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -88,7 +89,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_ocp_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -100,7 +101,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_lna_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -111,7 +112,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_bw_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -122,7 +123,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_ook_peak_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -132,7 +133,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_ook_avg_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -147,7 +148,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_afc_fet_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -157,7 +158,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_rssi_config_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -169,7 +170,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_dio_map1_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -181,7 +182,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_dio_map2_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -193,7 +194,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_sync_config_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -207,7 +208,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_packet_config1_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -218,7 +219,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_auto_modes_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -228,7 +229,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_fifo_thresh_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -241,7 +242,7 @@ typedef union __attribute__((packed, aligned(1)))
     }bitfield;
 }egl_rfm69_reg_packet_config2_t;
 
-typedef union __attribute__((packed, aligned(1)))
+typedef union
 {
     uint8_t raw;
     struct
@@ -251,6 +252,7 @@ typedef union __attribute__((packed, aligned(1)))
         uint8_t temp_meas_start : 1;
     }bitfield;
 }egl_rfm69_reg_temp1_t;
+#pragma pack(pop)
 
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
