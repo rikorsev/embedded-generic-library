@@ -5,6 +5,7 @@
 #define EGL_RFM69_FSTEP_COEF                (524288U)
 #define EGL_RFM69_MODE_MASK                 (0x1C)
 #define EGL_RFM69_MODE_SHIFT                (2U)
+#define EGL_RFM69_AFC_OFFSET_COEF           (488U)
 
 typedef union __attribute__((packed, aligned(1)))
 {
@@ -2205,6 +2206,65 @@ egl_result_t egl_rfm69_temp_get(egl_rfm69_t *rfm, int8_t *temp)
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEMP2, &raw);
 
     *temp = (int8_t)(EGL_RFM69_TEMP_CONSTANT - raw);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_sensitivity_mode_set(egl_rfm69_t *rfm, egl_rfm69_sensitivity_mode_t mode)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TEST_LNA, (uint8_t)mode);
+}
+
+egl_result_t egl_rfm69_sensitivity_mode_get(egl_rfm69_t *rfm, egl_rfm69_sensitivity_mode_t *mode)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEST_LNA, (uint8_t *)mode);
+}
+
+egl_result_t egl_rfm69_pa1_mode_set(egl_rfm69_t *rfm, egl_rfm69_pa1_mode_t mode)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TEST_PA1, (uint8_t)mode);
+}
+
+egl_result_t egl_rfm69_pa1_mode_get(egl_rfm69_t *rfm, egl_rfm69_pa1_mode_t *mode)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEST_PA1, (uint8_t *)mode);
+}
+
+egl_result_t egl_rfm69_pa2_mode_set(egl_rfm69_t *rfm, egl_rfm69_pa2_mode_t mode)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TEST_PA2, (uint8_t)mode);
+}
+
+egl_result_t egl_rfm69_pa2_mode_get(egl_rfm69_t *rfm, egl_rfm69_pa2_mode_t *mode)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEST_PA2, (uint8_t *)mode);
+}
+
+egl_result_t egl_rfm69_dagc_mode_set(egl_rfm69_t *rfm, egl_rfm69_dagc_mode_t mode)
+{
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TEST_DAGC, (uint8_t)mode);
+}
+
+egl_result_t egl_rfm69_dagc_mode_get(egl_rfm69_t *rfm, egl_rfm69_dagc_mode_t *mode)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEST_DAGC, (uint8_t *)mode);
+}
+
+egl_result_t egl_rfm69_afc_offset_set(egl_rfm69_t *rfm, uint32_t hz)
+{
+    uint8_t regval = hz / EGL_RFM69_AFC_OFFSET_COEF;
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_TEST_AFC, regval);
+}
+
+egl_result_t egl_rfm69_afc_offset_get(egl_rfm69_t *rfm, uint32_t *hz)
+{
+    egl_result_t result;
+    uint8_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEST_AFC, &regval);
+    EGL_RESULT_CHECK(result);
+
+    *hz = regval * EGL_RFM69_AFC_OFFSET_COEF;
 
     return result;
 }

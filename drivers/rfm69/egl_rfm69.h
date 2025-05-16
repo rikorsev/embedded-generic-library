@@ -81,6 +81,11 @@
 #define EGL_RFM69_REG_AES_KEY16             (0x4D)
 #define EGL_RFM69_REG_TEMP1                 (0x4E)
 #define EGL_RFM69_REG_TEMP2                 (0x4F)
+#define EGL_RFM69_REG_TEST_LNA              (0x58)
+#define EGL_RFM69_REG_TEST_PA1              (0x5A)
+#define EGL_RFM69_REG_TEST_PA2              (0x5C)
+#define EGL_RFM69_REG_TEST_DAGC             (0x6F)
+#define EGL_RFM69_REG_TEST_AFC              (0x71)
 
 #define EGL_RFM69_MAX_POWER_DB              (13)
 #define EGL_RFM69_MIN_POWER_DB              (-18)
@@ -321,6 +326,31 @@ typedef enum
     EGL_RFM69_TX_START_CONDITION_FIFO_NOT_EMPTY
 }egl_rfm69_tx_start_cond_t;
 
+typedef enum
+{
+    EGL_RFM69_SENSITIVITY_MODE_NORMAL = 0x1B,
+    EGL_RFM69_SENSITIVITY_MODE_HIGH = 0x2D
+}egl_rfm69_sensitivity_mode_t;
+
+typedef enum
+{
+    EGL_RFM69_PA1_MODE_NORMAL = 0x55,
+    EGL_RFM69_PA1_MODE_PLUS_13_DBM = 0x5D
+}egl_rfm69_pa1_mode_t;
+
+typedef enum
+{
+    EGL_RFM69_PA2_MODE_NORMAL = 0x70,
+    EGL_RFM69_PA2_MODE_PLUS_13_DBM = 0x7C
+}egl_rfm69_pa2_mode_t;
+
+typedef enum
+{
+    EGL_RFM69_DAGC_MODE_NORMAL = 0x00,
+    EGL_RFM69_DAGC_MODE_IMPROVED_MARGIN1 = 0x20,
+    EGL_RFM69_DAGC_MODE_IMPROVED_MARGIN2 = 0x30
+}egl_rfm69_dagc_mode_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -518,5 +548,15 @@ egl_result_t egl_rfm69_aes_key_set(egl_rfm69_t *rfm, uint8_t *key, size_t size);
 egl_result_t egl_rfm69_temp_meas_start(egl_rfm69_t *rfm);
 egl_result_t egl_rfm69_temp_meas_state_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_temp_get(egl_rfm69_t *rfm, int8_t *temp);
+egl_result_t egl_rfm69_sensitivity_mode_set(egl_rfm69_t *rfm, egl_rfm69_sensitivity_mode_t mode);
+egl_result_t egl_rfm69_sensitivity_mode_get(egl_rfm69_t *rfm, egl_rfm69_sensitivity_mode_t *mode);
+egl_result_t egl_rfm69_pa1_mode_set(egl_rfm69_t *rfm, egl_rfm69_pa1_mode_t mode);
+egl_result_t egl_rfm69_pa1_mode_get(egl_rfm69_t *rfm, egl_rfm69_pa1_mode_t *mode);
+egl_result_t egl_rfm69_pa2_mode_set(egl_rfm69_t *rfm, egl_rfm69_pa2_mode_t mode);
+egl_result_t egl_rfm69_pa2_mode_get(egl_rfm69_t *rfm, egl_rfm69_pa2_mode_t *mode);
+egl_result_t egl_rfm69_dagc_mode_set(egl_rfm69_t *rfm, egl_rfm69_dagc_mode_t mode);
+egl_result_t egl_rfm69_dagc_mode_get(egl_rfm69_t *rfm, egl_rfm69_dagc_mode_t *mode);
+egl_result_t egl_rfm69_afc_offset_set(egl_rfm69_t *rfm, uint32_t hz);
+egl_result_t egl_rfm69_afc_offset_get(egl_rfm69_t *rfm, uint32_t *hz);
 
 #endif
