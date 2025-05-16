@@ -7,6 +7,7 @@
 #include "egl_interface.h"
 #include "egl_clock.h"
 
+#define EGL_RFM69_REG_FIFO                  (0x00)
 #define EGL_RFM69_REG_MODE                  (0x01)
 #define EGL_RFM69_REG_DATA_MODUL            (0x02)
 #define EGL_RFM69_REG_BITRATE_MSB           (0x03)
@@ -397,6 +398,11 @@ egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate);
 egl_result_t egl_rfm69_bitrate_set(egl_rfm69_t *rfm, uint32_t bitrate);
 egl_result_t egl_rfm69_mode_set(egl_rfm69_t *rfm, egl_rfm69_mode_t mode);
 egl_result_t egl_rfm69_mode_get(egl_rfm69_t *rfm, egl_rfm69_mode_t *mode);
+egl_result_t egl_rfm69_listen_abort(egl_rfm69_t *rfm);
+egl_result_t egl_rfm69_listen_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_listen_state_get(egl_rfm69_t *rfm, bool *state);
+egl_result_t egl_rfm69_sequencer_state_set(egl_rfm69_t *rfm, bool state);
+egl_result_t egl_rfm69_sequencer_state_get(egl_rfm69_t *rfm, bool *state);
 egl_result_t egl_rfm69_modulation_shaping_set(egl_rfm69_t *rfm, egl_rfm69_modulation_shaping_t modsh);
 egl_result_t egl_rfm69_modulation_shaping_get(egl_rfm69_t *rfm, egl_rfm69_modulation_shaping_t *modsh);
 egl_result_t egl_rfm69_modulation_type_set(egl_rfm69_t *rfm, egl_rfm69_modulation_type_t modtype);

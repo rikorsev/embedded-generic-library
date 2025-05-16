@@ -12,6 +12,19 @@ typedef union __attribute__((packed, aligned(1)))
     uint8_t raw;
     struct
     {
+        uint8_t reserved : 2;
+        uint8_t mode : 3;
+        uint8_t listen_abort : 1;
+        uint8_t listen_on : 1;
+        uint8_t sequencer_off : 1;
+    }bitfield;
+}egl_rfm69_reg_op_mode_t;
+
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint8_t raw;
+    struct
+    {
         uint8_t modulation_shaping : 2;
         uint8_t reserved           : 1;
         uint8_t modulation_type    : 2;
@@ -396,19 +409,92 @@ egl_result_t egl_rfm69_bitrate_get(egl_rfm69_t *rfm, uint32_t *bitrate)
 
 egl_result_t egl_rfm69_mode_set(egl_rfm69_t *rfm, egl_rfm69_mode_t mode)
 {
-    uint8_t mode_val = ((uint8_t)mode << EGL_RFM69_MODE_SHIFT) & EGL_RFM69_MODE_MASK;
-    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, mode_val);
+    egl_result_t result;
+    egl_rfm69_reg_op_mode_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.mode = mode;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, regval.raw);
 }
 
 egl_result_t egl_rfm69_mode_get(egl_rfm69_t *rfm, egl_rfm69_mode_t *mode)
 {
     egl_result_t result;
-    uint8_t mode_val;
+    egl_rfm69_reg_op_mode_t regval;
 
-    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &mode_val);
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    *mode = (egl_rfm69_mode_t)((mode_val & EGL_RFM69_MODE_MASK) >> EGL_RFM69_MODE_SHIFT);
+    *mode = regval.bitfield.mode;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_listen_abort(egl_rfm69_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm69_reg_op_mode_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.listen_on = false;
+    regval.bitfield.listen_abort = true;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, regval.raw);
+}
+
+egl_result_t egl_rfm69_listen_state_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_op_mode_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.listen_on = state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, regval.raw);
+}
+
+egl_result_t egl_rfm69_listen_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_op_mode_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.listen_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_sequencer_state_set(egl_rfm69_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_op_mode_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sequencer_off = !state;
+
+    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, regval.raw);
+}
+
+egl_result_t egl_rfm69_sequencer_state_get(egl_rfm69_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm69_reg_op_mode_t regval;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = !regval.bitfield.sequencer_off;
 
     return result;
 }
