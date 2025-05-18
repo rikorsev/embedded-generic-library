@@ -564,5 +564,6 @@ egl_result_t egl_rfm69_dagc_mode_set(egl_rfm69_t *rfm, egl_rfm69_dagc_mode_t mod
 egl_result_t egl_rfm69_dagc_mode_get(egl_rfm69_t *rfm, egl_rfm69_dagc_mode_t *mode);
 egl_result_t egl_rfm69_afc_offset_set(egl_rfm69_t *rfm, uint32_t hz);
 egl_result_t egl_rfm69_afc_offset_get(egl_rfm69_t *rfm, uint32_t *hz);
+egl_result_t egl_rfm69_version_get(egl_rfm69_t *rfm, uint8_t *version);
 
 #endif

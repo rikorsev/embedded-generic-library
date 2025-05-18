@@ -257,81 +257,37 @@ static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
     egl_result_t result;
 
     result = egl_pm_init(rfm->pm);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 PM component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_itf_init(rfm->iface);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 iface component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio0);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 DIO0 component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio1);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 DIO1 component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio2);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 DIO2 component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio3);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 DIO3 component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio4);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 DIO4 component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio5);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init rfm69 DIO5 component. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pm_poweron(rfm->pm);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to poweron rfm69. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_pm_reset(rfm->pm);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to reset rfm69. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     result = egl_clock_init(rfm->clock, 0);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Fail to init clock rfm69. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     return result;
 }
@@ -341,11 +297,7 @@ egl_result_t egl_rfm69_init(egl_rfm69_t *rfm)
     egl_result_t result;
 
     result = egl_rfm69_hw_init(rfm);
-    if(result != EGL_SUCCESS)
-    {
-        EGL_LOG_ERROR("Failt to init rfm69 hardware. Result: %s", EGL_RESULT(result));
-        return result;
-    }
+    EGL_RESULT_CHECK(result);
 
     return result;
 }
@@ -2353,4 +2305,9 @@ egl_result_t egl_rfm69_afc_offset_get(egl_rfm69_t *rfm, uint32_t *hz)
     *hz = regval * EGL_RFM69_AFC_OFFSET_COEF;
 
     return result;
+}
+
+egl_result_t egl_rfm69_version_get(egl_rfm69_t *rfm, uint8_t *version)
+{
+    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_VERSION, version);
 }
