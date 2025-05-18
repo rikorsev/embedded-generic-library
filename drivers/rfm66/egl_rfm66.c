@@ -2,6 +2,21 @@
 #include "egl_log.h"
 #include "egl_util.h"
 
+#pragma pack(push, 1)
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t mode : 3;
+        uint8_t modulation_shaping : 2;
+        uint8_t modulation_type : 2;
+    }bitfield;
+}egl_rfm66_reg_op_mode_t;
+
+#pragma pack(pop)
+
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
 {
     egl_result_t result;
@@ -89,4 +104,82 @@ egl_result_t egl_rfm66_read_burst(egl_rfm66_t *rfm, uint8_t addr, void *data, si
 egl_result_t egl_rfm66_version_get(egl_rfm66_t *rfm, uint8_t *version)
 {
     return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_VERSION, version);
+}
+
+egl_result_t egl_rfm66_mode_set(egl_rfm66_t *rfm, egl_rfm66_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_op_mode_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.mode = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_MODE, regval.raw);
+}
+
+egl_result_t egl_rfm66_mode_get(egl_rfm66_t *rfm, egl_rfm66_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_op_mode_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.mode;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_modulation_shaping_set(egl_rfm66_t *rfm, egl_rfm66_modulation_shaping_t modsh)
+{
+    egl_result_t result;
+    egl_rfm66_reg_op_mode_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.modulation_shaping = modsh;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_MODE, regval.raw);
+}
+
+egl_result_t egl_rfm66_modulation_shaping_get(egl_rfm66_t *rfm, egl_rfm66_modulation_shaping_t *modsh)
+{
+    egl_result_t result;
+    egl_rfm66_reg_op_mode_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *modsh = regval.bitfield.modulation_shaping;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_modulation_type_set(egl_rfm66_t *rfm, egl_rfm66_modulation_type_t modtype)
+{
+    egl_result_t result;
+    egl_rfm66_reg_op_mode_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.modulation_type = modtype;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_MODE, regval.raw);
+}
+
+egl_result_t egl_rfm66_modulation_type_get(egl_rfm66_t *rfm, egl_rfm66_modulation_type_t *modtype)
+{
+    egl_result_t result;
+    egl_rfm66_reg_op_mode_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *modtype = regval.bitfield.modulation_type;
+
+    return result;
 }
