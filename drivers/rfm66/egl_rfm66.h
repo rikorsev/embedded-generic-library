@@ -17,6 +17,7 @@
 #define EGL_RFM66_REG_FREQUENCY_MID         (0x07)
 #define EGL_RFM66_REG_FREQUENCY_LSB         (0x08)
 #define EGL_RFM66_REG_PA_CONFIG             (0x09)
+#define EGL_RFM66_REG_PA_RAMP               (0x0A)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -50,6 +51,26 @@ typedef enum
     EGL_RFM66_PA_SELECT_RFO_PIN,
     EGL_RFM66_PA_SELECT_PA_BOOST,
 }egl_rfm66_pa_select_t;
+
+typedef enum
+{
+    EGL_RFM66_POWER_RAMP_3_4_MS,
+    EGL_RFM66_POWER_RAMP_2_MS,
+    EGL_RFM66_POWER_RAMP_1_MS,
+    EGL_RFM66_POWER_RAMP_500_US,
+    EGL_RFM66_POWER_RAMP_250_US,
+    EGL_RFM66_POWER_RAMP_125_US,
+    EGL_RFM66_POWER_RAMP_100_US,
+    EGL_RFM66_POWER_RAMP_62_US,
+    EGL_RFM66_POWER_RAMP_50_US,
+    EGL_RFM66_POWER_RAMP_40_US,
+    EGL_RFM66_POWER_RAMP_31_US,
+    EGL_RFM66_POWER_RAMP_25_US,
+    EGL_RFM66_POWER_RAMP_20_US,
+    EGL_RFM66_POWER_RAMP_15_US,
+    EGL_RFM66_POWER_RAMP_12_US,
+    EGL_RFM66_POWER_RAMP_10_US,
+}egl_rfm66_power_ramp_t;
 
 typedef struct
 {
@@ -86,5 +107,9 @@ egl_result_t egl_rfm66_pa_power_set(egl_rfm66_t *rfm, uint8_t power);
 egl_result_t egl_rfm66_pa_power_get(egl_rfm66_t *rfm, uint8_t *power);
 egl_result_t egl_rfm66_pa_select_set(egl_rfm66_t *rfm, egl_rfm66_pa_select_t select);
 egl_result_t egl_rfm66_pa_select_get(egl_rfm66_t *rfm, egl_rfm66_pa_select_t *select);
+egl_result_t egl_rfm66_pa_ramp_set(egl_rfm66_t *rfm, egl_rfm66_power_ramp_t ramp);
+egl_result_t egl_rfm66_pa_ramp_get(egl_rfm66_t *rfm, egl_rfm66_power_ramp_t *ramp);
+egl_result_t egl_rfm66_low_pn_tx_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_low_pn_tx_state_get(egl_rfm66_t *rfm, bool *state);
 
 #endif

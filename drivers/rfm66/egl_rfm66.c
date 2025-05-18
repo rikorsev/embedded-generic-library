@@ -26,7 +26,18 @@ typedef union
         uint8_t reserved : 3;
         uint8_t pa_select : 1;
     }bitfield;
-}egl_rfm6_reg_pa_config_t;
+}egl_rfm66_reg_pa_config_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t pa_ramp : 4;
+        uint8_t low_pn_tx_pll_off : 1;
+    }bitfield;
+}egl_rfm66_reg_pa_ramp_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -276,7 +287,7 @@ egl_result_t egl_rfm66_pa_power_set(egl_rfm66_t *rfm, uint8_t power)
     EGL_ASSERT_CHECK(power <= EGL_RFM66_RAW_PA_POWER_MAX, EGL_OUT_OF_BOUNDARY);
 
     egl_result_t result;
-    egl_rfm6_reg_pa_config_t regval;
+    egl_rfm66_reg_pa_config_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -289,7 +300,7 @@ egl_result_t egl_rfm66_pa_power_set(egl_rfm66_t *rfm, uint8_t power)
 egl_result_t egl_rfm66_pa_power_get(egl_rfm66_t *rfm, uint8_t *power)
 {
     egl_result_t result;
-    egl_rfm6_reg_pa_config_t regval;
+    egl_rfm66_reg_pa_config_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -302,7 +313,7 @@ egl_result_t egl_rfm66_pa_power_get(egl_rfm66_t *rfm, uint8_t *power)
 egl_result_t egl_rfm66_pa_select_set(egl_rfm66_t *rfm, egl_rfm66_pa_select_t select)
 {
     egl_result_t result;
-    egl_rfm6_reg_pa_config_t regval;
+    egl_rfm66_reg_pa_config_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -315,12 +326,64 @@ egl_result_t egl_rfm66_pa_select_set(egl_rfm66_t *rfm, egl_rfm66_pa_select_t sel
 egl_result_t egl_rfm66_pa_select_get(egl_rfm66_t *rfm, egl_rfm66_pa_select_t *select)
 {
     egl_result_t result;
-    egl_rfm6_reg_pa_config_t regval;
+    egl_rfm66_reg_pa_config_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
     EGL_RESULT_CHECK(result);
 
     *select = regval.bitfield.pa_select;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_pa_ramp_set(egl_rfm66_t *rfm, egl_rfm66_power_ramp_t ramp)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pa_ramp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_RAMP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa_ramp = ramp;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PA_RAMP, regval.raw);
+}
+
+egl_result_t egl_rfm66_pa_ramp_get(egl_rfm66_t *rfm, egl_rfm66_power_ramp_t *ramp)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pa_ramp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_RAMP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *ramp = regval.bitfield.pa_ramp;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_low_pn_tx_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pa_ramp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_RAMP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.low_pn_tx_pll_off = !state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PA_RAMP, regval.raw);
+}
+
+egl_result_t egl_rfm66_low_pn_tx_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pa_ramp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_RAMP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = !regval.bitfield.low_pn_tx_pll_off;
 
     return result;
 }
