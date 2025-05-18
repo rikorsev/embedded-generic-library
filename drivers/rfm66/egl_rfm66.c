@@ -4,6 +4,7 @@
 
 #define EGL_RFM66_FSTEP_COEF                (524288U)
 
+
 #pragma pack(push, 1)
 
 typedef union
@@ -38,6 +39,15 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_pa_ramp_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t ocp_trim : 5;
+        uint8_t ocp_on : 1;
+    }bitfield;
+}egl_rfm66_reg_ocp_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -384,6 +394,91 @@ egl_result_t egl_rfm66_low_pn_tx_state_get(egl_rfm66_t *rfm, bool *state)
     EGL_RESULT_CHECK(result);
 
     *state = !regval.bitfield.low_pn_tx_pll_off;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ocp_trim_set(egl_rfm66_t *rfm, uint8_t ma)
+{
+#define EGL_RFM66_OCP_TRIM_THRESH_1_MA (120U)
+#define EGL_RFM66_OCP_TRIM_THRESH_2_MA (240U)
+#define EGL_RFM66_OCP_TRIM_RAW_MAX     (0x1F)
+
+    egl_result_t result;
+    egl_rfm66_reg_ocp_t regval;
+    uint8_t ocp_trim_raw;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    if(ma <=  EGL_RFM66_OCP_TRIM_THRESH_1_MA)
+    {
+        ocp_trim_raw = (ma - 45) / 5;
+    }
+    else if(ma <= EGL_RFM66_OCP_TRIM_THRESH_2_MA)
+    {
+        ocp_trim_raw = (ma + 30) / 10;
+    }
+    else
+    {
+        ocp_trim_raw = EGL_RFM66_OCP_TRIM_RAW_MAX;
+    }
+
+    regval.bitfield.ocp_trim = ocp_trim_raw;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OCP, regval.raw);
+}
+
+egl_result_t egl_rfm66_ocp_trim_get(egl_rfm66_t *rfm, uint8_t *ma)
+{
+#define EGL_RFM66_OCP_TRIM_RAW_THRESH_1 (15U)
+#define EGL_RFM66_OCP_TRIM_RAW_THRESH_2 (27U)
+#define EGL_RFM66_OCP_TRIM_MAX_MA       (240U)
+
+    egl_result_t result;
+    egl_rfm66_reg_ocp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    if(regval.bitfield.ocp_trim <= EGL_RFM66_OCP_TRIM_RAW_THRESH_1)
+    {
+        *ma = (regval.bitfield.ocp_trim * 5) + 45;
+    }
+    else if(regval.bitfield.ocp_trim <= EGL_RFM66_OCP_TRIM_RAW_THRESH_2)
+    {
+        *ma = (regval.bitfield.ocp_trim * 10) - 30;
+    }
+    else
+    {
+        *ma = EGL_RFM66_OCP_TRIM_MAX_MA;
+    }
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ocp_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ocp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ocp_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OCP, regval.raw);
+}
+
+egl_result_t egl_rfm66_ocp_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ocp_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OCP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.ocp_on;
 
     return result;
 }

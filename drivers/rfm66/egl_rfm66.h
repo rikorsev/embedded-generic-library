@@ -18,6 +18,7 @@
 #define EGL_RFM66_REG_FREQUENCY_LSB         (0x08)
 #define EGL_RFM66_REG_PA_CONFIG             (0x09)
 #define EGL_RFM66_REG_PA_RAMP               (0x0A)
+#define EGL_RFM66_REG_OCP                   (0x0B)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -111,5 +112,10 @@ egl_result_t egl_rfm66_pa_ramp_set(egl_rfm66_t *rfm, egl_rfm66_power_ramp_t ramp
 egl_result_t egl_rfm66_pa_ramp_get(egl_rfm66_t *rfm, egl_rfm66_power_ramp_t *ramp);
 egl_result_t egl_rfm66_low_pn_tx_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_low_pn_tx_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_ocp_trim_set(egl_rfm66_t *rfm, uint8_t ma);
+egl_result_t egl_rfm66_ocp_trim_get(egl_rfm66_t *rfm, uint8_t *ma);
+egl_result_t egl_rfm66_ocp_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_ocp_state_get(egl_rfm66_t *rfm, bool *state);
+
 
 #endif
