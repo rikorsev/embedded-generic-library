@@ -16,7 +16,10 @@
 #define EGL_RFM66_REG_FREQUENCY_MSB         (0x06)
 #define EGL_RFM66_REG_FREQUENCY_MID         (0x07)
 #define EGL_RFM66_REG_FREQUENCY_LSB         (0x08)
+#define EGL_RFM66_REG_PA_CONFIG             (0x09)
 #define EGL_RFM66_REG_VERSION               (0x42)
+
+#define EGL_RFM66_RAW_PA_POWER_MAX          (15)
 
 typedef enum
 {
@@ -41,6 +44,12 @@ typedef enum
     EGL_RFM66_MODULATION_TYPE_FSK,
     EGL_RFM66_MODULATION_TYPE_OOK
 }egl_rfm66_modulation_type_t;
+
+typedef enum
+{
+    EGL_RFM66_PA_SELECT_RFO_PIN,
+    EGL_RFM66_PA_SELECT_PA_BOOST,
+}egl_rfm66_pa_select_t;
 
 typedef struct
 {
@@ -73,5 +82,9 @@ egl_result_t egl_rfm66_deviation_set(egl_rfm66_t *rfm, uint32_t hz);
 egl_result_t egl_rfm66_deviation_get(egl_rfm66_t *rfm, uint32_t *hz);
 egl_result_t egl_rfm66_frequency_set(egl_rfm66_t *rfm, uint32_t hz);
 egl_result_t egl_rfm66_frequency_get(egl_rfm66_t *rfm, uint32_t *hz);
+egl_result_t egl_rfm66_pa_power_set(egl_rfm66_t *rfm, uint8_t power);
+egl_result_t egl_rfm66_pa_power_get(egl_rfm66_t *rfm, uint8_t *power);
+egl_result_t egl_rfm66_pa_select_set(egl_rfm66_t *rfm, egl_rfm66_pa_select_t select);
+egl_result_t egl_rfm66_pa_select_get(egl_rfm66_t *rfm, egl_rfm66_pa_select_t *select);
 
 #endif

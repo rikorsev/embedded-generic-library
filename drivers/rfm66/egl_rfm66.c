@@ -17,6 +17,16 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_op_mode_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t pa_power : 4;
+        uint8_t reserved : 3;
+        uint8_t pa_select : 1;
+    }bitfield;
+}egl_rfm6_reg_pa_config_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -257,6 +267,60 @@ egl_result_t egl_rfm66_frequency_get(egl_rfm66_t *rfm, uint32_t *hz)
     *hz |= raw[1] << 8;
     *hz |= raw[3];
     *hz = ((uint64_t)(*hz) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_pa_power_set(egl_rfm66_t *rfm, uint8_t power)
+{
+    EGL_ASSERT_CHECK(power <= EGL_RFM66_RAW_PA_POWER_MAX, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm6_reg_pa_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa_power = power;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PA_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_pa_power_get(egl_rfm66_t *rfm, uint8_t *power)
+{
+    egl_result_t result;
+    egl_rfm6_reg_pa_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *power = regval.bitfield.pa_power;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_pa_select_set(egl_rfm66_t *rfm, egl_rfm66_pa_select_t select)
+{
+    egl_result_t result;
+    egl_rfm6_reg_pa_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa_select = select;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PA_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_pa_select_get(egl_rfm66_t *rfm, egl_rfm66_pa_select_t *select)
+{
+    egl_result_t result;
+    egl_rfm6_reg_pa_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *select = regval.bitfield.pa_select;
 
     return result;
 }
