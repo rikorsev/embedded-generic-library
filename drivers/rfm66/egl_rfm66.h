@@ -13,6 +13,9 @@
 #define EGL_RFM66_REG_BITRATE_LSB           (0x03)
 #define EGL_RFM66_REG_DEVIATION_MSB         (0x04)
 #define EGL_RFM66_REG_DEVIATION_LSB         (0x05)
+#define EGL_RFM66_REG_FREQUENCY_MSB         (0x06)
+#define EGL_RFM66_REG_FREQUENCY_MID         (0x07)
+#define EGL_RFM66_REG_FREQUENCY_LSB         (0x08)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 typedef enum
@@ -68,5 +71,7 @@ egl_result_t egl_rfm66_bitrate_set(egl_rfm66_t *rfm, uint32_t kbs);
 egl_result_t egl_rfm66_bitrate_get(egl_rfm66_t *rfm, uint32_t *kbs);
 egl_result_t egl_rfm66_deviation_set(egl_rfm66_t *rfm, uint32_t hz);
 egl_result_t egl_rfm66_deviation_get(egl_rfm66_t *rfm, uint32_t *hz);
+egl_result_t egl_rfm66_frequency_set(egl_rfm66_t *rfm, uint32_t hz);
+egl_result_t egl_rfm66_frequency_get(egl_rfm66_t *rfm, uint32_t *hz);
 
 #endif

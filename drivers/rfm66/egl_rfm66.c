@@ -231,3 +231,32 @@ egl_result_t egl_rfm66_deviation_get(egl_rfm66_t *rfm, uint32_t *hz)
 
     return result;
 }
+
+egl_result_t egl_rfm66_frequency_set(egl_rfm66_t *rfm, uint32_t hz)
+{
+    uint8_t raw[3];
+    hz = (((uint64_t)hz * EGL_RFM66_FSTEP_COEF) / egl_clock_get(rfm->clock));
+
+    raw[0] = hz >> 16 & 0xFF;
+    raw[1] = hz >> 8 & 0xFF;
+    raw[2] = hz & 0xFF;
+
+    return egl_rfm66_write_burst(rfm, EGL_RFM66_REG_FREQUENCY_MSB, raw, sizeof(raw));
+}
+
+egl_result_t egl_rfm66_frequency_get(egl_rfm66_t *rfm, uint32_t *hz)
+{
+    egl_result_t result;
+    uint8_t raw[3];
+
+    result = egl_rfm66_read_burst(rfm, EGL_RFM66_REG_FREQUENCY_MSB, &raw, sizeof(raw));
+    EGL_RESULT_CHECK(result);
+
+    *hz = 0;
+    *hz |= raw[0] << 16;
+    *hz |= raw[1] << 8;
+    *hz |= raw[3];
+    *hz = ((uint64_t)(*hz) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF;
+
+    return result;
+}
