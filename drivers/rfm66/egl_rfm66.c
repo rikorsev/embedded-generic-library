@@ -2,6 +2,8 @@
 #include "egl_log.h"
 #include "egl_util.h"
 
+#define EGL_RFM66_FSTEP_COEF                (524288U)
+
 #pragma pack(push, 1)
 
 typedef union
@@ -203,6 +205,29 @@ egl_result_t egl_rfm66_bitrate_get(egl_rfm66_t *rfm, uint32_t *kbs)
 
     /* Calculate bitrate in bits per second */
     *kbs = egl_clock_get(rfm->clock) / egl_swap16(raw);
+
+    return result;
+}
+
+egl_result_t egl_rfm66_deviation_set(egl_rfm66_t *rfm, uint32_t hz)
+{
+    uint16_t raw;
+
+    raw = egl_swap16((uint16_t)(((uint64_t)hz * EGL_RFM66_FSTEP_COEF) / egl_clock_get(rfm->clock)));
+
+    return egl_rfm66_write_burst(rfm, EGL_RFM66_REG_DEVIATION_MSB, (uint8_t *)&raw, sizeof(raw));
+}
+
+egl_result_t egl_rfm66_deviation_get(egl_rfm66_t *rfm, uint32_t *hz)
+{
+    egl_result_t result;
+    uint16_t raw;
+
+    result = egl_rfm66_read_burst(rfm, EGL_RFM66_REG_DEVIATION_MSB, &raw, sizeof(raw));
+    EGL_RESULT_CHECK(result);
+
+    /* Calculate bitrate in bits per second */
+    *hz = (uint32_t)(((uint64_t)egl_swap16(raw) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF);
 
     return result;
 }
