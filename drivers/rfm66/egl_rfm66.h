@@ -20,6 +20,7 @@
 #define EGL_RFM66_REG_PA_RAMP               (0x0A)
 #define EGL_RFM66_REG_OCP                   (0x0B)
 #define EGL_RFM66_REG_LNA                   (0x0C)
+#define EGL_RFM66_REG_RX_CONFIG             (0x0D)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -90,6 +91,14 @@ typedef enum
     EGL_RFM66_LNA_BOOST_ON = 0x03
 }egl_rfm66_lna_boost_t;
 
+typedef enum
+{
+    EGL_RFM66_RX_TRIGGER_0 = 0,
+    EGL_RFM66_RX_TRIGGER_1 = 1,
+    EGL_RFM66_RX_TRIGGER_2 = 6,
+    EGL_RFM66_RX_TRIGGER_3 = 7
+}egl_rfm66_rx_trigger_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -137,5 +146,17 @@ egl_result_t egl_rfm66_lna_boost_state_set(egl_rfm66_t *rfm, egl_rfm66_lna_boost
 egl_result_t egl_rfm66_lna_boost_state_get(egl_rfm66_t *rfm, egl_rfm66_lna_boost_t *state);
 egl_result_t egl_rfm66_lna_gain_set(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t gain);
 egl_result_t egl_rfm66_lna_gain_get(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t *gain);
+egl_result_t egl_rfm66_rx_trigger_set(egl_rfm66_t *rfm, egl_rfm66_rx_trigger_t trigger);
+egl_result_t egl_rfm66_rx_trigger_get(egl_rfm66_t *rfm, egl_rfm66_rx_trigger_t *trigger);
+egl_result_t egl_rfm66_auto_agc_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_auto_agc_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_auto_afc_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_auto_afc_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_restart_rx_with_pll_lock_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_restart_rx_with_pll_lock_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_restart_rx_wo_pll_lock_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_restart_rx_wo_pll_lock_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_restart_rx_on_collision_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_restart_rx_on_collision_state_get(egl_rfm66_t *rfm, bool *state);
 
 #endif

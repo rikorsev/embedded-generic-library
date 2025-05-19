@@ -59,6 +59,20 @@ typedef union
         uint8_t lna_gain : 3;
     }bitfield;
 }egl_rfm66_reg_lna_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t rx_trigger : 3;
+        uint8_t agc_auto_on : 1;
+        uint8_t afc_auto_on : 1;
+        uint8_t restart_rx_with_pll_lock : 1;
+        uint8_t restart_rx_wo_pll_lock : 1;
+        uint8_t restart_rx_on_collision : 1;
+    }bitfield;
+}egl_rfm66_reg_rx_config_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -542,6 +556,162 @@ egl_result_t egl_rfm66_lna_gain_get(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t *gain
     EGL_RESULT_CHECK(result);
 
     *gain = regval.bitfield.lna_gain;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rx_trigger_set(egl_rfm66_t *rfm, egl_rfm66_rx_trigger_t trigger)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.rx_trigger = trigger;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_rx_trigger_get(egl_rfm66_t *rfm, egl_rfm66_rx_trigger_t *trigger)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *trigger = regval.bitfield.rx_trigger;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_auto_agc_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_auto_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_auto_agc_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.agc_auto_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_auto_afc_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.afc_auto_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_auto_afc_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.afc_auto_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_restart_rx_with_pll_lock_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.restart_rx_with_pll_lock = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_restart_rx_with_pll_lock_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.restart_rx_with_pll_lock;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_restart_rx_wo_pll_lock_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.restart_rx_wo_pll_lock = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_restart_rx_wo_pll_lock_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.restart_rx_wo_pll_lock;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_restart_rx_on_collision_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.restart_rx_on_collision = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_restart_rx_on_collision_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rx_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.restart_rx_on_collision;
 
     return result;
 }
