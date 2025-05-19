@@ -48,6 +48,17 @@ typedef union
         uint8_t ocp_on : 1;
     }bitfield;
 }egl_rfm66_reg_ocp_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t lna_boost : 2;
+        uint8_t reserved : 3;
+        uint8_t lna_gain : 3;
+    }bitfield;
+}egl_rfm66_reg_lna_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -479,6 +490,58 @@ egl_result_t egl_rfm66_ocp_state_get(egl_rfm66_t *rfm, bool *state)
     EGL_RESULT_CHECK(result);
 
     *state = regval.bitfield.ocp_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_lna_boost_state_set(egl_rfm66_t *rfm, egl_rfm66_lna_boost_t state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_lna_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.lna_boost = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_LNA, regval.raw);
+}
+
+egl_result_t egl_rfm66_lna_boost_state_get(egl_rfm66_t *rfm, egl_rfm66_lna_boost_t *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_lna_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.lna_boost;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_lna_gain_set(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t gain)
+{
+    egl_result_t result;
+    egl_rfm66_reg_lna_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.lna_gain = gain;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_LNA, regval.raw);
+}
+
+egl_result_t egl_rfm66_lna_gain_get(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t *gain)
+{
+    egl_result_t result;
+    egl_rfm66_reg_lna_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LNA, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *gain = regval.bitfield.lna_gain;
 
     return result;
 }

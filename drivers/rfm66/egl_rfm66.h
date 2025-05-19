@@ -19,6 +19,7 @@
 #define EGL_RFM66_REG_PA_CONFIG             (0x09)
 #define EGL_RFM66_REG_PA_RAMP               (0x0A)
 #define EGL_RFM66_REG_OCP                   (0x0B)
+#define EGL_RFM66_REG_LNA                   (0x0C)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -73,6 +74,22 @@ typedef enum
     EGL_RFM66_POWER_RAMP_10_US,
 }egl_rfm66_power_ramp_t;
 
+typedef enum
+{
+    EGL_RFM66_LNA_GAIN_HIGHEST = 1,
+    EGL_RFM66_LNA_GAIN_HIGHEST_MINUS_6_DB,
+    EGL_RFM66_LNA_GAIN_HIGHEST_MINUS_12_DB,
+    EGL_RFM66_LNA_GAIN_HIGHEST_MINUS_24_DB,
+    EGL_RFM66_LNA_GAIN_HIGHEST_MINUS_36_DB,
+    EGL_RFM66_LNA_GAIN_HIGHEST_MINUS_48_DB,
+}egl_rfm66_lna_gain_t;
+
+typedef enum
+{
+    EGL_RFM66_LNA_BOOST_OFF = 0x00,
+    EGL_RFM66_LNA_BOOST_ON = 0x03
+}egl_rfm66_lna_boost_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -116,6 +133,9 @@ egl_result_t egl_rfm66_ocp_trim_set(egl_rfm66_t *rfm, uint8_t ma);
 egl_result_t egl_rfm66_ocp_trim_get(egl_rfm66_t *rfm, uint8_t *ma);
 egl_result_t egl_rfm66_ocp_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_ocp_state_get(egl_rfm66_t *rfm, bool *state);
-
+egl_result_t egl_rfm66_lna_boost_state_set(egl_rfm66_t *rfm, egl_rfm66_lna_boost_t state);
+egl_result_t egl_rfm66_lna_boost_state_get(egl_rfm66_t *rfm, egl_rfm66_lna_boost_t *state);
+egl_result_t egl_rfm66_lna_gain_set(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t gain);
+egl_result_t egl_rfm66_lna_gain_get(egl_rfm66_t *rfm, egl_rfm66_lna_gain_t *gain);
 
 #endif
