@@ -21,6 +21,7 @@
 #define EGL_RFM66_REG_OCP                   (0x0B)
 #define EGL_RFM66_REG_LNA                   (0x0C)
 #define EGL_RFM66_REG_RX_CONFIG             (0x0D)
+#define EGL_RFM66_REG_RSSI_CONFIG           (0x0E)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -99,6 +100,18 @@ typedef enum
     EGL_RFM66_RX_TRIGGER_3 = 7
 }egl_rfm66_rx_trigger_t;
 
+typedef enum
+{
+    EGL_RFM66_RSSI_SMOOTHING_2_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_4_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_8_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_16_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_32_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_64_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_128_SAMPLES,
+    EGL_RFM66_RSSI_SMOOTHING_256_SAMPLES,
+}egl_rfm66_rssi_smoothing_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -158,5 +171,9 @@ egl_result_t egl_rfm66_restart_rx_wo_pll_lock_state_set(egl_rfm66_t *rfm, bool s
 egl_result_t egl_rfm66_restart_rx_wo_pll_lock_state_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_restart_rx_on_collision_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_restart_rx_on_collision_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_rssi_offset_set(egl_rfm66_t *rfm, int8_t offset);
+egl_result_t egl_rfm66_rssi_offset_get(egl_rfm66_t *rfm, int8_t *offset);
+egl_result_t egl_rfm66_rssi_smoothing_set(egl_rfm66_t *rfm, egl_rfm66_rssi_smoothing_t smoothing);
+egl_result_t egl_rfm66_rssi_smoothing_get(egl_rfm66_t *rfm, egl_rfm66_rssi_smoothing_t *smoothing);
 
 #endif

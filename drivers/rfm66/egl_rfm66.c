@@ -4,7 +4,6 @@
 
 #define EGL_RFM66_FSTEP_COEF                (524288U)
 
-
 #pragma pack(push, 1)
 
 typedef union
@@ -73,6 +72,18 @@ typedef union
         uint8_t restart_rx_on_collision : 1;
     }bitfield;
 }egl_rfm66_reg_rx_config_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t rssi_smoothing : 3;
+        uint8_t rssi_offset : 4;
+        uint8_t rssi_offset_sign : 1;
+    }bitfield;
+}egl_rfm66_reg_rssi_config_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -712,6 +723,70 @@ egl_result_t egl_rfm66_restart_rx_on_collision_state_get(egl_rfm66_t *rfm, bool 
     EGL_RESULT_CHECK(result);
 
     *state = regval.bitfield.restart_rx_on_collision;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rssi_offset_set(egl_rfm66_t *rfm, int8_t offset)
+{
+#define EGL_RFM66_RSSI_OFFSET_MIN           (-16)
+#define EGL_RFM66_RSSI_OFFSET_MAX           (15)
+#define EGL_RFM66_RSSI_OFFSET_MASK          (0x07)
+#define EGL_RFM66_RSSI_OFFSET_SHIFT         (3)
+
+    egl_result_t result;
+    egl_rfm66_reg_rssi_config_t regval;
+
+    EGL_ASSERT_CHECK(offset >= EGL_RFM66_RSSI_OFFSET_MIN &&
+                     offset <= EGL_RFM66_RSSI_OFFSET_MAX,
+                     EGL_OUT_OF_BOUNDARY);
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.raw &= EGL_RFM66_RSSI_OFFSET_MASK;
+    regval.raw |= offset << EGL_RFM66_RSSI_OFFSET_SHIFT;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RSSI_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_rssi_offset_get(egl_rfm66_t *rfm, int8_t *offset)
+{
+#define EGL_RFM66_RSSI_OFFSET_SHIFT         (3)
+
+    egl_result_t result;
+    egl_rfm66_reg_rssi_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *offset = (int8_t)regval.raw >> EGL_RFM66_RSSI_OFFSET_SHIFT;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rssi_smoothing_set(egl_rfm66_t *rfm, egl_rfm66_rssi_smoothing_t smoothing)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rssi_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.rssi_smoothing = smoothing;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RSSI_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_rssi_smoothing_get(egl_rfm66_t *rfm, egl_rfm66_rssi_smoothing_t *smoothing)
+{
+    egl_result_t result;
+    egl_rfm66_reg_rssi_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *smoothing = regval.bitfield.rssi_smoothing;
 
     return result;
 }
