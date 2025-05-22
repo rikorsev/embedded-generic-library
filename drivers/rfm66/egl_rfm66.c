@@ -94,6 +94,16 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_bw_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t ook_peak_thresh_step : 3;
+        uint8_t ook_thresh_type : 2;
+        uint8_t bit_sync_on : 1;
+    }bitfield;
+}egl_rfm66_reg_ook_peak_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -948,6 +958,84 @@ egl_result_t egl_rfm66_afc_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *ma
     EGL_RESULT_CHECK(result);
 
     *mant = regval.bitfield.bw_mant;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ook_peak_thresh_step_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_step_t step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_peak_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_PEAK, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ook_peak_thresh_step = step;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_PEAK, regval.raw);
+}
+
+egl_result_t egl_rfm66_ook_peak_thresh_step_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_step_t *step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_peak_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_PEAK, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *step = regval.bitfield.ook_peak_thresh_step;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ook_thresh_type_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_type_t type)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_peak_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_PEAK, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ook_thresh_type = type;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_PEAK, regval.raw);
+}
+
+egl_result_t egl_rfm66_ook_thresh_type_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_type_t *type)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_peak_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_PEAK, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *type = regval.bitfield.ook_thresh_type;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_bit_sync_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_peak_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_PEAK, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bit_sync_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_PEAK, regval.raw);
+}
+
+egl_result_t egl_rfm66_bit_sync_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_peak_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_PEAK, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.bit_sync_on;
 
     return result;
 }

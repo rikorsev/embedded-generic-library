@@ -27,7 +27,7 @@
 #define EGL_RFM66_REG_RSSI_VALUE            (0x11)
 #define EGL_RFM66_REG_RX_BW                 (0x12)
 #define EGL_RFM66_REG_AFC_BW                (0x13)
-
+#define EGL_RFM66_REG_OOK_PEAK              (0x14)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -125,6 +125,25 @@ typedef enum
     EGL_RFM66_BW_MANT_24
 }egl_rfm66_bw_mant_t;
 
+typedef enum
+{
+    EGL_RFM66_OOK_THRESH_STEP_0_5_DB,
+    EGL_RFM66_OOK_THRESH_STEP_1_0_DB,
+    EGL_RFM66_OOK_THRESH_STEP_1_5_DB,
+    EGL_RFM66_OOK_THRESH_STEP_2_0_DB,
+    EGL_RFM66_OOK_THRESH_STEP_3_0_DB,
+    EGL_RFM66_OOK_THRESH_STEP_4_0_DB,
+    EGL_RFM66_OOK_THRESH_STEP_5_0_DB,
+    EGL_RFM66_OOK_THRESH_STEP_6_0_DB,
+}egl_rfm66_ook_thresh_step_t;
+
+typedef enum
+{
+    EGL_RFM66_OOK_THRESH_TYPE_FIXED,
+    EGL_RFM66_OOK_THRESH_TYPE_AVERAGE,
+    EGL_RFM66_OOK_THRESH_TYPE_PEAK
+}egl_rfm66_ook_thresh_type_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -201,5 +220,11 @@ egl_result_t egl_rfm66_afc_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp);
 egl_result_t egl_rfm66_afc_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp);
 egl_result_t egl_rfm66_afc_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant);
 egl_result_t egl_rfm66_afc_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *mant);
+egl_result_t egl_rfm66_ook_peak_thresh_step_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_step_t step);
+egl_result_t egl_rfm66_ook_peak_thresh_step_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_step_t *step);
+egl_result_t egl_rfm66_ook_thresh_type_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_type_t type);
+egl_result_t egl_rfm66_ook_thresh_type_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_type_t *type);
+egl_result_t egl_rfm66_bit_sync_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_bit_sync_state_get(egl_rfm66_t *rfm, bool *state);
 
 #endif
