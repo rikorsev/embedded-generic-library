@@ -104,6 +104,18 @@ typedef union
         uint8_t bit_sync_on : 1;
     }bitfield;
 }egl_rfm66_reg_ook_peak_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t ook_average_thresh_filt : 2;
+        uint8_t ook_average_offset : 2;
+        uint8_t reserved : 1;
+        uint8_t ook_peak_thresh_dec : 3;
+    }bitfield;
+}egl_rfm66_reg_ook_avg_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -1036,6 +1048,94 @@ egl_result_t egl_rfm66_bit_sync_state_get(egl_rfm66_t *rfm, bool *state)
     EGL_RESULT_CHECK(result);
 
     *state = regval.bitfield.bit_sync_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ook_thresh_fixed_set(egl_rfm66_t *rfm, uint8_t thresh)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_FIX, thresh);
+}
+
+egl_result_t egl_rfm66_ook_thresh_fixed_get(egl_rfm66_t *rfm, uint8_t *thresh)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_FIX, thresh);
+}
+
+egl_result_t egl_rfm66_ook_thresh_avg_filt_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_avg_filt_t filt)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_avg_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ook_average_thresh_filt = filt;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_AVG, regval.raw);
+}
+
+egl_result_t egl_rfm66_ook_thresh_avg_filt_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_avg_filt_t *filt)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_avg_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *filt = regval.bitfield.ook_average_thresh_filt;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ook_peak_thresh_dec_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_dec_t dec)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_avg_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ook_peak_thresh_dec = dec;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_AVG, regval.raw);
+}
+
+egl_result_t egl_rfm66_ook_peak_thresh_dec_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_dec_t *dec)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_avg_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *dec = regval.bitfield.ook_peak_thresh_dec;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_ook_avg_offset_set(egl_rfm66_t *rfm, egl_rfm66_ook_avg_offset_t offset)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_avg_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.ook_average_offset = offset;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OOK_AVG, regval.raw);
+}
+
+egl_result_t egl_rfm66_ook_avg_offset_get(egl_rfm66_t *rfm, egl_rfm66_ook_avg_offset_t *offset)
+{
+    egl_result_t result;
+    egl_rfm66_reg_ook_avg_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OOK_AVG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *offset = regval.bitfield.ook_average_offset;
 
     return result;
 }

@@ -214,7 +214,7 @@ typedef enum
     EGL_RFM69_OOK_THRESH_DEC_4_TIMES_IN_EACH_CHIP,
     EGL_RFM69_OOK_THRESH_DEC_8_TIMES_IN_EACH_CHIP,
     EGL_RFM69_OOK_THRESH_DEC_16_TIMES_IN_EACH_CHIP
-}egl_rfm_ook_thresh_dec_t;
+}egl_rfm69_ook_thresh_dec_t;
 
 typedef enum
 {
@@ -460,8 +460,8 @@ egl_result_t egl_rfm69_afc_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t man
 egl_result_t egl_rfm69_afc_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant);
 egl_result_t egl_rfm69_afc_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq);
 egl_result_t egl_rfm69_afc_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq);
-egl_result_t egl_rfm69_ook_peak_thresh_dec_set(egl_rfm69_t *rfm, egl_rfm_ook_thresh_dec_t dec);
-egl_result_t egl_rfm69_ook_peak_thresh_dec_get(egl_rfm69_t *rfm, egl_rfm_ook_thresh_dec_t *dec);
+egl_result_t egl_rfm69_ook_peak_thresh_dec_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_dec_t dec);
+egl_result_t egl_rfm69_ook_peak_thresh_dec_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_dec_t *dec);
 egl_result_t egl_rfm69_ook_peak_thresh_step_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_step_t step);
 egl_result_t egl_rfm69_ook_peak_thresh_step_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_step_t *step);
 egl_result_t egl_rfm69_ook_thresh_type_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_type_t type);

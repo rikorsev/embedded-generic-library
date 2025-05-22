@@ -28,6 +28,8 @@
 #define EGL_RFM66_REG_RX_BW                 (0x12)
 #define EGL_RFM66_REG_AFC_BW                (0x13)
 #define EGL_RFM66_REG_OOK_PEAK              (0x14)
+#define EGL_RFM66_REG_OOK_FIX               (0x15)
+#define EGL_RFM66_REG_OOK_AVG               (0x16)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -144,6 +146,34 @@ typedef enum
     EGL_RFM66_OOK_THRESH_TYPE_PEAK
 }egl_rfm66_ook_thresh_type_t;
 
+typedef enum
+{
+    EGL_RFM66_OOK_THRESH_DEC_ONCE_PER_CHIP,
+    EGL_RFM66_OOK_THRESH_DEC_ONCE_PER_2_CHIPS,
+    EGL_RFM66_OOK_THRESH_DEC_ONCE_PER_4_CHIPS,
+    EGL_RFM66_OOK_THRESH_DEC_ONCE_PER_8_CHIPS,
+    EGL_RFM66_OOK_THRESH_DEC_TWICE_IN_EACH_CHIP,
+    EGL_RFM66_OOK_THRESH_DEC_4_TIMES_IN_EACH_CHIP,
+    EGL_RFM66_OOK_THRESH_DEC_8_TIMES_IN_EACH_CHIP,
+    EGL_RFM66_OOK_THRESH_DEC_16_TIMES_IN_EACH_CHIP
+}egl_rfm66_ook_thresh_dec_t;
+
+typedef enum
+{
+    EGL_RFM66_OOK_CHIP_RATE_DIV_32P,
+    EGL_RFM66_OOK_CHIP_RATE_DIV_8P,
+    EGL_RFM66_OOK_CHIP_RATE_DIV_4P,
+    EGL_RFM66_OOK_CHIP_RATE_DIV_2P
+}egl_rfm66_ook_thresh_avg_filt_t;
+
+typedef enum
+{
+    EGL_RFM66_OOK_AVERAGE_OFFSET_0_DB,
+    EGL_RFM66_OOK_AVERAGE_OFFSET_2_DB,
+    EGL_RFM66_OOK_AVERAGE_OFFSET_4_DB,
+    EGL_RFM66_OOK_AVERAGE_OFFSET_6_DB,
+}egl_rfm66_ook_avg_offset_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -226,5 +256,13 @@ egl_result_t egl_rfm66_ook_thresh_type_set(egl_rfm66_t *rfm, egl_rfm66_ook_thres
 egl_result_t egl_rfm66_ook_thresh_type_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_type_t *type);
 egl_result_t egl_rfm66_bit_sync_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_bit_sync_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_ook_thresh_fixed_set(egl_rfm66_t *rfm, uint8_t thresh);
+egl_result_t egl_rfm66_ook_thresh_fixed_get(egl_rfm66_t *rfm, uint8_t *thresh);
+egl_result_t egl_rfm66_ook_thresh_avg_filt_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_avg_filt_t filt);
+egl_result_t egl_rfm66_ook_thresh_avg_filt_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_avg_filt_t *filt);
+egl_result_t egl_rfm66_ook_peak_thresh_dec_set(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_dec_t dec);
+egl_result_t egl_rfm66_ook_peak_thresh_dec_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_dec_t *dec);
+egl_result_t egl_rfm66_ook_avg_offset_set(egl_rfm66_t *rfm, egl_rfm66_ook_avg_offset_t offset);
+egl_result_t egl_rfm66_ook_avg_offset_get(egl_rfm66_t *rfm, egl_rfm66_ook_avg_offset_t *offset);
 
 #endif

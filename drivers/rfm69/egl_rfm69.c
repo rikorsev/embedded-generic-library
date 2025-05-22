@@ -1154,7 +1154,7 @@ egl_result_t egl_rfm69_afc_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq)
     return result;
 }
 
-egl_result_t egl_rfm69_ook_peak_thresh_dec_set(egl_rfm69_t *rfm, egl_rfm_ook_thresh_dec_t dec)
+egl_result_t egl_rfm69_ook_peak_thresh_dec_set(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_dec_t dec)
 {
     egl_result_t result;
     egl_rfm69_reg_ook_peak_t regval;
@@ -1167,7 +1167,7 @@ egl_result_t egl_rfm69_ook_peak_thresh_dec_set(egl_rfm69_t *rfm, egl_rfm_ook_thr
     return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_OOK_PEAK, regval.raw);
 }
 
-egl_result_t egl_rfm69_ook_peak_thresh_dec_get(egl_rfm69_t *rfm, egl_rfm_ook_thresh_dec_t *dec)
+egl_result_t egl_rfm69_ook_peak_thresh_dec_get(egl_rfm69_t *rfm, egl_rfm69_ook_thresh_dec_t *dec)
 {
     egl_result_t result;
     egl_rfm69_reg_ook_peak_t regval;
