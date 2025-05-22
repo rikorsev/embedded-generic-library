@@ -22,6 +22,10 @@
 #define EGL_RFM66_REG_LNA                   (0x0C)
 #define EGL_RFM66_REG_RX_CONFIG             (0x0D)
 #define EGL_RFM66_REG_RSSI_CONFIG           (0x0E)
+#define EGL_RFM66_REG_RSSI_COLLISION        (0x0F)
+#define EGL_RFM66_REG_RSSI_THRESHOLD        (0x10)
+#define EGL_RFM66_REG_RSSI_VALUE            (0x11)
+
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -175,5 +179,10 @@ egl_result_t egl_rfm66_rssi_offset_set(egl_rfm66_t *rfm, int8_t offset);
 egl_result_t egl_rfm66_rssi_offset_get(egl_rfm66_t *rfm, int8_t *offset);
 egl_result_t egl_rfm66_rssi_smoothing_set(egl_rfm66_t *rfm, egl_rfm66_rssi_smoothing_t smoothing);
 egl_result_t egl_rfm66_rssi_smoothing_get(egl_rfm66_t *rfm, egl_rfm66_rssi_smoothing_t *smoothing);
+egl_result_t egl_rfm66_rssi_collision_set(egl_rfm66_t *rfm, uint8_t collision);
+egl_result_t egl_rfm66_rssi_collision_get(egl_rfm66_t *rfm, uint8_t *collision);
+egl_result_t egl_rfm66_rssi_threshold_set(egl_rfm66_t *rfm, int8_t threshold);
+egl_result_t egl_rfm66_rssi_threshold_get(egl_rfm66_t *rfm, int8_t *threshold);
+egl_result_t egl_rfm66_rssi_get(egl_rfm66_t *rfm, int8_t *rssi);
 
 #endif

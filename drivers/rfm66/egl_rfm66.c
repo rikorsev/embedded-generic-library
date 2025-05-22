@@ -790,3 +790,46 @@ egl_result_t egl_rfm66_rssi_smoothing_get(egl_rfm66_t *rfm, egl_rfm66_rssi_smoot
 
     return result;
 }
+
+egl_result_t egl_rfm66_rssi_collision_set(egl_rfm66_t *rfm, uint8_t collision)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RSSI_COLLISION, collision);
+}
+
+egl_result_t egl_rfm66_rssi_collision_get(egl_rfm66_t *rfm, uint8_t *collision)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_COLLISION, collision);
+}
+
+egl_result_t egl_rfm66_rssi_threshold_set(egl_rfm66_t *rfm, int8_t threshold)
+{
+    EGL_ASSERT_CHECK(threshold < 0, EGL_OUT_OF_BOUNDARY);
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RSSI_THRESHOLD, (uint8_t)(threshold * (-2)));
+}
+
+egl_result_t egl_rfm66_rssi_threshold_get(egl_rfm66_t *rfm, int8_t *threshold)
+{
+    uint8_t raw;
+    egl_result_t result;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_THRESHOLD, &raw);
+    EGL_RESULT_CHECK(result);
+
+    *threshold = -(raw / 2);
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rssi_get(egl_rfm66_t *rfm, int8_t *rssi)
+{
+    uint8_t raw;
+    egl_result_t result;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_VALUE, &raw);
+    EGL_RESULT_CHECK(result);
+
+    *rssi = -raw;
+
+    return result;
+}
