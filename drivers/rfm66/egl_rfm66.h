@@ -30,6 +30,11 @@
 #define EGL_RFM66_REG_OOK_PEAK              (0x14)
 #define EGL_RFM66_REG_OOK_FIX               (0x15)
 #define EGL_RFM66_REG_OOK_AVG               (0x16)
+#define EGL_RFM66_REG_AFC_FEI               (0x1A)
+#define EGL_RFM66_REG_AFC_MSB               (0x1B)
+#define EGL_RFM66_REG_AFC_LSB               (0x1C)
+#define EGL_RFM66_REG_FEI_MSB               (0x1D)
+#define EGL_RFM66_REG_FEI_LSB               (0x1E)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -264,5 +269,11 @@ egl_result_t egl_rfm66_ook_peak_thresh_dec_set(egl_rfm66_t *rfm, egl_rfm66_ook_t
 egl_result_t egl_rfm66_ook_peak_thresh_dec_get(egl_rfm66_t *rfm, egl_rfm66_ook_thresh_dec_t *dec);
 egl_result_t egl_rfm66_ook_avg_offset_set(egl_rfm66_t *rfm, egl_rfm66_ook_avg_offset_t offset);
 egl_result_t egl_rfm66_ook_avg_offset_get(egl_rfm66_t *rfm, egl_rfm66_ook_avg_offset_t *offset);
+egl_result_t egl_rfm66_afc_clear(egl_rfm66_t *rfm);
+egl_result_t egl_rfm66_afc_auto_clear_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_afc_auto_clear_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_agc_start(egl_rfm66_t *rfm);
+egl_result_t egl_rfm66_afc_get(egl_rfm66_t *rfm, int16_t *hz);
+egl_result_t egl_rfm66_fei_get(egl_rfm66_t *rfm, int16_t *hz);
 
 #endif

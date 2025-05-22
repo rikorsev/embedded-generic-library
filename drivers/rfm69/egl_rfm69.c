@@ -146,7 +146,7 @@ typedef union
         uint8_t fei_start : 1;
         uint8_t fei_done : 1;
     }bitfield;
-}egl_rfm69_reg_afc_fet_t;
+}egl_rfm69_reg_afc_fei_t;
 
 typedef union
 {
@@ -1271,7 +1271,7 @@ egl_result_t egl_rfm69_ook_thresh_fixed_get(egl_rfm69_t *rfm, uint8_t *db)
 egl_result_t egl_rfm69_afc_start(egl_rfm69_t *rfm)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1284,7 +1284,7 @@ egl_result_t egl_rfm69_afc_start(egl_rfm69_t *rfm)
 egl_result_t egl_rfm69_afc_clear(egl_rfm69_t *rfm)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1297,7 +1297,7 @@ egl_result_t egl_rfm69_afc_clear(egl_rfm69_t *rfm)
 egl_result_t egl_rfm69_afc_auto_start_set(egl_rfm69_t *rfm, bool state)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1310,7 +1310,7 @@ egl_result_t egl_rfm69_afc_auto_start_set(egl_rfm69_t *rfm, bool state)
 egl_result_t egl_rfm69_afc_auto_start_get(egl_rfm69_t *rfm, bool *state)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1323,7 +1323,7 @@ egl_result_t egl_rfm69_afc_auto_start_get(egl_rfm69_t *rfm, bool *state)
 egl_result_t egl_rfm69_afc_auto_clear_set(egl_rfm69_t *rfm, bool state)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1336,7 +1336,7 @@ egl_result_t egl_rfm69_afc_auto_clear_set(egl_rfm69_t *rfm, bool state)
 egl_result_t egl_rfm69_afc_auto_clear_get(egl_rfm69_t *rfm, bool *state)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1349,7 +1349,7 @@ egl_result_t egl_rfm69_afc_auto_clear_get(egl_rfm69_t *rfm, bool *state)
 egl_result_t egl_rfm69_afc_state_get(egl_rfm69_t *rfm, bool *state)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1362,7 +1362,7 @@ egl_result_t egl_rfm69_afc_state_get(egl_rfm69_t *rfm, bool *state)
 egl_result_t egl_rfm69_fei_start(egl_rfm69_t *rfm)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1375,7 +1375,7 @@ egl_result_t egl_rfm69_fei_start(egl_rfm69_t *rfm)
 egl_result_t egl_rfm69_fei_state_get(egl_rfm69_t *rfm, bool *state)
 {
     egl_result_t result;
-    egl_rfm69_reg_afc_fet_t regval;
+    egl_rfm69_reg_afc_fei_t regval;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_AFC_FEI, &regval.raw);
     EGL_RESULT_CHECK(result);

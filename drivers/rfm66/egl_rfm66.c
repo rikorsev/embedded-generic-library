@@ -116,6 +116,18 @@ typedef union
         uint8_t ook_peak_thresh_dec : 3;
     }bitfield;
 }egl_rfm66_reg_ook_avg_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t afc_auto_clear_on : 1;
+        uint8_t afc_clear : 1;
+        uint8_t reserved : 2;
+        uint8_t agc_start : 1;
+    }bitfield;
+}egl_rfm66_reg_afc_fei_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -1136,6 +1148,84 @@ egl_result_t egl_rfm66_ook_avg_offset_get(egl_rfm66_t *rfm, egl_rfm66_ook_avg_of
     EGL_RESULT_CHECK(result);
 
     *offset = regval.bitfield.ook_average_offset;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_afc_clear(egl_rfm66_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm66_reg_afc_fei_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_FEI, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.afc_clear = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AFC_FEI, regval.raw);
+}
+
+egl_result_t egl_rfm66_afc_auto_clear_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_afc_fei_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_FEI, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.afc_auto_clear_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AFC_FEI, regval.raw);
+}
+
+egl_result_t egl_rfm66_afc_auto_clear_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_afc_fei_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_FEI, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.afc_auto_clear_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_agc_start(egl_rfm66_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm66_reg_afc_fei_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_FEI, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_start = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AFC_FEI, regval.raw);
+}
+
+egl_result_t egl_rfm66_afc_get(egl_rfm66_t *rfm, int16_t *hz)
+{
+    egl_result_t result;
+    uint16_t raw;
+
+    result = egl_rfm66_read_burst(rfm, EGL_RFM66_REG_AFC_MSB, &raw, sizeof(raw));
+    EGL_RESULT_CHECK(result);
+
+    *hz = (int16_t)((((uint64_t)egl_swap16(raw)) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF);
+
+    return result;
+}
+
+egl_result_t egl_rfm66_fei_get(egl_rfm66_t *rfm, int16_t *hz)
+{
+    egl_result_t result;
+    uint16_t raw;
+
+    result = egl_rfm66_read_burst(rfm, EGL_RFM66_REG_FEI_MSB, &raw, sizeof(raw));
+    EGL_RESULT_CHECK(result);
+
+    *hz = (int16_t)((((uint64_t)egl_swap16(raw)) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF);
 
     return result;
 }
