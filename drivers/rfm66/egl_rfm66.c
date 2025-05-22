@@ -84,6 +84,16 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_rssi_config_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t bw_exp : 3;
+        uint8_t bw_mant : 2;
+    }bitfield;
+}egl_rfm66_reg_bw_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -830,6 +840,114 @@ egl_result_t egl_rfm66_rssi_get(egl_rfm66_t *rfm, int8_t *rssi)
     EGL_RESULT_CHECK(result);
 
     *rssi = -raw;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rx_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp)
+{
+    EGL_ASSERT_CHECK(exp < 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_exp = exp;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_BW, regval.raw);
+}
+
+egl_result_t egl_rfm66_rx_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp)
+{
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *exp = regval.bitfield.bw_exp;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rx_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant)
+{
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_mant = mant;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_BW, regval.raw);
+}
+
+egl_result_t egl_rfm66_rx_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *mant)
+{
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mant = regval.bitfield.bw_mant;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_afc_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp)
+{
+    EGL_ASSERT_CHECK(exp < 8, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_exp = exp;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AFC_BW, regval.raw);
+}
+
+egl_result_t egl_rfm66_afc_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp)
+{
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *exp = regval.bitfield.bw_exp;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_afc_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant)
+{
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.bw_mant = mant;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AFC_BW, regval.raw);
+}
+
+egl_result_t egl_rfm66_afc_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *mant)
+{
+    egl_result_t result;
+    egl_rfm66_reg_bw_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AFC_BW, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mant = regval.bitfield.bw_mant;
 
     return result;
 }

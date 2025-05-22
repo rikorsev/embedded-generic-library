@@ -25,6 +25,8 @@
 #define EGL_RFM66_REG_RSSI_COLLISION        (0x0F)
 #define EGL_RFM66_REG_RSSI_THRESHOLD        (0x10)
 #define EGL_RFM66_REG_RSSI_VALUE            (0x11)
+#define EGL_RFM66_REG_RX_BW                 (0x12)
+#define EGL_RFM66_REG_AFC_BW                (0x13)
 
 #define EGL_RFM66_REG_VERSION               (0x42)
 
@@ -116,6 +118,13 @@ typedef enum
     EGL_RFM66_RSSI_SMOOTHING_256_SAMPLES,
 }egl_rfm66_rssi_smoothing_t;
 
+typedef enum
+{
+    EGL_RFM66_BW_MANT_16,
+    EGL_RFM66_BW_MANT_20,
+    EGL_RFM66_BW_MANT_24
+}egl_rfm66_bw_mant_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -184,5 +193,13 @@ egl_result_t egl_rfm66_rssi_collision_get(egl_rfm66_t *rfm, uint8_t *collision);
 egl_result_t egl_rfm66_rssi_threshold_set(egl_rfm66_t *rfm, int8_t threshold);
 egl_result_t egl_rfm66_rssi_threshold_get(egl_rfm66_t *rfm, int8_t *threshold);
 egl_result_t egl_rfm66_rssi_get(egl_rfm66_t *rfm, int8_t *rssi);
+egl_result_t egl_rfm66_rx_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp);
+egl_result_t egl_rfm66_rx_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp);
+egl_result_t egl_rfm66_rx_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant);
+egl_result_t egl_rfm66_rx_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *mant);
+egl_result_t egl_rfm66_afc_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp);
+egl_result_t egl_rfm66_afc_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp);
+egl_result_t egl_rfm66_afc_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant);
+egl_result_t egl_rfm66_afc_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *mant);
 
 #endif
