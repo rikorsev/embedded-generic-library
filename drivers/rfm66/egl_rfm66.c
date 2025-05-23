@@ -128,6 +128,18 @@ typedef union
         uint8_t agc_start : 1;
     }bitfield;
 }egl_rfm66_reg_afc_fei_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t preamble_detector_tol : 5;
+        uint8_t preamble_detector_size : 2;
+        uint8_t preamble_detector_on : 1;
+    }bitfield;
+}egk_rfm66_reg_preamble_detect_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -1226,6 +1238,86 @@ egl_result_t egl_rfm66_fei_get(egl_rfm66_t *rfm, int16_t *hz)
     EGL_RESULT_CHECK(result);
 
     *hz = (int16_t)((((uint64_t)egl_swap16(raw)) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF);
+
+    return result;
+}
+
+egl_result_t egl_rfm66_preamble_detect_tol_set(egl_rfm66_t *rfm, uint8_t tol)
+{
+    EGL_ASSERT_CHECK(tol <= 31, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egk_rfm66_reg_preamble_detect_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.preamble_detector_tol = tol;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, regval.raw);
+}
+
+egl_result_t egl_rfm66_preamble_detect_tol_get(egl_rfm66_t *rfm, uint8_t *tol)
+{
+    egl_result_t result;
+    egk_rfm66_reg_preamble_detect_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *tol = regval.bitfield.preamble_detector_tol;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_preamble_detect_size_set(egl_rfm66_t *rfm, egl_rfm66_preamble_detect_size_t size)
+{
+    egl_result_t result;
+    egk_rfm66_reg_preamble_detect_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.preamble_detector_size = size;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, regval.raw);
+}
+
+egl_result_t egl_rfm66_preamble_detect_size_get(egl_rfm66_t *rfm, egl_rfm66_preamble_detect_size_t *size)
+{
+    egl_result_t result;
+    egk_rfm66_reg_preamble_detect_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *size = regval.bitfield.preamble_detector_size;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_preamble_detect_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egk_rfm66_reg_preamble_detect_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.preamble_detector_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, regval.raw);
+}
+
+egl_result_t egl_rfm66_preamble_detect_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egk_rfm66_reg_preamble_detect_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.preamble_detector_on;
 
     return result;
 }

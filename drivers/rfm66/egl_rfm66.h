@@ -35,6 +35,7 @@
 #define EGL_RFM66_REG_AFC_LSB               (0x1C)
 #define EGL_RFM66_REG_FEI_MSB               (0x1D)
 #define EGL_RFM66_REG_FEI_LSB               (0x1E)
+#define EGL_RFM66_REG_PREAMBLE_DETECT       (0x1F)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -179,6 +180,13 @@ typedef enum
     EGL_RFM66_OOK_AVERAGE_OFFSET_6_DB,
 }egl_rfm66_ook_avg_offset_t;
 
+typedef enum
+{
+    EGL_RFM66_PREAMBLE_DETECT_SIZE_1_BYTE,
+    EGL_RFM66_PREAMBLE_DETECT_SIZE_2_BYTE,
+    EGL_RFM66_PREAMBLE_DETECT_SIZE_3_BYTE,
+}egl_rfm66_preamble_detect_size_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -275,5 +283,11 @@ egl_result_t egl_rfm66_afc_auto_clear_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_agc_start(egl_rfm66_t *rfm);
 egl_result_t egl_rfm66_afc_get(egl_rfm66_t *rfm, int16_t *hz);
 egl_result_t egl_rfm66_fei_get(egl_rfm66_t *rfm, int16_t *hz);
+egl_result_t egl_rfm66_preamble_detect_tol_set(egl_rfm66_t *rfm, uint8_t tol);
+egl_result_t egl_rfm66_preamble_detect_tol_get(egl_rfm66_t *rfm, uint8_t *tol);
+egl_result_t egl_rfm66_preamble_detect_size_set(egl_rfm66_t *rfm, egl_rfm66_preamble_detect_size_t size);
+egl_result_t egl_rfm66_preamble_detect_size_get(egl_rfm66_t *rfm, egl_rfm66_preamble_detect_size_t *size);
+egl_result_t egl_rfm66_preamble_detect_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_preamble_detect_state_get(egl_rfm66_t *rfm, bool *state);
 
 #endif
