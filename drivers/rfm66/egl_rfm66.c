@@ -1321,3 +1321,43 @@ egl_result_t egl_rfm66_preamble_detect_state_get(egl_rfm66_t *rfm, bool *state)
 
     return result;
 }
+
+egl_result_t egl_rfm66_timeout_rx_rssi_set(egl_rfm66_t *rfm, uint8_t timeout)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_TIMEOUT1, timeout);
+}
+
+egl_result_t egl_rfm66_timeout_rx_rssi_get(egl_rfm66_t *rfm, uint8_t *timeout)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_TIMEOUT1, timeout);
+}
+
+egl_result_t egl_rfm66_timeout_rx_preamble_set(egl_rfm66_t *rfm, uint8_t timeout)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_TIMEOUT2, timeout);
+}
+
+egl_result_t egl_rfm66_timeout_rx_preamble_get(egl_rfm66_t *rfm, uint8_t *timeout)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_TIMEOUT2, timeout);
+}
+
+egl_result_t egl_rfm66_timeout_rx_signal_sync_set(egl_rfm66_t *rfm, uint8_t timeout)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_TIMEOUT3, timeout);
+}
+
+egl_result_t egl_rfm66_timeout_rx_signal_sync_get(egl_rfm66_t *rfm, uint8_t *timeout)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_TIMEOUT3, timeout);
+}
+
+egl_result_t egl_rfm66_timeout_rx_delay_set(egl_rfm66_t *rfm, uint8_t delay)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_RX_DELAY, delay);
+}
+
+egl_result_t egl_rfm66_timeout_rx_delay_get(egl_rfm66_t *rfm, uint8_t *delay)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_DELAY, delay);
+}
