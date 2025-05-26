@@ -1410,3 +1410,13 @@ egl_result_t egl_rfm66_rc_calibration_start(egl_rfm66_t *rfm)
 
     return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OSC, regval.raw);
 }
+
+egl_result_t egl_rfm66_preamble_set(egl_rfm66_t *rfm, uint16_t bytes)
+{
+    return egl_rfm66_write_burst(rfm, EGL_RFM66_REG_PREAMBLE_MSB, &bytes, sizeof(bytes));
+}
+
+egl_result_t egl_rfm66_preamble_get(egl_rfm66_t *rfm, uint16_t *bytes)
+{
+    return egl_rfm66_read_burst(rfm, EGL_RFM66_REG_PREAMBLE_MSB, bytes, sizeof(*bytes));
+}

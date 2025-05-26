@@ -41,6 +41,8 @@
 #define EGL_RFM66_REG_RX_TIMEOUT3           (0x22)
 #define EGL_RFM66_REG_RX_DELAY              (0x23)
 #define EGL_RFM66_REG_OSC                   (0x24)
+#define EGL_RFM66_REG_PREAMBLE_MSB          (0x25)
+#define EGL_RFM66_REG_PREAMBLE_LSB          (0x26)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -317,6 +319,7 @@ egl_result_t egl_rfm66_timeout_rx_delay_get(egl_rfm66_t *rfm, uint8_t *delay);
 egl_result_t egl_rfm66_clk_out_set(egl_rfm66_t *rfm, egl_rfm66_clk_out_t out);
 egl_result_t egl_rfm66_clk_out_get(egl_rfm66_t *rfm, egl_rfm66_clk_out_t *out);
 egl_result_t egl_rfm66_rc_calibration_start(egl_rfm66_t *rfm);
-
+egl_result_t egl_rfm66_preamble_set(egl_rfm66_t *rfm, uint16_t bytes);
+egl_result_t egl_rfm66_preamble_get(egl_rfm66_t *rfm, uint16_t *bytes);
 
 #endif
