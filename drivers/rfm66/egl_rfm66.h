@@ -43,6 +43,7 @@
 #define EGL_RFM66_REG_OSC                   (0x24)
 #define EGL_RFM66_REG_PREAMBLE_MSB          (0x25)
 #define EGL_RFM66_REG_PREAMBLE_LSB          (0x26)
+#define EGL_RFM66_REG_SYNC_CONFIG           (0x27)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -206,6 +207,25 @@ typedef enum
     EGL_RFM66_CLK_OUT_OFF
 }egl_rfm66_clk_out_t;
 
+typedef enum
+{
+    EGL_RFM66_FIFO_FILL_COND_SYNC_ADDR,
+    EGL_RFM66_FIFO_FILL_COND_FIFO_COND_SET
+}egl_rfm66_fifo_fill_cond_t;
+
+typedef enum
+{
+    EGL_RFM66_PREAMBLE_POL_AA,
+    EGL_RFM66_PREAMBLE_POL_55
+}egl_rfm66_preamble_pol_t;
+
+typedef enum
+{
+    EGL_RFM66_AUTO_RESTART_RX_MODE_OFF,
+    EGL_RFM66_AUTO_RESTART_RX_MODE_ON_WO_PLL,
+    EGL_RFM66_AUTO_RESTART_RX_MODE_ON_WITH_PLL
+}egl_rfm66_auto_restart_rx_mode_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -321,5 +341,15 @@ egl_result_t egl_rfm66_clk_out_get(egl_rfm66_t *rfm, egl_rfm66_clk_out_t *out);
 egl_result_t egl_rfm66_rc_calibration_start(egl_rfm66_t *rfm);
 egl_result_t egl_rfm66_preamble_set(egl_rfm66_t *rfm, uint16_t bytes);
 egl_result_t egl_rfm66_preamble_get(egl_rfm66_t *rfm, uint16_t *bytes);
+egl_result_t egl_rfm66_sync_size_set(egl_rfm66_t *rfm, uint8_t size);
+egl_result_t egl_rfm66_sync_size_get(egl_rfm66_t *rfm, uint8_t *size);
+egl_result_t egl_rfm66_fifo_fill_cond_set(egl_rfm66_t *rfm, egl_rfm66_fifo_fill_cond_t cond);
+egl_result_t egl_rfm66_fifo_fill_cond_get(egl_rfm66_t *rfm, egl_rfm66_fifo_fill_cond_t *cond);
+egl_result_t egl_rfm66_sync_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_sync_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_preamble_polarity_set(egl_rfm66_t *rfm, egl_rfm66_preamble_pol_t polarity);
+egl_result_t egl_rfm66_preamble_polarity_get(egl_rfm66_t *rfm, egl_rfm66_preamble_pol_t *polarity);
+egl_result_t egl_rfm66_auto_restart_rx_mode_set(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t mode);
+egl_result_t egl_rfm66_auto_restart_rx_mode_get(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t *mode);
 
 #endif

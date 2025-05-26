@@ -150,6 +150,18 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_osc_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t sync_size : 3;
+        uint8_t fifo_fill_condition : 1;
+        uint8_t sync_on : 1;
+        uint8_t preamble_polarity : 1;
+        uint8_t auto_restart_rx_mode : 2;
+    }bitfield;
+}egl_rfm66_reg_sync_config_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -1419,4 +1431,136 @@ egl_result_t egl_rfm66_preamble_set(egl_rfm66_t *rfm, uint16_t bytes)
 egl_result_t egl_rfm66_preamble_get(egl_rfm66_t *rfm, uint16_t *bytes)
 {
     return egl_rfm66_read_burst(rfm, EGL_RFM66_REG_PREAMBLE_MSB, bytes, sizeof(*bytes));
+}
+
+egl_result_t egl_rfm66_sync_size_set(egl_rfm66_t *rfm, uint8_t size)
+{
+    EGL_ASSERT_CHECK(size <= 7, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sync_size = size;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_sync_size_get(egl_rfm66_t *rfm, uint8_t *size)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *size = regval.bitfield.sync_size;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_fifo_fill_cond_set(egl_rfm66_t *rfm, egl_rfm66_fifo_fill_cond_t cond)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.fifo_fill_condition = cond;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_fifo_fill_cond_get(egl_rfm66_t *rfm, egl_rfm66_fifo_fill_cond_t *cond)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *cond = regval.bitfield.fifo_fill_condition;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_sync_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sync_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_sync_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.sync_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_preamble_polarity_set(egl_rfm66_t *rfm, egl_rfm66_preamble_pol_t polarity)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.preamble_polarity = polarity;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_preamble_polarity_get(egl_rfm66_t *rfm, egl_rfm66_preamble_pol_t *polarity)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *polarity = regval.bitfield.preamble_polarity;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_auto_restart_rx_mode_set(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.auto_restart_rx_mode = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, regval.raw);
+}
+
+egl_result_t egl_rfm66_auto_restart_rx_mode_get(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_sync_config_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.auto_restart_rx_mode;
+
+    return result;
 }
