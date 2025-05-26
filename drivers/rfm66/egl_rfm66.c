@@ -138,7 +138,17 @@ typedef union
         uint8_t preamble_detector_size : 2;
         uint8_t preamble_detector_on : 1;
     }bitfield;
-}egk_rfm66_reg_preamble_detect_t;
+}egl_rfm66_reg_preamble_detect_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t clk_out : 3;
+        uint8_t rc_cal_start : 1;
+    }bitfield;
+}egl_rfm66_reg_osc_t;
 
 #pragma pack(pop)
 
@@ -1247,7 +1257,7 @@ egl_result_t egl_rfm66_preamble_detect_tol_set(egl_rfm66_t *rfm, uint8_t tol)
     EGL_ASSERT_CHECK(tol <= 31, EGL_OUT_OF_BOUNDARY);
 
     egl_result_t result;
-    egk_rfm66_reg_preamble_detect_t regval;
+    egl_rfm66_reg_preamble_detect_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1260,7 +1270,7 @@ egl_result_t egl_rfm66_preamble_detect_tol_set(egl_rfm66_t *rfm, uint8_t tol)
 egl_result_t egl_rfm66_preamble_detect_tol_get(egl_rfm66_t *rfm, uint8_t *tol)
 {
     egl_result_t result;
-    egk_rfm66_reg_preamble_detect_t regval;
+    egl_rfm66_reg_preamble_detect_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1273,7 +1283,7 @@ egl_result_t egl_rfm66_preamble_detect_tol_get(egl_rfm66_t *rfm, uint8_t *tol)
 egl_result_t egl_rfm66_preamble_detect_size_set(egl_rfm66_t *rfm, egl_rfm66_preamble_detect_size_t size)
 {
     egl_result_t result;
-    egk_rfm66_reg_preamble_detect_t regval;
+    egl_rfm66_reg_preamble_detect_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1286,7 +1296,7 @@ egl_result_t egl_rfm66_preamble_detect_size_set(egl_rfm66_t *rfm, egl_rfm66_prea
 egl_result_t egl_rfm66_preamble_detect_size_get(egl_rfm66_t *rfm, egl_rfm66_preamble_detect_size_t *size)
 {
     egl_result_t result;
-    egk_rfm66_reg_preamble_detect_t regval;
+    egl_rfm66_reg_preamble_detect_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1299,7 +1309,7 @@ egl_result_t egl_rfm66_preamble_detect_size_get(egl_rfm66_t *rfm, egl_rfm66_prea
 egl_result_t egl_rfm66_preamble_detect_state_set(egl_rfm66_t *rfm, bool state)
 {
     egl_result_t result;
-    egk_rfm66_reg_preamble_detect_t regval;
+    egl_rfm66_reg_preamble_detect_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1312,7 +1322,7 @@ egl_result_t egl_rfm66_preamble_detect_state_set(egl_rfm66_t *rfm, bool state)
 egl_result_t egl_rfm66_preamble_detect_state_get(egl_rfm66_t *rfm, bool *state)
 {
     egl_result_t result;
-    egk_rfm66_reg_preamble_detect_t regval;
+    egl_rfm66_reg_preamble_detect_t regval;
 
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PREAMBLE_DETECT, &regval.raw);
     EGL_RESULT_CHECK(result);
@@ -1360,4 +1370,43 @@ egl_result_t egl_rfm66_timeout_rx_delay_set(egl_rfm66_t *rfm, uint8_t delay)
 egl_result_t egl_rfm66_timeout_rx_delay_get(egl_rfm66_t *rfm, uint8_t *delay)
 {
     return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RX_DELAY, delay);
+}
+
+egl_result_t egl_rfm66_clk_out_set(egl_rfm66_t *rfm, egl_rfm66_clk_out_t out)
+{
+    egl_result_t result;
+    egl_rfm66_reg_osc_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OSC, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.clk_out = out;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OSC, regval.raw);
+}
+
+egl_result_t egl_rfm66_clk_out_get(egl_rfm66_t *rfm, egl_rfm66_clk_out_t *out)
+{
+    egl_result_t result;
+    egl_rfm66_reg_osc_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OSC, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *out = regval.bitfield.clk_out;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_rc_calibration_start(egl_rfm66_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm66_reg_osc_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_OSC, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.rc_cal_start = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_OSC, regval.raw);
 }

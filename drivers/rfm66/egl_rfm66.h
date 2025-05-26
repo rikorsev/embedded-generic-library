@@ -40,6 +40,7 @@
 #define EGL_RFM66_REG_RX_TIMEOUT2           (0x21)
 #define EGL_RFM66_REG_RX_TIMEOUT3           (0x22)
 #define EGL_RFM66_REG_RX_DELAY              (0x23)
+#define EGL_RFM66_REG_OSC                   (0x24)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -191,6 +192,18 @@ typedef enum
     EGL_RFM66_PREAMBLE_DETECT_SIZE_3_BYTE,
 }egl_rfm66_preamble_detect_size_t;
 
+typedef enum
+{
+    EGL_RFM66_CLK_OUT_FXOSC,
+    EGL_RFM66_CLK_OUT_FXOSC_DIV_2,
+    EGL_RFM66_CLK_OUT_FXOSC_DIV_4,
+    EGL_RFM66_CLK_OUT_FXOSC_DIV_8,
+    EGL_RFM66_CLK_OUT_FXOSC_DIV_16,
+    EGL_RFM66_CLK_OUT_FXOSC_DIV_32,
+    EGL_RFM66_CLK_OUT_RC,
+    EGL_RFM66_CLK_OUT_OFF
+}egl_rfm66_clk_out_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -301,5 +314,9 @@ egl_result_t egl_rfm66_timeout_rx_signal_sync_set(egl_rfm66_t *rfm, uint8_t time
 egl_result_t egl_rfm66_timeout_rx_signal_sync_get(egl_rfm66_t *rfm, uint8_t *timeout);
 egl_result_t egl_rfm66_timeout_rx_delay_set(egl_rfm66_t *rfm, uint8_t delay);
 egl_result_t egl_rfm66_timeout_rx_delay_get(egl_rfm66_t *rfm, uint8_t *delay);
+egl_result_t egl_rfm66_clk_out_set(egl_rfm66_t *rfm, egl_rfm66_clk_out_t out);
+egl_result_t egl_rfm66_clk_out_get(egl_rfm66_t *rfm, egl_rfm66_clk_out_t *out);
+egl_result_t egl_rfm66_rc_calibration_start(egl_rfm66_t *rfm);
+
 
 #endif
