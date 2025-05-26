@@ -1717,6 +1717,7 @@ egl_result_t egl_rfm69_sync_tol_get(egl_rfm69_t *rfm, uint8_t *tol)
 egl_result_t egl_rfm69_sync_size_set(egl_rfm69_t *rfm, uint8_t size)
 {
     EGL_ASSERT_CHECK(size <= 8, EGL_OUT_OF_BOUNDARY);
+    EGL_ASSERT_CHECK(size > 0, EGL_OUT_OF_BOUNDARY);
 
     egl_result_t result;
     egl_rfm69_reg_sync_config_t regval;
@@ -1798,7 +1799,6 @@ egl_result_t egl_rfm69_sync_set(egl_rfm69_t *rfm, uint8_t *sync, uint8_t size)
 {
     egl_result_t result;
 
-    EGL_ASSERT_CHECK(size <= EGL_RFM69_SYNC_MAX_SIZE, EGL_OUT_OF_BOUNDARY);
     EGL_ASSERT_CHECK(sync != NULL, EGL_NULL_POINTER);
 
     result = egl_rfm69_sync_size_set(rfm, size);

@@ -44,9 +44,18 @@
 #define EGL_RFM66_REG_PREAMBLE_MSB          (0x25)
 #define EGL_RFM66_REG_PREAMBLE_LSB          (0x26)
 #define EGL_RFM66_REG_SYNC_CONFIG           (0x27)
+#define EGL_RFM66_REG_SYNC_VALUE1           (0x28)
+#define EGL_RFM66_REG_SYNC_VALUE2           (0x29)
+#define EGL_RFM66_REG_SYNC_VALUE3           (0x2A)
+#define EGL_RFM66_REG_SYNC_VALUE4           (0x2B)
+#define EGL_RFM66_REG_SYNC_VALUE5           (0x2C)
+#define EGL_RFM66_REG_SYNC_VALUE6           (0x2D)
+#define EGL_RFM66_REG_SYNC_VALUE7           (0x2E)
+#define EGL_RFM66_REG_SYNC_VALUE8           (0x2F)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
+#define EGL_RFM66_SYNC_MAX_SIZE             (8U)
 
 typedef enum
 {
@@ -351,5 +360,8 @@ egl_result_t egl_rfm66_preamble_polarity_set(egl_rfm66_t *rfm, egl_rfm66_preambl
 egl_result_t egl_rfm66_preamble_polarity_get(egl_rfm66_t *rfm, egl_rfm66_preamble_pol_t *polarity);
 egl_result_t egl_rfm66_auto_restart_rx_mode_set(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t mode);
 egl_result_t egl_rfm66_auto_restart_rx_mode_get(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t *mode);
+egl_result_t egl_rfm66_sync_set(egl_rfm66_t *rfm, uint8_t *sync, uint8_t size);
+egl_result_t egl_rfm66_sync_get(egl_rfm66_t *rfm, uint8_t *sync, uint8_t *size);
+
 
 #endif

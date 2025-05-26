@@ -1435,7 +1435,8 @@ egl_result_t egl_rfm66_preamble_get(egl_rfm66_t *rfm, uint16_t *bytes)
 
 egl_result_t egl_rfm66_sync_size_set(egl_rfm66_t *rfm, uint8_t size)
 {
-    EGL_ASSERT_CHECK(size <= 7, EGL_OUT_OF_BOUNDARY);
+    EGL_ASSERT_CHECK(size <= EGL_RFM66_SYNC_MAX_SIZE, EGL_OUT_OF_BOUNDARY);
+    EGL_ASSERT_CHECK(size > 0, EGL_OUT_OF_BOUNDARY);
 
     egl_result_t result;
     egl_rfm66_reg_sync_config_t regval;
@@ -1443,7 +1444,7 @@ egl_result_t egl_rfm66_sync_size_set(egl_rfm66_t *rfm, uint8_t size)
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    regval.bitfield.sync_size = size;
+    regval.bitfield.sync_size = size - 1;
 
     return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, regval.raw);
 }
@@ -1456,7 +1457,7 @@ egl_result_t egl_rfm66_sync_size_get(egl_rfm66_t *rfm, uint8_t *size)
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SYNC_CONFIG, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    *size = regval.bitfield.sync_size;
+    *size = regval.bitfield.sync_size + 1;
 
     return result;
 }
@@ -1563,4 +1564,26 @@ egl_result_t egl_rfm66_auto_restart_rx_mode_get(egl_rfm66_t *rfm, egl_rfm66_auto
     *mode = regval.bitfield.auto_restart_rx_mode;
 
     return result;
+}
+
+egl_result_t egl_rfm66_sync_set(egl_rfm66_t *rfm, uint8_t *sync, uint8_t size)
+{
+    egl_result_t result;
+
+    EGL_ASSERT_CHECK(sync != NULL, EGL_NULL_POINTER);
+
+    result = egl_rfm66_sync_size_set(rfm, size);
+    EGL_RESULT_CHECK(result);
+
+    return egl_rfm66_write_burst(rfm, EGL_RFM66_REG_SYNC_VALUE1, sync, size);
+}
+
+egl_result_t egl_rfm66_sync_get(egl_rfm66_t *rfm, uint8_t *sync, uint8_t *size)
+{
+    egl_result_t result;
+
+    result = egl_rfm66_sync_size_get(rfm, size);
+    EGL_RESULT_CHECK(result);
+
+    return egl_rfm66_read_burst(rfm, EGL_RFM66_REG_SYNC_VALUE1, sync, *size);
 }
