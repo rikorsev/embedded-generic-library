@@ -52,6 +52,9 @@
 #define EGL_RFM66_REG_SYNC_VALUE6           (0x2D)
 #define EGL_RFM66_REG_SYNC_VALUE7           (0x2E)
 #define EGL_RFM66_REG_SYNC_VALUE8           (0x2F)
+#define EGL_RFM66_REG_PACKET_CONFIG1        (0x30)
+#define EGL_RFM66_REG_PACKET_CONFIG2        (0x31)
+#define EGL_RFM66_REG_PACKET_LENGTH         (0x32)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -235,6 +238,38 @@ typedef enum
     EGL_RFM66_AUTO_RESTART_RX_MODE_ON_WITH_PLL
 }egl_rfm66_auto_restart_rx_mode_t;
 
+typedef enum
+{
+    EGL_RFM66_CRC_WHITENING_TYPE_CCITT,
+    EGL_RFM66_CRC_WHITENING_TYPE_IBM
+}egl_rfm66_crc_whitening_t;
+
+typedef enum
+{
+    EGL_RFM66_ADDRESS_FILTERING_NONE,
+    EGL_RFM66_ADDRESS_FILTERING_MATCH_NODE_ADDRESS,
+    EGK_RFM66_ADDRESS_FILTERING_MATCH_NODE_AND_BROADCAST_ADDRESS
+}egl_rfm66_address_filtering_t;
+
+typedef enum
+{
+    EGL_RFM66_DC_FREE_ENCODING_OFF,
+    EGL_RFM66_DC_FREE_ENCODING_MANCHESTER,
+    EGL_RFM66_DC_FREE_ENCODING_WHITENING
+}egl_rfm66_dc_free_t;
+
+typedef enum
+{
+    EGL_RFM66_PACKET_FORMAT_FIXED,
+    EGL_RFM66_PACKET_FORMAT_VARIABLE
+}egl_rfm66_packet_format_t;
+
+typedef enum
+{
+    EGL_RFM66_DATA_MODE_CONTINIOUS,
+    EGL_RFM66_DATA_MODE_PACKET
+}egl_rfm66_data_mode_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -362,6 +397,27 @@ egl_result_t egl_rfm66_auto_restart_rx_mode_set(egl_rfm66_t *rfm, egl_rfm66_auto
 egl_result_t egl_rfm66_auto_restart_rx_mode_get(egl_rfm66_t *rfm, egl_rfm66_auto_restart_rx_mode_t *mode);
 egl_result_t egl_rfm66_sync_set(egl_rfm66_t *rfm, uint8_t *sync, uint8_t size);
 egl_result_t egl_rfm66_sync_get(egl_rfm66_t *rfm, uint8_t *sync, uint8_t *size);
-
+egl_result_t egl_rfm66_crc_whitening_type_set(egl_rfm66_t *rfm, egl_rfm66_crc_whitening_t whitening);
+egl_result_t egl_rfm66_crc_whitening_type_get(egl_rfm66_t *rfm, egl_rfm66_crc_whitening_t *whitening);
+egl_result_t egl_rfm66_address_filtering_set(egl_rfm66_t *rfm, egl_rfm66_address_filtering_t filteing);
+egl_result_t egl_rfm66_address_filtering_get(egl_rfm66_t *rfm, egl_rfm66_address_filtering_t *filteing);
+egl_result_t egl_rfm66_crc_autoclear_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_crc_autoclear_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_crc_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_crc_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_dc_free_set(egl_rfm66_t *rfm, egl_rfm66_dc_free_t type);
+egl_result_t egl_rfm66_dc_free_get(egl_rfm66_t *rfm, egl_rfm66_dc_free_t *type);
+egl_result_t egl_rfm66_packet_format_set(egl_rfm66_t *rfm, egl_rfm66_packet_format_t format);
+egl_result_t egl_rfm66_packet_format_get(egl_rfm66_t *rfm, egl_rfm66_packet_format_t *format);
+egl_result_t egl_rfm66_packet_length_set(egl_rfm66_t *rfm, uint16_t length);
+egl_result_t egl_rfm66_packet_length_get(egl_rfm66_t *rfm, uint16_t *length);
+egl_result_t egl_rfm66_beacon_mode_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_beacon_mode_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_io_home_power_frame_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_io_home_power_frame_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_io_home_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_io_home_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_data_mode_set(egl_rfm66_t *rfm, egl_rfm66_data_mode_t mode);
+egl_result_t egl_rfm66_data_mode_get(egl_rfm66_t *rfm, egl_rfm66_data_mode_t *mode);
 
 #endif
