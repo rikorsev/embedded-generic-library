@@ -55,6 +55,9 @@
 #define EGL_RFM66_REG_PACKET_CONFIG1        (0x30)
 #define EGL_RFM66_REG_PACKET_CONFIG2        (0x31)
 #define EGL_RFM66_REG_PACKET_LENGTH         (0x32)
+#define EGL_RFM66_REG_MODE_ADRS             (0x33)
+#define EGL_RFM66_REG_BROADCAST_ADRS        (0x34)
+#define EGL_RFM66_REG_FIFO_THRESH           (0x35)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -270,6 +273,12 @@ typedef enum
     EGL_RFM66_DATA_MODE_PACKET
 }egl_rfm66_data_mode_t;
 
+typedef enum
+{
+    EGL_RFM66_TX_START_CONDITION_FIFO_LEVEL,
+    EGL_RFM66_TX_START_CONDITION_FIFO_EMPTY
+}egl_rfm66_tx_start_condition_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -419,5 +428,13 @@ egl_result_t egl_rfm66_io_home_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_io_home_state_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_data_mode_set(egl_rfm66_t *rfm, egl_rfm66_data_mode_t mode);
 egl_result_t egl_rfm66_data_mode_get(egl_rfm66_t *rfm, egl_rfm66_data_mode_t *mode);
+egl_result_t egl_rfm66_node_address_set(egl_rfm66_t *rfm, uint8_t address);
+egl_result_t egl_rfm66_node_address_get(egl_rfm66_t *rfm, uint8_t *address);
+egl_result_t egl_rfm66_broadcast_address_set(egl_rfm66_t *rfm, uint8_t address);
+egl_result_t egl_rfm66_broadcast_address_get(egl_rfm66_t *rfm, uint8_t *address);
+egl_result_t egl_rfm66_fifo_thresh_set(egl_rfm66_t *rfm, uint8_t thresh);
+egl_result_t egl_rfm66_fifo_thresh_get(egl_rfm66_t *rfm, uint8_t *thresh);
+egl_result_t egl_rfm66_tx_start_condition_set(egl_rfm66_t *rfm, egl_rfm66_tx_start_condition_t cond);
+egl_result_t egl_rfm66_tx_start_condition_get(egl_rfm66_t *rfm, egl_rfm66_tx_start_condition_t *cond);
 
 #endif

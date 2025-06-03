@@ -190,6 +190,17 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_packet_config2_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t fifo_threshold : 6;
+        uint8_t reserved : 1;
+        uint8_t tx_start_condition : 1;
+    }bitfield;
+}egl_rfm66_reg_fifo_thresh_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -1914,3 +1925,76 @@ egl_result_t egl_rfm66_data_mode_get(egl_rfm66_t *rfm, egl_rfm66_data_mode_t *mo
     return result;
 }
 
+egl_result_t egl_rfm66_node_address_set(egl_rfm66_t *rfm, uint8_t address)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_MODE_ADRS, address);
+}
+
+egl_result_t egl_rfm66_node_address_get(egl_rfm66_t *rfm, uint8_t *address)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_MODE_ADRS, address);
+}
+
+egl_result_t egl_rfm66_broadcast_address_set(egl_rfm66_t *rfm, uint8_t address)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_BROADCAST_ADRS, address);
+}
+
+egl_result_t egl_rfm66_broadcast_address_get(egl_rfm66_t *rfm, uint8_t *address)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_BROADCAST_ADRS, address);
+}
+
+egl_result_t egl_rfm66_fifo_thresh_set(egl_rfm66_t *rfm, uint8_t thresh)
+{
+    EGL_ASSERT_CHECK(thresh < 32, EGL_OUT_OF_BOUNDARY)
+
+    egl_result_t result;
+    egl_rfm66_reg_fifo_thresh_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_FIFO_THRESH, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.fifo_threshold = thresh;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_FIFO_THRESH, regval.raw);
+}
+
+egl_result_t egl_rfm66_fifo_thresh_get(egl_rfm66_t *rfm, uint8_t *thresh)
+{
+    egl_result_t result;
+    egl_rfm66_reg_fifo_thresh_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_FIFO_THRESH, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *thresh = regval.bitfield.fifo_threshold;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_tx_start_condition_set(egl_rfm66_t *rfm, egl_rfm66_tx_start_condition_t cond)
+{
+    egl_result_t result;
+    egl_rfm66_reg_fifo_thresh_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_FIFO_THRESH, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.tx_start_condition = cond;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_FIFO_THRESH, regval.raw);
+}
+
+egl_result_t egl_rfm66_tx_start_condition_get(egl_rfm66_t *rfm, egl_rfm66_tx_start_condition_t *cond)
+{
+    egl_result_t result;
+    egl_rfm66_reg_fifo_thresh_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_FIFO_THRESH, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *cond = regval.bitfield.tx_start_condition;
+
+    return result;
+}
