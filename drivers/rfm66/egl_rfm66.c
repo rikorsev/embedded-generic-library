@@ -201,6 +201,31 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_fifo_thresh_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t from_transmit : 1;
+        uint8_t from_idle : 1;
+        uint8_t low_power_selection : 1;
+        uint8_t from_start : 2;
+        uint8_t idle_mode : 1;
+        uint8_t sequencer_stop : 1;
+        uint8_t sequencer_start : 1;
+    }bitfield;
+}egl_rfm66_reg_seq_config1_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t from_packet_received : 3;
+        uint8_t from_rx_timeout : 2;
+        uint8_t from_receive : 3;
+    }bitfield;
+}egl_rfm66_reg_seq_config2_t;
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -1995,6 +2020,240 @@ egl_result_t egl_rfm66_tx_start_condition_get(egl_rfm66_t *rfm, egl_rfm66_tx_sta
     EGL_RESULT_CHECK(result);
 
     *cond = regval.bitfield.tx_start_condition;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_from_transmit_set(egl_rfm66_t *rfm, egl_rfm66_from_transmit_t to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.from_transmit = to;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_transmit_get(egl_rfm66_t *rfm, egl_rfm66_from_transmit_t *to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *to = regval.bitfield.from_transmit;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_from_idle_set(egl_rfm66_t *rfm, egl_rfm66_from_idle_t to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.from_idle = to;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_idle_get(egl_rfm66_t *rfm, egl_rfm66_from_idle_t *to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *to = regval.bitfield.from_idle;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_low_power_selection_set(egl_rfm66_t *rfm, egl_rfm66_low_power_selection_t selection)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.low_power_selection = selection;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_low_power_selection_get(egl_rfm66_t *rfm, egl_rfm66_low_power_selection_t *selection)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *selection = regval.bitfield.low_power_selection;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_from_start_set(egl_rfm66_t *rfm, egl_rfm66_from_start_t to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.from_start = to;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_start_get(egl_rfm66_t *rfm, egl_rfm66_from_start_t *to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *to = regval.bitfield.from_start;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_idle_mode_set(egl_rfm66_t *rfm, egl_rfm66_idle_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.idle_mode = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_idle_mode_get(egl_rfm66_t *rfm, egl_rfm66_idle_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.idle_mode;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_sequencer_start(egl_rfm66_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sequencer_start = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_sequencer_stop(egl_rfm66_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.sequencer_stop = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG1, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_packet_received_set(egl_rfm66_t *rfm, egl_rfm66_from_packet_received_t to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.from_packet_received = to;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_packet_received_get(egl_rfm66_t *rfm, egl_rfm66_from_packet_received_t *to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *to = regval.bitfield.from_packet_received;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_from_rx_timeout_set(egl_rfm66_t *rfm, egl_rfm66_from_rx_timeout_t to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.from_rx_timeout = to;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_rx_timeout_get(egl_rfm66_t *rfm, egl_rfm66_from_rx_timeout_t *to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *to = regval.bitfield.from_rx_timeout;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_from_receive_set(egl_rfm66_t *rfm, egl_rfm66_from_receive_t to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.from_receive = to;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, regval.raw);
+}
+
+egl_result_t egl_rfm66_from_receive_get(egl_rfm66_t *rfm, egl_rfm66_from_receive_t *to)
+{
+    egl_result_t result;
+    egl_rfm66_reg_seq_config2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_SEQ_CONFIG2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *to = regval.bitfield.from_receive;
 
     return result;
 }

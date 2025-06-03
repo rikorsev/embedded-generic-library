@@ -58,6 +58,8 @@
 #define EGL_RFM66_REG_MODE_ADRS             (0x33)
 #define EGL_RFM66_REG_BROADCAST_ADRS        (0x34)
 #define EGL_RFM66_REG_FIFO_THRESH           (0x35)
+#define EGL_RFM66_REG_SEQ_CONFIG1           (0x36)
+#define EGL_RFM66_REG_SEQ_CONFIG2           (0x37)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -279,6 +281,65 @@ typedef enum
     EGL_RFM66_TX_START_CONDITION_FIFO_EMPTY
 }egl_rfm66_tx_start_condition_t;
 
+typedef enum
+{
+    EGL_RFM66_FROM_TRANSMIT_TO_LOW_POWER,
+    EGL_RFM66_FROM_TRANSMIT_TO_RECEIVE
+}egl_rfm66_from_transmit_t;
+
+typedef enum
+{
+    EGL_RFM66_FROM_IDLE_TO_TRANSMIT,
+    EGL_RFM66_FROM_IDLE_TO_RECEIVE,
+}egl_rfm66_from_idle_t;
+
+typedef enum
+{
+    EGL_RFM66_LOW_POWER_SELECTION_SEQUENCER_OFF,
+    EGL_RFM66_LOW_POWER_SELECTION_IDLE_STATE
+}egl_rfm66_low_power_selection_t;
+
+typedef enum
+{
+    EGL_RFM66_FROM_START_TO_LOW_POWER,
+    EGL_RFM66_FROM_START_TO_RECEIVE,
+    EGL_RFM66_FROM_START_TO_TRANSMIT,
+    EGL_RFM66_FROM_START_TO_TRANSMIT_ON_FIFO_LEVEL
+}egl_rfm66_from_start_t;
+
+typedef enum
+{
+    EGL_RFM66_IDLE_MODE_STANDBY,
+    EGL_RFM66_IDLE_MODE_SLEEP
+}egl_rfm66_idle_mode_t;
+
+typedef enum
+{
+    EGL_RFM66_FROM_PACKET_RECEIVED_TO_SEQUENCER_OFF,
+    EGL_RFM66_FROM_PACKET_RECEIVED_TO_TRANSMIT_ON_FIFO_EMPTY,
+    EGL_RFM66_FROM_PACKET_RECEIVED_TO_LOW_POWER,
+    EGL_RFM66_FROM_PACKET_RECEIVED_TO_RECEIVE_VIA_FS_MODE,
+    EGL_RFM66_FROM_PACKET_RECEIVED_TO_RECEIVE
+}egl_rfm66_from_packet_received_t;
+
+typedef enum
+{
+    EGL_RFM66_FROM_RX_TIMEOUT_TO_RECEIVE,
+    EGL_RFM66_FROM_RX_TIMEOUT_TO_TRANSMIT,
+    EGL_RFM66_FROM_RX_TIMEOUT_TO_LOW_POWER,
+    EGL_RFM66_FROM_RX_TIMEOUT_TO_SEQUENCER_OFF
+}egl_rfm66_from_rx_timeout_t;
+
+typedef enum
+{
+    EGL_RFM66_FROM_RECEIVE_TO_PACKET_RECEIVED_ON_PAYLOAD_READY,
+    EGL_RFM66_FROM_RECEIVE_TO_LOW_POWER_ON_PAYLOAD_READY,
+    EGL_RFM66_FROM_RECEIVE_TO_PACKET_RECEIVED_ON_CRC_OK,
+    EGL_RFM66_FROM_RECEIVE_TO_SEQUENCER_OFF_ON_RSSI_INERRUPT,
+    EGL_RFM66_FROM_RECEIVE_TO_SEQUENCER_OFF_ON_SYNC_ADDRESS,
+    EGL_RFM66_FROM_RECEIVE_TO_SEQUENCER_OFF_ON_PREAMBLE_DETECT
+}egl_rfm66_from_receive_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -436,5 +497,23 @@ egl_result_t egl_rfm66_fifo_thresh_set(egl_rfm66_t *rfm, uint8_t thresh);
 egl_result_t egl_rfm66_fifo_thresh_get(egl_rfm66_t *rfm, uint8_t *thresh);
 egl_result_t egl_rfm66_tx_start_condition_set(egl_rfm66_t *rfm, egl_rfm66_tx_start_condition_t cond);
 egl_result_t egl_rfm66_tx_start_condition_get(egl_rfm66_t *rfm, egl_rfm66_tx_start_condition_t *cond);
+egl_result_t egl_rfm66_from_transmit_set(egl_rfm66_t *rfm, egl_rfm66_from_transmit_t to);
+egl_result_t egl_rfm66_from_transmit_get(egl_rfm66_t *rfm, egl_rfm66_from_transmit_t *to);
+egl_result_t egl_rfm66_from_idle_set(egl_rfm66_t *rfm, egl_rfm66_from_idle_t to);
+egl_result_t egl_rfm66_from_idle_get(egl_rfm66_t *rfm, egl_rfm66_from_idle_t *to);
+egl_result_t egl_rfm66_low_power_selection_set(egl_rfm66_t *rfm, egl_rfm66_low_power_selection_t selection);
+egl_result_t egl_rfm66_low_power_selection_get(egl_rfm66_t *rfm, egl_rfm66_low_power_selection_t *selection);
+egl_result_t egl_rfm66_from_start_set(egl_rfm66_t *rfm, egl_rfm66_from_start_t to);
+egl_result_t egl_rfm66_from_start_get(egl_rfm66_t *rfm, egl_rfm66_from_start_t *to);
+egl_result_t egl_rfm66_idle_mode_set(egl_rfm66_t *rfm, egl_rfm66_idle_mode_t mode);
+egl_result_t egl_rfm66_idle_mode_get(egl_rfm66_t *rfm, egl_rfm66_idle_mode_t *mode);
+egl_result_t egl_rfm66_sequencer_start(egl_rfm66_t *rfm);
+egl_result_t egl_rfm66_sequencer_stop(egl_rfm66_t *rfm);
+egl_result_t egl_rfm66_from_packet_received_set(egl_rfm66_t *rfm, egl_rfm66_from_packet_received_t to);
+egl_result_t egl_rfm66_from_packet_received_get(egl_rfm66_t *rfm, egl_rfm66_from_packet_received_t *to);
+egl_result_t egl_rfm66_from_rx_timeout_set(egl_rfm66_t *rfm, egl_rfm66_from_rx_timeout_t to);
+egl_result_t egl_rfm66_from_rx_timeout_get(egl_rfm66_t *rfm, egl_rfm66_from_rx_timeout_t *to);
+egl_result_t egl_rfm66_from_receive_set(egl_rfm66_t *rfm, egl_rfm66_from_receive_t to);
+egl_result_t egl_rfm66_from_receive_get(egl_rfm66_t *rfm, egl_rfm66_from_receive_t *to);
 
 #endif
