@@ -60,6 +60,9 @@
 #define EGL_RFM66_REG_FIFO_THRESH           (0x35)
 #define EGL_RFM66_REG_SEQ_CONFIG1           (0x36)
 #define EGL_RFM66_REG_SEQ_CONFIG2           (0x37)
+#define EGL_RFM66_REG_TIMER_RESOL           (0x38)
+#define EGL_RFM66_REG_TIMER1_COEF           (0x39)
+#define EGL_RFM66_REG_TIMER2_COEF           (0x3A)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -340,6 +343,14 @@ typedef enum
     EGL_RFM66_FROM_RECEIVE_TO_SEQUENCER_OFF_ON_PREAMBLE_DETECT
 }egl_rfm66_from_receive_t;
 
+typedef enum
+{
+    EGL_RFM66_TIMER_DISABLED,
+    EGL_RFM66_TIMER_RESOLUTION_64_US,
+    EGL_RFM66_TIMER_RESOLUTION_4_1_MS,
+    EGL_RFM66_TIMER_RESOLUTION_262_MS
+}egl_rfm66_timer_resolution_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -515,5 +526,13 @@ egl_result_t egl_rfm66_from_rx_timeout_set(egl_rfm66_t *rfm, egl_rfm66_from_rx_t
 egl_result_t egl_rfm66_from_rx_timeout_get(egl_rfm66_t *rfm, egl_rfm66_from_rx_timeout_t *to);
 egl_result_t egl_rfm66_from_receive_set(egl_rfm66_t *rfm, egl_rfm66_from_receive_t to);
 egl_result_t egl_rfm66_from_receive_get(egl_rfm66_t *rfm, egl_rfm66_from_receive_t *to);
+egl_result_t egl_rfm66_timer1_resolution_set(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t resolution);
+egl_result_t egl_rfm66_timer1_resolution_get(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t *resolution);
+egl_result_t egl_rfm66_timer2_resolution_set(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t resolution);
+egl_result_t egl_rfm66_timer2_resolution_get(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t *resolution);
+egl_result_t egl_rfm66_timer1_coef_set(egl_rfm66_t *rfm, uint8_t coef);
+egl_result_t egl_rfm66_timer1_coef_get(egl_rfm66_t *rfm, uint8_t *coef);
+egl_result_t egl_rfm66_timer2_coef_set(egl_rfm66_t *rfm, uint8_t coef);
+egl_result_t egl_rfm66_timer2_coef_get(egl_rfm66_t *rfm, uint8_t *coef);
 
 #endif

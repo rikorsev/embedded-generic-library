@@ -226,6 +226,17 @@ typedef union
         uint8_t from_receive : 3;
     }bitfield;
 }egl_rfm66_reg_seq_config2_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t timer2_resolution : 2;
+        uint8_t timer1_resolution : 2;
+    }bitfield;
+}egl_rfm66_reg_timer_resol_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -2256,4 +2267,76 @@ egl_result_t egl_rfm66_from_receive_get(egl_rfm66_t *rfm, egl_rfm66_from_receive
     *to = regval.bitfield.from_receive;
 
     return result;
+}
+
+egl_result_t egl_rfm66_timer1_resolution_set(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t resolution)
+{
+    egl_result_t result;
+    egl_rfm66_reg_timer_resol_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER_RESOL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.timer1_resolution = resolution;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_TIMER_RESOL, regval.raw);
+}
+
+egl_result_t egl_rfm66_timer1_resolution_get(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t *resolution)
+{
+    egl_result_t result;
+    egl_rfm66_reg_timer_resol_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER_RESOL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *resolution = regval.bitfield.timer1_resolution;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_timer2_resolution_set(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t resolution)
+{
+    egl_result_t result;
+    egl_rfm66_reg_timer_resol_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER_RESOL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.timer2_resolution = resolution;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_TIMER_RESOL, regval.raw);
+}
+
+egl_result_t egl_rfm66_timer2_resolution_get(egl_rfm66_t *rfm, egl_rfm66_timer_resolution_t *resolution)
+{
+    egl_result_t result;
+    egl_rfm66_reg_timer_resol_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER_RESOL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *resolution = regval.bitfield.timer2_resolution;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_timer1_coef_set(egl_rfm66_t *rfm, uint8_t coef)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_TIMER1_COEF, coef);
+}
+
+egl_result_t egl_rfm66_timer1_coef_get(egl_rfm66_t *rfm, uint8_t *coef)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER1_COEF, coef);
+}
+
+egl_result_t egl_rfm66_timer2_coef_set(egl_rfm66_t *rfm, uint8_t coef)
+{
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_TIMER2_COEF, coef);
+}
+
+egl_result_t egl_rfm66_timer2_coef_get(egl_rfm66_t *rfm, uint8_t *coef)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER2_COEF, coef);
 }
