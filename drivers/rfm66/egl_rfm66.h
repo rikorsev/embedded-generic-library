@@ -64,6 +64,7 @@
 #define EGL_RFM66_REG_TIMER1_COEF           (0x39)
 #define EGL_RFM66_REG_TIMER2_COEF           (0x3A)
 #define EGL_RFM66_REG_IMAGE_CAL             (0x3B)
+#define EGL_RFM66_REG_TEMP                  (0x3C)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -559,5 +560,6 @@ egl_result_t egl_rfm66_image_cal_start(egl_rfm66_t *rfm);
 egl_result_t egl_rfm66_image_cal_state_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_auto_image_cal_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_auto_image_cal_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_temp_get(egl_rfm66_t *rfm, int8_t *temp);
 
 #endif

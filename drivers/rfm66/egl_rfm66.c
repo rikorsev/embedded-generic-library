@@ -2485,3 +2485,16 @@ egl_result_t egl_rfm66_auto_image_cal_state_get(egl_rfm66_t *rfm, bool *state)
 
     return result;
 }
+
+egl_result_t egl_rfm66_temp_get(egl_rfm66_t *rfm, int8_t *temp)
+{
+    uint8_t raw;
+    egl_result_t result;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TEMP, &raw);
+    EGL_RESULT_CHECK(result);
+
+    *temp = -(int8_t)raw;
+
+    return result;
+}
