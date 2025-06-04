@@ -237,6 +237,21 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_timer_resol_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t temp_monitor_off : 1;
+        uint8_t temp_threshold : 2;
+        uint8_t temp_change : 1;
+        uint8_t reserved : 1;
+        uint8_t image_cal_running : 1;
+        uint8_t image_cal_start : 1;
+        uint8_t auto_image_cal_on : 1;
+    }bitfield;
+}egl_rfm66_reg_image_cal_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -2339,4 +2354,134 @@ egl_result_t egl_rfm66_timer2_coef_set(egl_rfm66_t *rfm, uint8_t coef)
 egl_result_t egl_rfm66_timer2_coef_get(egl_rfm66_t *rfm, uint8_t *coef)
 {
     return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TIMER2_COEF, coef);
+}
+
+egl_result_t egl_rfm66_temp_monitor_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.temp_monitor_off = !state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, regval.raw);
+}
+
+egl_result_t egl_rfm66_temp_monitor_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = !regval.bitfield.temp_monitor_off;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_temp_threshold_set(egl_rfm66_t *rfm, egl_rfm66_temp_threshold_t threshold)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.temp_threshold = threshold;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, regval.raw);
+}
+
+egl_result_t egl_rfm66_temp_threshold_get(egl_rfm66_t *rfm, egl_rfm66_temp_threshold_t *threshold)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *threshold = regval.bitfield.temp_threshold;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_temp_change_set(egl_rfm66_t *rfm, egl_rfm66_temp_change_t change)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.temp_change = change;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, regval.raw);
+}
+
+egl_result_t egl_rfm66_temp_change_get(egl_rfm66_t *rfm, egl_rfm66_temp_change_t *change)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *change = regval.bitfield.temp_change;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_image_cal_start(egl_rfm66_t *rfm)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.image_cal_start = true;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, regval.raw);
+}
+
+egl_result_t egl_rfm66_image_cal_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.image_cal_running;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_auto_image_cal_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.auto_image_cal_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, regval.raw);
+}
+
+egl_result_t egl_rfm66_auto_image_cal_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_image_cal_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_IMAGE_CAL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.auto_image_cal_on;
+
+    return result;
 }
