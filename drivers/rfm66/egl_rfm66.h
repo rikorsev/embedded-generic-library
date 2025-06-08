@@ -65,6 +65,7 @@
 #define EGL_RFM66_REG_TIMER2_COEF           (0x3A)
 #define EGL_RFM66_REG_IMAGE_CAL             (0x3B)
 #define EGL_RFM66_REG_TEMP                  (0x3C)
+#define EGL_RFM66_REG_LOW_BAT               (0x3D)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -367,6 +368,18 @@ typedef enum
     EGL_RFM66_TEMP_CHANGE_HIGHER_THAN_THRESHOLD,
 }egl_rfm66_temp_change_t;
 
+typedef enum
+{
+    EGL_RFM66_LOW_BAT_TRIM_1695_MV,
+    EGL_RFM66_LOW_BAT_TRIM_1764_MV,
+    EGL_RFM66_LOW_BAT_TRIM_1835_MV,
+    EGL_RFM66_LOW_BAT_TRIM_1905_MV,
+    EGL_RFM66_LOW_BAT_TRIM_1976_MV,
+    EGL_RFM66_LOW_BAT_TRIM_2045_MV,
+    EGL_RFM66_LOW_BAT_TRIM_2116_MV,
+    EGL_RFM66_LOW_BAT_TRIM_2185_MV,
+}egl_rfm66_low_bat_trim_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -561,5 +574,9 @@ egl_result_t egl_rfm66_image_cal_state_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_auto_image_cal_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_auto_image_cal_state_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_temp_get(egl_rfm66_t *rfm, int8_t *temp);
+egl_result_t egl_rfm66_low_bat_trim_set(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim_t trim);
+egl_result_t egl_rfm66_low_bat_trim_get(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim_t *trim);
+egl_result_t egl_rfm66_low_bat_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_low_bat_state_get(egl_rfm66_t *rfm, bool *state);
 
 #endif

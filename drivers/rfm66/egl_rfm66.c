@@ -252,6 +252,16 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_image_cal_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t low_bat_trim : 3;
+        uint8_t low_bat_on : 1;
+    }bitfield;
+}egl_rfm66_reg_low_bat_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -2495,6 +2505,58 @@ egl_result_t egl_rfm66_temp_get(egl_rfm66_t *rfm, int8_t *temp)
     EGL_RESULT_CHECK(result);
 
     *temp = -(int8_t)raw;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_low_bat_trim_set(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim_t trim)
+{
+    egl_result_t result;
+    egl_rfm66_reg_low_bat_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LOW_BAT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.low_bat_trim = trim;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_LOW_BAT, regval.raw);
+}
+
+egl_result_t egl_rfm66_low_bat_trim_get(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim_t *trim)
+{
+    egl_result_t result;
+    egl_rfm66_reg_low_bat_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LOW_BAT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *trim = regval.bitfield.low_bat_trim;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_low_bat_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_low_bat_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LOW_BAT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.low_bat_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_LOW_BAT, regval.raw);
+}
+
+egl_result_t egl_rfm66_low_bat_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_low_bat_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_LOW_BAT, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.low_bat_on;
 
     return result;
 }
