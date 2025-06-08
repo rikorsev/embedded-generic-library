@@ -262,6 +262,30 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_low_bat_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t dio3 : 2;
+        uint8_t dio2 : 2;
+        uint8_t dio1 : 2;
+        uint8_t dio0 : 2;
+    }bitfield;
+}egl_rfm66_reg_dio_map1_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t map_preamble_detect : 1;
+        uint8_t reserved : 3;
+        uint8_t dio5 : 2;
+        uint8_t dio4 : 2;
+    }bitfield;
+}egl_rfm66_reg_dio_map2_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -2564,4 +2588,186 @@ egl_result_t egl_rfm66_low_bat_state_get(egl_rfm66_t *rfm, bool *state)
 egl_result_t egl_rfm66_flags_get(egl_rfm66_t *rfm, egl_rfm66_irq_flags_t *flags)
 {
     return egl_rfm66_read_burst(rfm, EGL_RFM66_REG_IRQ_FLAGS1, &flags->raw, sizeof(*flags));
+}
+
+egl_result_t egl_rfm66_dio0_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio0 = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm66_dio0_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio0;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_dio1_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio1 = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm66_dio1_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio1;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_dio2_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio2 = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm66_dio2_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio2;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_dio3_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio3 = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP1, regval.raw);
+}
+
+egl_result_t egl_rfm66_dio3_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio3;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_dio4_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio4 = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP2, regval.raw);
+}
+
+egl_result_t egl_rfm66_dio4_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio4;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_dio5_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.dio5 = mode;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP2, regval.raw);
+}
+
+egl_result_t egl_rfm66_dio5_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *mode = regval.bitfield.dio5;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_map_preamble_detect_set(egl_rfm66_t *rfm, egl_rfm66_map_preamble_detect_t map)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.map_preamble_detect = map;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_DIO_MAP2, regval.raw);
+}
+
+egl_result_t egl_rfm66_map_preamble_detect_get(egl_rfm66_t *rfm, egl_rfm66_map_preamble_detect_t *map)
+{
+    egl_result_t result;
+    egl_rfm66_reg_dio_map2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_DIO_MAP2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *map = regval.bitfield.map_preamble_detect;
+
+    return result;
 }

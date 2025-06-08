@@ -68,6 +68,8 @@
 #define EGL_RFM66_REG_LOW_BAT               (0x3D)
 #define EGL_RFM66_REG_IRQ_FLAGS1            (0x3E)
 #define EGL_RFM66_REG_IRQ_FLAGS2            (0x3F)
+#define EGL_RFM66_REG_DIO_MAP1              (0x40)
+#define EGL_RFM66_REG_DIO_MAP2              (0x41)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -382,6 +384,20 @@ typedef enum
     EGL_RFM66_LOW_BAT_TRIM_2185_MV,
 }egl_rfm66_low_bat_trim_t;
 
+typedef enum
+{
+    EGL_RFM66_DIO_MODE_0,
+    EGL_RFM66_DIO_MODE_1,
+    EGL_RFM66_DIO_MODE_2,
+    EGL_RFM66_DIO_MODE_3,
+}egl_rfm66_dio_mode_t;
+
+typedef enum
+{
+    EGL_RFM66_MAP_PREAMBLE_DETECT_RSSI,
+    EGL_RFM66_MAP_PREAMBLE_DETECT_PREAMBLE
+}egl_rfm66_map_preamble_detect_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -605,5 +621,19 @@ egl_result_t egl_rfm66_low_bat_trim_get(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim
 egl_result_t egl_rfm66_low_bat_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_low_bat_state_get(egl_rfm66_t *rfm, bool *state);
 egl_result_t egl_rfm66_flags_get(egl_rfm66_t *rfm, egl_rfm66_irq_flags_t *flags);
+egl_result_t egl_rfm66_dio0_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode);
+egl_result_t egl_rfm66_dio0_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
+egl_result_t egl_rfm66_dio1_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode);
+egl_result_t egl_rfm66_dio1_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
+egl_result_t egl_rfm66_dio2_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode);
+egl_result_t egl_rfm66_dio2_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
+egl_result_t egl_rfm66_dio3_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode);
+egl_result_t egl_rfm66_dio3_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
+egl_result_t egl_rfm66_dio4_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode);
+egl_result_t egl_rfm66_dio4_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
+egl_result_t egl_rfm66_dio5_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode);
+egl_result_t egl_rfm66_dio5_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
+egl_result_t egl_rfm66_map_preamble_detect_set(egl_rfm66_t *rfm, egl_rfm66_map_preamble_detect_t map);
+egl_result_t egl_rfm66_map_preamble_detect_get(egl_rfm66_t *rfm, egl_rfm66_map_preamble_detect_t *map);
 
 #endif
