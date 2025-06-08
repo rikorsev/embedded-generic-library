@@ -79,6 +79,7 @@
 #define EGL_RFM66_REG_TCXO                  (0x58)
 #define EGL_RFM66_REG_PA_DAC                (0x5A)
 #define EGL_RFM66_REG_PLL                   (0x5C)
+#define EGL_RFM66_REG_FORMER_TEMP           (0x6C)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
 #define EGL_RFM66_SYNC_MAX_SIZE             (8U)
@@ -677,5 +678,6 @@ egl_result_t egl_rfm66_pa_dac_set(egl_rfm66_t *rfm, egl_rfm66_pa_dac_t type);
 egl_result_t egl_rfm66_pa_dac_get(egl_rfm66_t *rfm, egl_rfm66_pa_dac_t *type);
 egl_result_t egl_rfm66_pll_bandwidth_set(egl_rfm66_t *rfm, egl_rfm66_pll_bandwidth_t bandwidth);
 egl_result_t egl_rfm66_pll_bandwidth_get(egl_rfm66_t *rfm, egl_rfm66_pll_bandwidth_t *bandwidth);
+egl_result_t egl_rfm66_former_temp_get(egl_rfm66_t *rfm, int8_t *temp);
 
 #endif

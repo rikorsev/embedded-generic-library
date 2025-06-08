@@ -3095,3 +3095,16 @@ egl_result_t egl_rfm66_pll_bandwidth_get(egl_rfm66_t *rfm, egl_rfm66_pll_bandwid
 
     return result;
 }
+
+egl_result_t egl_rfm66_former_temp_get(egl_rfm66_t *rfm, int8_t *temp)
+{
+    uint8_t raw;
+    egl_result_t result;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_FORMER_TEMP, &raw);
+    EGL_RESULT_CHECK(result);
+
+    *temp = -(int8_t)raw;
+
+    return result;
+}
