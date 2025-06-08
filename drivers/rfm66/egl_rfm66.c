@@ -315,6 +315,45 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_agc_thresh3_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 7;
+        uint8_t fast_hop_on : 1;
+    }bitfield;
+}egl_rfm66_reg_pll_hop_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 4;
+        uint8_t tcxo_input_on : 1;
+    }bitfield;
+}egl_rfm66_reg_tcxo_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t reserved : 6;
+        uint8_t pll_bandwidth : 2;
+    }bitfield;
+}egl_rfm66_reg_pll_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t pa_dac : 3;
+    }bitfield;
+}egl_rfm66_reg_pa_dac_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -2949,6 +2988,110 @@ egl_result_t egl_rfm66_agc_step5_get(egl_rfm66_t *rfm, uint8_t *step)
     EGL_RESULT_CHECK(result);
 
     *step = regval.bitfield.agc_step5;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_fast_hop_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pll_hop_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PLL_HOP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.fast_hop_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PLL_HOP, regval.raw);
+}
+
+egl_result_t egl_rfm66_fast_hop_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pll_hop_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PLL_HOP, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.fast_hop_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_tcxo_input_state_set(egl_rfm66_t *rfm, bool state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_tcxo_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TCXO, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.tcxo_input_on = state;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_TCXO, regval.raw);
+}
+
+egl_result_t egl_rfm66_tcxo_input_state_get(egl_rfm66_t *rfm, bool *state)
+{
+    egl_result_t result;
+    egl_rfm66_reg_tcxo_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_TCXO, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *state = regval.bitfield.tcxo_input_on;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_pa_dac_set(egl_rfm66_t *rfm, egl_rfm66_pa_dac_t type)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pa_dac_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_DAC, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pa_dac = type;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PA_DAC, regval.raw);
+}
+
+egl_result_t egl_rfm66_pa_dac_get(egl_rfm66_t *rfm, egl_rfm66_pa_dac_t *type)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pa_dac_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PA_DAC, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *type = regval.bitfield.pa_dac;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_pll_bandwidth_set(egl_rfm66_t *rfm, egl_rfm66_pll_bandwidth_t bandwidth)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pll_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PLL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.pll_bandwidth = bandwidth;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_PLL, regval.raw);
+}
+
+egl_result_t egl_rfm66_pll_bandwidth_get(egl_rfm66_t *rfm, egl_rfm66_pll_bandwidth_t *bandwidth)
+{
+    egl_result_t result;
+    egl_rfm66_reg_pll_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_PLL, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *bandwidth = regval.bitfield.pll_bandwidth;
 
     return result;
 }

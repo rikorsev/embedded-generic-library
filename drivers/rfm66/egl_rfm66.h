@@ -75,6 +75,10 @@
 #define EGL_RFM66_REG_AGC_THRESH1           (0x44)
 #define EGL_RFM66_REG_AGC_THRESH2           (0x45)
 #define EGL_RFM66_REG_AGC_THRESH3           (0x46)
+#define EGL_RFM66_REG_PLL_HOP               (0x4B)
+#define EGL_RFM66_REG_TCXO                  (0x58)
+#define EGL_RFM66_REG_PA_DAC                (0x5A)
+#define EGL_RFM66_REG_PLL                   (0x5C)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
 #define EGL_RFM66_SYNC_MAX_SIZE             (8U)
@@ -402,6 +406,20 @@ typedef enum
     EGL_RFM66_MAP_PREAMBLE_DETECT_PREAMBLE
 }egl_rfm66_map_preamble_detect_t;
 
+typedef enum
+{
+    EGL_RFM66_PA_DAC_DEFAULT = 0x04,
+    EGL_RFM66_PA_DAC_PLUS_20_DBM = 0x07
+}egl_rfm66_pa_dac_t;
+
+typedef enum
+{
+    EGL_RFM66_PLL_BANDWIDTH_75_KHZ,
+    EGL_RFM66_PLL_BANDWIDTH_150_KHZ,
+    EGL_RFM66_PLL_BANDWODTH_225_KHZ,
+    EGL_RFM66_PLL_BANDWIDTH_300_KHZ,
+}egl_rfm66_pll_bandwidth_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -651,5 +669,13 @@ egl_result_t egl_rfm66_agc_step4_set(egl_rfm66_t *rfm, uint8_t step);
 egl_result_t egl_rfm66_agc_step4_get(egl_rfm66_t *rfm, uint8_t *step);
 egl_result_t egl_rfm66_agc_step5_set(egl_rfm66_t *rfm, uint8_t step);
 egl_result_t egl_rfm66_agc_step5_get(egl_rfm66_t *rfm, uint8_t *step);
+egl_result_t egl_rfm66_fast_hop_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_fast_hop_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_tcxo_input_state_set(egl_rfm66_t *rfm, bool state);
+egl_result_t egl_rfm66_tcxo_input_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_pa_dac_set(egl_rfm66_t *rfm, egl_rfm66_pa_dac_t type);
+egl_result_t egl_rfm66_pa_dac_get(egl_rfm66_t *rfm, egl_rfm66_pa_dac_t *type);
+egl_result_t egl_rfm66_pll_bandwidth_set(egl_rfm66_t *rfm, egl_rfm66_pll_bandwidth_t bandwidth);
+egl_result_t egl_rfm66_pll_bandwidth_get(egl_rfm66_t *rfm, egl_rfm66_pll_bandwidth_t *bandwidth);
 
 #endif
