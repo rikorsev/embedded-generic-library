@@ -286,6 +286,35 @@ typedef union
     }bitfield;
 }egl_rfm66_reg_dio_map2_t;
 
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t agc_step1 : 4;
+    }bitfield;
+}egl_rfm66_reg_agc_thresh1_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t agc_step3 : 4;
+        uint8_t agc_step2 : 4;
+    }bitfield;
+}egl_rfm66_reg_agc_thresh2_t;
+
+typedef union
+{
+    uint8_t raw;
+    struct
+    {
+        uint8_t agc_step5 : 4;
+        uint8_t agc_step4 : 4;
+    }bitfield;
+}egl_rfm66_reg_agc_thresh3_t;
+
 #pragma pack(pop)
 
 static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
@@ -2768,6 +2797,158 @@ egl_result_t egl_rfm66_map_preamble_detect_get(egl_rfm66_t *rfm, egl_rfm66_map_p
     EGL_RESULT_CHECK(result);
 
     *map = regval.bitfield.map_preamble_detect;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_agc_reference_level_set(egl_rfm66_t *rfm, uint8_t level)
+{
+    EGL_ASSERT_CHECK(level < 64, EGL_OUT_OF_BOUNDARY);
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AGC_REF, level);
+}
+
+egl_result_t egl_rfm66_agc_reference_level_get(egl_rfm66_t *rfm, uint8_t *level)
+{
+    return egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_REF, level);
+}
+
+egl_result_t egl_rfm66_agc_step1_set(egl_rfm66_t *rfm, uint8_t step)
+{
+    EGL_ASSERT_CHECK(step < 16, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_step1 = step;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AGC_THRESH1, step);
+}
+
+egl_result_t egl_rfm66_agc_step1_get(egl_rfm66_t *rfm, uint8_t *step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh1_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH1, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *step = regval.bitfield.agc_step1;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_agc_step2_set(egl_rfm66_t *rfm, uint8_t step)
+{
+    EGL_ASSERT_CHECK(step < 16, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_step2 = step;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AGC_THRESH2, regval.raw);
+}
+
+egl_result_t egl_rfm66_agc_step2_get(egl_rfm66_t *rfm, uint8_t *step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *step = regval.bitfield.agc_step2;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_agc_step3_set(egl_rfm66_t *rfm, uint8_t step)
+{
+    EGL_ASSERT_CHECK(step < 16, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_step3 = step;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AGC_THRESH2, regval.raw);
+}
+
+egl_result_t egl_rfm66_agc_step3_get(egl_rfm66_t *rfm, uint8_t *step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh2_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH2, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *step = regval.bitfield.agc_step3;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_agc_step4_set(egl_rfm66_t *rfm, uint8_t step)
+{
+    EGL_ASSERT_CHECK(step < 16, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh3_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH3, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_step4 = step;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AGC_THRESH3, regval.raw);
+}
+
+egl_result_t egl_rfm66_agc_step4_get(egl_rfm66_t *rfm, uint8_t *step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh3_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH3, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *step = regval.bitfield.agc_step4;
+
+    return result;
+}
+
+egl_result_t egl_rfm66_agc_step5_set(egl_rfm66_t *rfm, uint8_t step)
+{
+    EGL_ASSERT_CHECK(step < 16, EGL_OUT_OF_BOUNDARY);
+
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh3_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH3, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    regval.bitfield.agc_step5 = step;
+
+    return egl_rfm66_write_byte(rfm, EGL_RFM66_REG_AGC_THRESH3, regval.raw);
+}
+
+egl_result_t egl_rfm66_agc_step5_get(egl_rfm66_t *rfm, uint8_t *step)
+{
+    egl_result_t result;
+    egl_rfm66_reg_agc_thresh3_t regval;
+
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_AGC_THRESH3, &regval.raw);
+    EGL_RESULT_CHECK(result);
+
+    *step = regval.bitfield.agc_step5;
 
     return result;
 }

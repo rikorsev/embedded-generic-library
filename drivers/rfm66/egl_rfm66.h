@@ -71,6 +71,10 @@
 #define EGL_RFM66_REG_DIO_MAP1              (0x40)
 #define EGL_RFM66_REG_DIO_MAP2              (0x41)
 #define EGL_RFM66_REG_VERSION               (0x42)
+#define EGL_RFM66_REG_AGC_REF               (0x43)
+#define EGL_RFM66_REG_AGC_THRESH1           (0x44)
+#define EGL_RFM66_REG_AGC_THRESH2           (0x45)
+#define EGL_RFM66_REG_AGC_THRESH3           (0x46)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
 #define EGL_RFM66_SYNC_MAX_SIZE             (8U)
@@ -635,5 +639,17 @@ egl_result_t egl_rfm66_dio5_mode_set(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t mode
 egl_result_t egl_rfm66_dio5_mode_get(egl_rfm66_t *rfm, egl_rfm66_dio_mode_t *mode);
 egl_result_t egl_rfm66_map_preamble_detect_set(egl_rfm66_t *rfm, egl_rfm66_map_preamble_detect_t map);
 egl_result_t egl_rfm66_map_preamble_detect_get(egl_rfm66_t *rfm, egl_rfm66_map_preamble_detect_t *map);
+egl_result_t egl_rfm66_agc_reference_level_set(egl_rfm66_t *rfm, uint8_t level);
+egl_result_t egl_rfm66_agc_reference_level_get(egl_rfm66_t *rfm, uint8_t *level);
+egl_result_t egl_rfm66_agc_step1_set(egl_rfm66_t *rfm, uint8_t step);
+egl_result_t egl_rfm66_agc_step1_get(egl_rfm66_t *rfm, uint8_t *step);
+egl_result_t egl_rfm66_agc_step2_set(egl_rfm66_t *rfm, uint8_t step);
+egl_result_t egl_rfm66_agc_step2_get(egl_rfm66_t *rfm, uint8_t *step);
+egl_result_t egl_rfm66_agc_step3_set(egl_rfm66_t *rfm, uint8_t step);
+egl_result_t egl_rfm66_agc_step3_get(egl_rfm66_t *rfm, uint8_t *step);
+egl_result_t egl_rfm66_agc_step4_set(egl_rfm66_t *rfm, uint8_t step);
+egl_result_t egl_rfm66_agc_step4_get(egl_rfm66_t *rfm, uint8_t *step);
+egl_result_t egl_rfm66_agc_step5_set(egl_rfm66_t *rfm, uint8_t step);
+egl_result_t egl_rfm66_agc_step5_get(egl_rfm66_t *rfm, uint8_t *step);
 
 #endif
