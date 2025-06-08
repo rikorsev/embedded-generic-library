@@ -66,6 +66,8 @@
 #define EGL_RFM66_REG_IMAGE_CAL             (0x3B)
 #define EGL_RFM66_REG_TEMP                  (0x3C)
 #define EGL_RFM66_REG_LOW_BAT               (0x3D)
+#define EGL_RFM66_REG_IRQ_FLAGS1            (0x3E)
+#define EGL_RFM66_REG_IRQ_FLAGS2            (0x3F)
 #define EGL_RFM66_REG_VERSION               (0x42)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
@@ -380,6 +382,30 @@ typedef enum
     EGL_RFM66_LOW_BAT_TRIM_2185_MV,
 }egl_rfm66_low_bat_trim_t;
 
+typedef union __attribute__((packed, aligned(1)))
+{
+    uint16_t raw;
+    struct
+    {
+        uint16_t sync_addr_match : 1;
+        uint16_t preamble_detect : 1;
+        uint16_t timeout : 1;
+        uint16_t rssi : 1;
+        uint16_t pll_lock : 1;
+        uint16_t tx_ready : 1;
+        uint16_t rx_ready : 1;
+        uint16_t mode_ready : 1;
+        uint16_t low_bat : 1;
+        uint16_t crc_ok : 1;
+        uint16_t payload_ready : 1;
+        uint16_t packet_sent : 1;
+        uint16_t fifo_overrun : 1;
+        uint16_t fifo_level : 1;
+        uint16_t fifo_empty : 1;
+        uint16_t fifo_full : 1;
+    }bitfield;
+}egl_rfm66_irq_flags_t;
+
 typedef struct
 {
     egl_pm_t        *pm;
@@ -578,5 +604,6 @@ egl_result_t egl_rfm66_low_bat_trim_set(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim
 egl_result_t egl_rfm66_low_bat_trim_get(egl_rfm66_t *rfm, egl_rfm66_low_bat_trim_t *trim);
 egl_result_t egl_rfm66_low_bat_state_set(egl_rfm66_t *rfm, bool state);
 egl_result_t egl_rfm66_low_bat_state_get(egl_rfm66_t *rfm, bool *state);
+egl_result_t egl_rfm66_flags_get(egl_rfm66_t *rfm, egl_rfm66_irq_flags_t *flags);
 
 #endif

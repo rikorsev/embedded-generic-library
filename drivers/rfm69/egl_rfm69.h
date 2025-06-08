@@ -41,7 +41,7 @@
 #define EGL_RFM69_REG_RSSI_VALUE            (0x24)
 #define EGL_RFM69_REG_DIO_MAP1              (0x25)
 #define EGL_RFM69_REG_DIO_MAP2              (0x26)
-#define EGL_RFM69_REG_IRQ_FALGS1            (0x27)
+#define EGL_RFM69_REG_IRQ_FLAGS1            (0x27)
 #define EGL_RFM69_REG_IRQ_FLAGS2            (0x28)
 #define EGL_RFM69_REG_RSSI_THRESH           (0x29)
 #define EGL_RFM69_REG_TIMEOUT1              (0x2A)

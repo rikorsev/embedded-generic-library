@@ -1626,7 +1626,7 @@ egl_result_t egl_rfm69_clk_out_get(egl_rfm69_t *rfm, egl_rfm69_clk_out_t *out)
 
 egl_result_t egl_rfm69_flags_get(egl_rfm69_t *rfm, egl_rfm69_irq_flags_t *flags)
 {
-    return egl_rfm69_read_burst(rfm, EGL_RFM69_REG_IRQ_FALGS1, &flags->raw, sizeof(*flags));
+    return egl_rfm69_read_burst(rfm, EGL_RFM69_REG_IRQ_FLAGS1, &flags->raw, sizeof(*flags));
 }
 
 egl_result_t egl_rfm69_rssi_thresh_set(egl_rfm69_t *rfm, int8_t db)

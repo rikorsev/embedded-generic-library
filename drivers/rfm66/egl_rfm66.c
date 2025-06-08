@@ -2560,3 +2560,8 @@ egl_result_t egl_rfm66_low_bat_state_get(egl_rfm66_t *rfm, bool *state)
 
     return result;
 }
+
+egl_result_t egl_rfm66_flags_get(egl_rfm66_t *rfm, egl_rfm66_irq_flags_t *flags)
+{
+    return egl_rfm66_read_burst(rfm, EGL_RFM66_REG_IRQ_FLAGS1, &flags->raw, sizeof(*flags));
+}
