@@ -525,23 +525,33 @@ egl_result_t egl_rfm66_modulation_type_get(egl_rfm66_t *rfm, egl_rfm66_modulatio
 
 egl_result_t egl_rfm66_bitrate_set(egl_rfm66_t *rfm, uint32_t kbs)
 {
-    /* Calculate bitrate value */
-    uint16_t raw = egl_swap16((uint16_t)(egl_clock_get(rfm->clock) / kbs));
+    egl_result_t result;
+    uint32_t clock = egl_clock_get(rfm->clock);
+    uint16_t raw_int = egl_swap16((uint16_t)(clock / kbs));
+    uint8_t raw_frac = ((clock % kbs) * 16) / kbs;
 
-    /* Write bautrate value */
-    return egl_rfm66_write_burst(rfm, EGL_RFM66_REG_BITRATE_MSB, (uint8_t *)&raw, sizeof(raw));
+    result = egl_rfm66_write_burst(rfm, EGL_RFM66_REG_BITRATE_MSB, (uint8_t *)&raw_int, sizeof(raw_int));
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm66_write_byte(rfm, EGL_RFM66_REG_BITRATE_FRAC, raw_frac);
+    EGL_RESULT_CHECK(result);
+
+    return result;
 }
 
 egl_result_t egl_rfm66_bitrate_get(egl_rfm66_t *rfm, uint32_t *kbs)
 {
     egl_result_t result;
-    uint16_t raw;
+    uint16_t raw_int;
+    uint8_t raw_frac;
 
-    result = egl_rfm66_read_burst(rfm, EGL_RFM66_REG_BITRATE_MSB, &raw, sizeof(raw));
+    result = egl_rfm66_read_burst(rfm, EGL_RFM66_REG_BITRATE_MSB, &raw_int, sizeof(raw_int));
     EGL_RESULT_CHECK(result);
 
-    /* Calculate bitrate in bits per second */
-    *kbs = egl_clock_get(rfm->clock) / egl_swap16(raw);
+    result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_BITRATE_FRAC, &raw_frac);
+    EGL_RESULT_CHECK(result);
+
+    *kbs = (egl_clock_get(rfm->clock) * 16) / ((uint32_t)egl_swap16(raw_int) * 16 + raw_frac);
 
     return result;
 }

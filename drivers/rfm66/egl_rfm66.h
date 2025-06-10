@@ -80,6 +80,7 @@
 #define EGL_RFM66_REG_PA_DAC                (0x5A)
 #define EGL_RFM66_REG_PLL                   (0x5C)
 #define EGL_RFM66_REG_FORMER_TEMP           (0x6C)
+#define EGL_RFM66_REG_BITRATE_FRAC          (0x70)
 
 #define EGL_RFM66_RAW_PA_POWER_MAX          (15)
 #define EGL_RFM66_SYNC_MAX_SIZE             (8U)
