@@ -19,22 +19,6 @@ egl_result_t egl_plat_boot(egl_platform_t *plat, unsigned int slot_idx)
     return plat->boot(slot_idx);
 }
 
-void *egl_plat_info(egl_platform_t *plat)
-{
-    EGL_ASSERT_CHECK(plat, NULL);
-    EGL_ASSERT_CHECK(plat->info, NULL);
-
-    return plat->info();
-}
-
-void *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx)
-{
-    EGL_ASSERT_CHECK(plat, NULL);
-    EGL_ASSERT_CHECK(plat->slot_info, NULL);
-
-    return plat->slot_info(slot_idx);
-}
-
 egl_result_t egl_plat_deinit(egl_platform_t *plat)
 {
     EGL_ASSERT_CHECK(plat, EGL_ASSERT_FAIL);
