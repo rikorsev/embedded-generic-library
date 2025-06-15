@@ -34,28 +34,23 @@ static const char *m_level_str[] =
     RED    "FAIL"  WHITE
 };
 
-static egl_log_t *default_logger = NULL;
-
-egl_result_t egl_log_init(egl_log_t *log, egl_interface_t *iface, egl_timer_t *timer)
+egl_result_t egl_log_init(egl_log_t *log)
 {
     EGL_ASSERT_CHECK(log, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(iface, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(log->iface, EGL_ASSERT_FAIL);
 
-    log->iface = iface;
-    log->timer = timer;
+    egl_result_t result;
 
-    return EGL_SUCCESS;
-}
+    result = egl_itf_init(log->iface);
+    EGL_RESULT_CHECK(result);
 
-egl_result_t egl_log_default_set(egl_log_t *log)
-{
-    default_logger = log;
-    return EGL_SUCCESS;
-}
+    if(log->timer)
+    {
+        result = egl_timer_init(log->timer);
+        EGL_RESULT_CHECK(result);
+    }
 
-egl_log_t *egl_log_default_get()
-{
-    return default_logger;
+    return result;
 }
 
 egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *format, ...)
@@ -96,4 +91,23 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
     offset += result;
 
     return egl_itf_write(log->iface, log->buff, &offset);
+}
+
+egl_result_t egl_log_deinit(egl_log_t *log)
+{
+    EGL_ASSERT_CHECK(log, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(log->iface, EGL_ASSERT_FAIL);
+
+    egl_result_t result;
+
+    result = egl_itf_deinit(log->iface);
+    EGL_RESULT_CHECK(result);
+
+    if(log->timer)
+    {
+        result = egl_timer_deinit(log->timer);
+        EGL_RESULT_CHECK(result);
+    }
+
+    return result;
 }

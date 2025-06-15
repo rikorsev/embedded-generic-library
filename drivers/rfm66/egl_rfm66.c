@@ -390,7 +390,7 @@ static egl_result_t egl_rfm66_hw_init(egl_rfm66_t *rfm)
     result = egl_pm_reset(rfm->pm);
     EGL_RESULT_CHECK(result);
 
-    result = egl_clock_init(rfm->clock, 0);
+    result = egl_clock_init(rfm->clock);
     EGL_RESULT_CHECK(result);
 
     return result;

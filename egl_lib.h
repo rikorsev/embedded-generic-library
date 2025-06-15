@@ -10,3 +10,4 @@
 #include "egl_pm.h"
 #include "egl_rfm69.h"
 #include "egl_rfm66.h"
+#include "egl_system.h"

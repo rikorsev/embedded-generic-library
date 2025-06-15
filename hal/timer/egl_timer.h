@@ -14,6 +14,7 @@ typedef struct
     egl_result_t    (*init)   (void);
     uint32_t        (*get) (void);
     egl_result_t    (*set)    (uint32_t val);
+    egl_result_t    (*wait)   (uint32_t delay);
     egl_result_t    (*deinit) (void);
 }egl_timer_t;
 
@@ -44,6 +45,16 @@ uint32_t     egl_timer_get    (egl_timer_t *timer);
  * @return EGL_SUCCES in case of successfull setting
  */
 egl_result_t egl_timer_set    (egl_timer_t *timer, uint32_t val);
+
+/**
+ * @brief Tick timer for a specified number of ticks
+ *
+ * @param timer - pointer to the timer
+ * @param delay - ticks to wait
+ *
+ * @return EGL_SUCCESS in case of successful wait, or an error code if the wait failed
+ */
+egl_result_t egl_timer_wait(egl_timer_t *timer, uint32_t cnt);
 
 /**
  * @brief Deinit the timer

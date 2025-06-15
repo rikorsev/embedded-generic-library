@@ -15,6 +15,7 @@ typedef struct
     egl_result_t    (*boot)(unsigned int slot_idx);
     void            *(*info)(void);
     void            *(*slot_info)(unsigned int slot_idx);
+    egl_result_t    (*deinit)(void);
 }egl_platform_t;
 
 /**
@@ -25,6 +26,15 @@ typedef struct
  * @return EGL_SUCCESS in case of successful deinitialization
  */
 egl_result_t egl_plat_init(egl_platform_t *plat);
+
+/**
+ * @brief Deinitialize platform
+ *
+ * @param plat - pointer to platform instance
+ *
+ * @return EGL_SUCCESS in case of successful deinitialization
+ */
+egl_result_t egl_plat_deinit(egl_platform_t *plat);
 
 /**
  * @brief Boot application from specific slot

@@ -34,3 +34,11 @@ void *egl_plat_slot_info(egl_platform_t *plat, unsigned int slot_idx)
 
     return plat->slot_info(slot_idx);
 }
+
+egl_result_t egl_plat_deinit(egl_platform_t *plat)
+{
+    EGL_ASSERT_CHECK(plat, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(plat->deinit, EGL_NOT_SUPPORTED);
+
+    return plat->deinit();
+}

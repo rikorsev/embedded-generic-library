@@ -27,6 +27,14 @@ egl_result_t egl_timer_set(egl_timer_t *timer, uint32_t val)
     return timer->set(val);
 }
 
+egl_result_t egl_timer_wait(egl_timer_t *timer, uint32_t cnt)
+{
+    EGL_ASSERT_CHECK(timer, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(timer->wait, EGL_NOT_SUPPORTED);
+
+    return timer->wait(cnt);
+}
+
 egl_result_t egl_timer_deinit(egl_timer_t *timer)
 {
     EGL_ASSERT_CHECK(timer, EGL_ASSERT_FAIL);

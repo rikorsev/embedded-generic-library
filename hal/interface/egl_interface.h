@@ -113,6 +113,6 @@ egl_result_t egl_itf_close(egl_interface_t *itf);
  *
  * @return EGL_SUCCESS in case of successful deinitialization
  */
-egl_result_t egl_itg_deinit(egl_interface_t *itf);
+egl_result_t egl_itf_deinit(egl_interface_t *itf);
 
 #endif /* EGL_INTERFACE_H */

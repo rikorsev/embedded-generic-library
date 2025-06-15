@@ -26,22 +26,31 @@ typedef struct
 }egl_log_t;
 
 #if CONFIG_EGL_LOG_ENABLED
-#define EGL_LOG_DEBUG(fmt, ...) egl_log(egl_log_default_get(), EGL_LOG_LEVEL_DEBUG, __FILENAME__, fmt, ##__VA_ARGS__)
-#define EGL_LOG_INFO(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_INFO,  __FILENAME__, fmt, ##__VA_ARGS__)
-#define EGL_LOG_WARN(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_WARN,  __FILENAME__, fmt, ##__VA_ARGS__)
-#define EGL_LOG_ERROR(fmt, ...) egl_log(egl_log_default_get(), EGL_LOG_LEVEL_ERROR, __FILENAME__, fmt, ##__VA_ARGS__)
-#define EGL_LOG_FAIL(fmt, ...)  egl_log(egl_log_default_get(), EGL_LOG_LEVEL_FAIL,  __FILENAME__, fmt, ##__VA_ARGS__)
+#include "egl_system.h"
+
+#define EGL_LOG_DEBUG(fmt, ...) egl_log(SYSLOG, EGL_LOG_LEVEL_DEBUG, __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_INFO(fmt, ...)  egl_log(SYSLOG, EGL_LOG_LEVEL_INFO,  __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_WARN(fmt, ...)  egl_log(SYSLOG, EGL_LOG_LEVEL_WARN,  __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_ERROR(fmt, ...) egl_log(SYSLOG, EGL_LOG_LEVEL_ERROR, __FILENAME__, fmt, ##__VA_ARGS__)
+#define EGL_LOG_FAIL(fmt, ...)  egl_log(SYSLOG, EGL_LOG_LEVEL_FAIL,  __FILENAME__, fmt, ##__VA_ARGS__)
 
 /**
- * @brief init log module
+ * @brief Init log module
  *
  * @param log   - pointer to log module
- * @param iface - pointer to serial interface that will be used to log the data
- * @param timer - pointer to timer that will provide timestamps
  *
  * @return EGL_SUCCESS in case of siccessfull initialization
  */
-egl_result_t egl_log_init(egl_log_t *log, egl_interface_t *iface, egl_timer_t *timer);
+egl_result_t egl_log_init(egl_log_t *log);
+
+/**
+ * @brief Deinit log module
+ *
+ * @param log - pointer to log module
+ *
+ * @return EGL_SUCCESS in case of successfull deinitialization
+ */
+egl_result_t egl_log_deinit(egl_log_t *log);
 
 /**
  * @brief Finction to log specific message
@@ -59,23 +68,6 @@ egl_result_t egl_log_init(egl_log_t *log, egl_interface_t *iface, egl_timer_t *t
  */
 egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *format, ...);
 
-/**
- * @brief Set default logger
- *
- * Default logger is used by log marcoses to choosw through which logger data should be passsed
- *
- * @param log - pointer to default logger to set
- *
- * @return EGL_SUCCESS in case if the logger has been set successfully
- */
-egl_result_t egl_log_default_set(egl_log_t *log);
-
-/**
- * @brief Get default logger
- *
- * @return pointer to default logger
- */
-egl_log_t *egl_log_default_get(void);
 #else
 #define EGL_LOG_DEBUG(fmt, ...)
 #define EGL_LOG_INFO(fmt, ...)
@@ -83,10 +75,9 @@ egl_log_t *egl_log_default_get(void);
 #define EGL_LOG_ERROR(fmt, ...)
 #define EGL_LOG_FAIL(fmt, ...)
 
-egl_result_t egl_log_init(egl_log_t *log, egl_interface_t *iface) { return EGL_SUCCESS; }
+egl_result_t egl_log_init(egl_log_t *log) { return EGL_SUCCESS; }
+egl_result_t egl_log_deinit(egl_log_t *log) { return EGL_SUCCESS; }
 egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *format, ...) { return EGL_SUCCESS; }
-egl_result_t egl_log_default_set(egl_log_t *log) { return EGL_SUCCESS; }
-egl_log_t   *egl_log_default_get(void) { return EGL_SUCCESS; }
 #endif
 
 #endif /* EGL_LOG_H */
