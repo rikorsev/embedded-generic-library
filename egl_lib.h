@@ -9,6 +9,7 @@
 #include "egl_clock.h"
 #include "egl_pm.h"
 #include "egl_rfm69.h"
-#include "egl_rfm66.h"
+#include "egl_rfm66_driver.h"
+#include "egl_rfm66_iface.h"
 #include "egl_system.h"
 #include "egl_value.h"

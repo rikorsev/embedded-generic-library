@@ -1,5 +1,5 @@
-#ifndef EGL_RFM66_H
-#define EGL_RFM66_H
+#ifndef EGL_RFM66_DRIVER_H
+#define EGL_RFM66_DRIVER_H
 
 #include "egl_result.h"
 #include "egl_pm.h"

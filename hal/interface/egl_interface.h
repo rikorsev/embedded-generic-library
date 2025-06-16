@@ -16,7 +16,7 @@ typedef struct
   size_t           (*read)          (void *data, size_t len);
   size_t           (*write_addr)    (uint32_t addr, void *data, size_t len);
   size_t           (*read_addr)     (uint32_t addr, void *data, size_t len);
-  egl_result_t     (*ioctl)         (uint8_t opcode, void* data, size_t len);
+  egl_result_t     (*ioctl)         (uint8_t opcode, void *data, size_t len);
   egl_result_t     (*close)         (void);
   egl_result_t     (*deinit)        (void);
 }egl_interface_t;
