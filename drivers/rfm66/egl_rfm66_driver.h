@@ -422,6 +422,31 @@ typedef enum
     EGL_RFM66_PLL_BANDWIDTH_300_KHZ,
 }egl_rfm66_pll_bandwidth_t;
 
+typedef enum
+{
+    EGL_RFM66_BANDWIDTH_2600,
+    EGL_RFM66_BANDWIDTH_3100,
+    EGL_RFM66_BANDWIDTH_3900,
+    EGL_RFM66_BANDWIDTH_5200,
+    EGL_RFM66_BANDWIDTH_6300,
+    EGL_RFM66_BANDWIDTH_7800,
+    EGL_RFM66_BANDWIDTH_10400,
+    EGL_RFM66_BANDWIDTH_12500,
+    EGL_RFM66_BANDWIDTH_15600,
+    EGL_RFM66_BANDWIDTH_20800,
+    EGL_RFM66_BANDWIDTH_25000,
+    EGL_RFM66_BANDWIDTH_31300,
+    EGL_RFM66_BANDWIDTH_41700,
+    EGL_RFM66_BANDWIDTH_50000,
+    EGL_RFM66_BANDWIDTH_62500,
+    EGL_RFM66_BANDWIDTH_83300,
+    EGL_RFM66_BANDWIDTH_100000,
+    EGL_RFM66_BANDWIDTH_125000,
+    EGL_RFM66_BANDWIDTH_166700,
+    EGL_RFM66_BANDWIDTH_200000,
+    EGL_RFM66_BANDWIDTH_250000
+}egl_rfm66_bandwidth_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -518,6 +543,10 @@ egl_result_t egl_rfm66_rx_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp);
 egl_result_t egl_rfm66_rx_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp);
 egl_result_t egl_rfm66_rx_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant);
 egl_result_t egl_rfm66_rx_bw_mant_get(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t *mant);
+egl_result_t egl_rfm66_rx_bandwidth_set(egl_rfm66_t *rfm, egl_rfm66_bandwidth_t bw);
+egl_result_t egl_rfm66_rx_bandwidth_get(egl_rfm66_t *rfm, egl_rfm66_bandwidth_t *bw);
+egl_result_t egl_rfm66_afc_bandwidth_set(egl_rfm66_t *rfm, egl_rfm66_bandwidth_t bw);
+egl_result_t egl_rfm66_afc_bandwidth_get(egl_rfm66_t *rfm, egl_rfm66_bandwidth_t *bw);
 egl_result_t egl_rfm66_afc_bw_exp_set(egl_rfm66_t *rfm, uint8_t exp);
 egl_result_t egl_rfm66_afc_bw_exp_get(egl_rfm66_t *rfm, uint8_t *exp);
 egl_result_t egl_rfm66_afc_bw_mant_set(egl_rfm66_t *rfm, egl_rfm66_bw_mant_t mant);

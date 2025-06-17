@@ -1,6 +1,8 @@
 #ifndef EGL_UTIL_H
 #define EGL_UTIL_H
 
+#define EGL_ARRAY_SIZE(array) (sizeof((array)) / sizeof((array[0])))
+
 static inline uint16_t egl_swap16(uint16_t val)
 {
     return ((val >> 8) & 0x00FF) | ((val << 8) & 0xFF00);
