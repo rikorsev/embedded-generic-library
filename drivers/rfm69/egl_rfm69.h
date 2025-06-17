@@ -352,6 +352,34 @@ typedef enum
     EGL_RFM69_DAGC_MODE_IMPROVED_MARGIN2 = 0x30
 }egl_rfm69_dagc_mode_t;
 
+typedef enum
+{
+    EGL_RFM69_BANDWIDTH_FSK_2600_OOK_1300,
+    EGL_RFM69_BANDWIDTH_FSK_3100_OOK_1600,
+    EGL_RFM69_BANDWIDTH_FSK_3900_OOK_2000,
+    EGL_RFM69_BANDWIDTH_FSK_5200_OOK_2600,
+    EGL_RFM69_BANDWIDTH_FSK_6300_OOK_3100,
+    EGL_RFM69_BANDWIDTH_FSK_7800_OOK_3900,
+    EGL_RFM69_BANDWIDTH_FSK_10400_OOK_5200,
+    EGL_RFM69_BANDWIDTH_FSK_12500_OOK_6300,
+    EGL_RFM69_BANDWIDTH_FSK_15600_OOK_7800,
+    EGL_RFM69_BANDWIDTH_FSK_20800_OOK_10400,
+    EGL_RFM69_BANDWIDTH_FSK_25000_OOK_12500,
+    EGL_RFM69_BANDWIDTH_FSK_31300_OOK_15600,
+    EGL_RFM69_BANDWIDTH_FSK_41700_OOK_20800,
+    EGL_RFM69_BANDWIDTH_FSK_50000_OOK_25000,
+    EGL_RFM69_BANDWIDTH_FSK_62500_OOK_31300,
+    EGL_RFM69_BANDWIDTH_FSK_83300_OOK_41700,
+    EGL_RFM69_BANDWIDTH_FSK_100000_OOK_50000,
+    EGL_RFM69_BANDWIDTH_FSK_125000_OOK_62500,
+    EGL_RFM69_BANDWIDTH_FSK_166700_OOK_83300,
+    EGL_RFM69_BANDWIDTH_FSK_200000_OOK_100000,
+    EGL_RFM69_BANDWIDTH_FSK_250000_OOK_125000,
+    EGL_RFM69_BANDWIDTH_FSK_333333_OOK_166700,
+    EGL_RFM69_BANDWIDTH_FSK_400000_OOK_200000,
+    EGL_RFM69_BANDWIDTH_FSK_500000_OOK_250000
+}egl_rfm69_bandwidth_t;
+
 typedef union __attribute__((packed, aligned(1)))
 {
     uint16_t raw;
@@ -454,6 +482,10 @@ egl_result_t egl_rfm69_rx_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t mant
 egl_result_t egl_rfm69_rx_bw_mant_get(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t *mant);
 egl_result_t egl_rfm69_rx_dcc_freq_set(egl_rfm69_t *rfm, uint8_t freq);
 egl_result_t egl_rfm69_rx_dcc_freq_get(egl_rfm69_t *rfm, uint8_t *freq);
+egl_result_t egl_rfm69_rx_bandwidth_set(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t bw);
+egl_result_t egl_rfm69_rx_bandwidth_get(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t *bw);
+egl_result_t egl_rfm69_afc_bandwidth_set(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t bw);
+egl_result_t egl_rfm69_afc_bandwidth_get(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t *bw);
 egl_result_t egl_rfm69_afc_bw_exp_set(egl_rfm69_t *rfm, uint8_t exp);
 egl_result_t egl_rfm69_afc_bw_exp_get(egl_rfm69_t *rfm, uint8_t *exp);
 egl_result_t egl_rfm69_afc_bw_mant_set(egl_rfm69_t *rfm, egl_rfm69_bw_mant_t mant);

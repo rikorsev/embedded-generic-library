@@ -254,6 +254,40 @@ typedef union
 }egl_rfm69_reg_temp1_t;
 #pragma pack(pop)
 
+typedef struct
+{
+    uint8_t exp;
+    egl_rfm69_bw_mant_t mant;
+}egl_rfm69_bw_param_t;
+
+static const egl_rfm69_bw_param_t egl_rfm69_bw_table[] =
+{
+    { .exp = 7, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 7, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 7, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 6, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 6, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 6, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 5, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 5, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 5, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 4, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 4, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 4, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 3, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 3, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 3, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 2, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 2, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 2, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 1, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 1, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 1, .mant = EGL_RFM69_BW_MANT_16 },
+    { .exp = 0, .mant = EGL_RFM69_BW_MANT_24 },
+    { .exp = 0, .mant = EGL_RFM69_BW_MANT_20 },
+    { .exp = 0, .mant = EGL_RFM69_BW_MANT_16 },
+};
+
 static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
 {
     egl_result_t result;
@@ -2312,4 +2346,92 @@ egl_result_t egl_rfm69_afc_offset_get(egl_rfm69_t *rfm, uint32_t *hz)
 egl_result_t egl_rfm69_version_get(egl_rfm69_t *rfm, uint8_t *version)
 {
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_VERSION, version);
+}
+
+egl_result_t egl_rfm69_rx_bandwidth_set(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t bw)
+{
+    EGL_ASSERT_CHECK(bw < EGL_ARRAY_SIZE(egl_rfm69_bw_table), EGL_INVALID_PARAM);
+
+    egl_result_t result;
+
+    result = egl_rfm69_rx_bw_exp_set(rfm, egl_rfm69_bw_table[bw].exp);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_rx_bw_mant_set(rfm, egl_rfm69_bw_table[bw].mant);
+    EGL_RESULT_CHECK(result);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_rx_bandwidth_get(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t *bw)
+{
+    uint8_t exp;
+    egl_rfm69_bw_mant_t mant;
+    egl_result_t result;
+
+    result = egl_rfm69_rx_bw_exp_get(rfm, &exp);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_rx_bw_mant_get(rfm, &mant);
+    EGL_RESULT_CHECK(result);
+
+    unsigned int index;
+    for(index = 0; index < EGL_ARRAY_SIZE(egl_rfm69_bw_table); index++)
+    {
+        if(egl_rfm69_bw_table[index].exp == exp &&
+           egl_rfm69_bw_table[index].mant == mant)
+        {
+            break;
+        }
+    }
+
+    EGL_ASSERT_CHECK(index < EGL_ARRAY_SIZE(egl_rfm69_bw_table), EGL_INVALID_STATE);
+
+    *bw = (egl_rfm69_bandwidth_t)index;
+
+    return result;
+}
+
+egl_result_t egl_rfm69_afc_bandwidth_set(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t bw)
+{
+    EGL_ASSERT_CHECK(bw < EGL_ARRAY_SIZE(egl_rfm69_bw_table), EGL_INVALID_PARAM);
+
+    egl_result_t result;
+
+    result = egl_rfm69_afc_bw_exp_set(rfm, egl_rfm69_bw_table[bw].exp);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_afc_bw_mant_set(rfm, egl_rfm69_bw_table[bw].mant);
+    EGL_RESULT_CHECK(result);
+
+    return result;
+}
+
+egl_result_t egl_rfm69_afc_bandwidth_get(egl_rfm69_t *rfm, egl_rfm69_bandwidth_t *bw)
+{
+    uint8_t exp;
+    egl_rfm69_bw_mant_t mant;
+    egl_result_t result;
+
+    result = egl_rfm69_afc_bw_exp_get(rfm, &exp);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_afc_bw_mant_get(rfm, &mant);
+    EGL_RESULT_CHECK(result);
+
+    unsigned int index;
+    for(index = 0; index < EGL_ARRAY_SIZE(egl_rfm69_bw_table); index++)
+    {
+        if(egl_rfm69_bw_table[index].exp == exp &&
+           egl_rfm69_bw_table[index].mant == mant)
+        {
+            break;
+        }
+    }
+
+    EGL_ASSERT_CHECK(index < EGL_ARRAY_SIZE(egl_rfm69_bw_table), EGL_INVALID_STATE);
+
+    *bw = (egl_rfm69_bandwidth_t)index;
+
+    return result;
 }
