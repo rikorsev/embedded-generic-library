@@ -633,7 +633,7 @@ egl_result_t egl_rfm66_frequency_get(egl_rfm66_t *rfm, uint32_t *hz)
     *hz = 0;
     *hz |= raw[0] << 16;
     *hz |= raw[1] << 8;
-    *hz |= raw[3];
+    *hz |= raw[2];
     *hz = ((uint64_t)(*hz) * egl_clock_get(rfm->clock)) / EGL_RFM66_FSTEP_COEF;
 
     return result;

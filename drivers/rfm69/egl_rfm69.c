@@ -611,7 +611,7 @@ egl_result_t egl_rfm69_frequency_get(egl_rfm69_t *rfm, uint32_t *frequency)
     *frequency = 0;
     *frequency |= freq_val[0] << 16;
     *frequency |= freq_val[1] << 8;
-    *frequency |= freq_val[3];
+    *frequency |= freq_val[2];
     *frequency = ((uint64_t)(*frequency) * egl_clock_get(rfm->clock)) / EGL_RFM69_FSTEP_COEF;
 
     return result;
