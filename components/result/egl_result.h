@@ -54,7 +54,7 @@ typedef struct
 #else
 #define EGL_RESULT_FATAL()
 #define EGL_ASSERT_CHECK(x, retval)
-#define EGL_RESULT_CHECK(x)
+#define EGL_RESULT_CHECK(x) ((void)(x))
 #endif
 
 /**
