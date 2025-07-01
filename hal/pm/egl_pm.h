@@ -13,7 +13,7 @@ typedef struct
 {
     egl_result_t (*init)(void);
     egl_result_t (*poweron)(void);
-    egl_result_t (*profile_set)(uint32_t profile);
+    egl_result_t (*mode_set)(uint32_t mode);
     egl_result_t (*sleep)(uint32_t delay);
     egl_result_t (*reset)(void);
     egl_result_t (*shutdown)(void);
@@ -42,11 +42,11 @@ egl_result_t egl_pm_poweron(egl_pm_t *pm);
  * @brief Set specific power profile to the unit
  * 
  * @param pm - pointer to pm instance
- * @param profile - profile id to apply
+ * @param mode - profile id to apply
  *
  * @return EGL_SUCCESS in case if the profile applied successfuly
  */
-egl_result_t egl_pm_profile_set(egl_pm_t *pm, uint32_t profile);
+egl_result_t egl_pm_mode_set(egl_pm_t *pm, uint32_t mode);
 
 /**
  * @brief Sleep for specified amoutn of time

@@ -1,12 +1,15 @@
 #ifndef EGL_RFM66_IFACE_H
 #define EGL_RFM66_IFACE_H
 
+#include "egl_rfm66_driver.h"
+
 typedef struct
 {
     uint32_t frequency;
-    uint32_t bandwith;
     uint32_t deviation;
     uint32_t bitrate;
+    uint16_t preamble;
+    egl_rfm66_bandwidth_t bandwidth;
 }egl_rfm66_config_t;
 
 egl_result_t egl_rfm66_iface_init(egl_rfm66_t *rfm, egl_rfm66_config_t *config);

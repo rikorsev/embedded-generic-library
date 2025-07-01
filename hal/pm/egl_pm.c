@@ -17,12 +17,12 @@ egl_result_t egl_pm_poweron(egl_pm_t *pm)
     return pm->poweron();
 }
 
-egl_result_t egl_pm_profile_set(egl_pm_t *pm, uint32_t profile)
+egl_result_t egl_pm_mode_set(egl_pm_t *pm, uint32_t mode)
 {
     EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(pm->profile_set, EGL_NOT_SUPPORTED);
+    EGL_ASSERT_CHECK(pm->mode_set, EGL_NOT_SUPPORTED);
 
-    return pm->profile_set(profile);
+    return pm->mode_set(mode);
 }
 
 egl_result_t egl_pm_sleep(egl_pm_t *pm, uint32_t delay)
