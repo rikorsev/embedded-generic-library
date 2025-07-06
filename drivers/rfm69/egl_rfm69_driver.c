@@ -1,4 +1,4 @@
-#include "egl_rfm69.h"
+#include "egl_rfm69_driver.h"
 #include "egl_log.h"
 #include "egl_util.h"
 

@@ -1,5 +1,5 @@
-#ifndef EGL_RFM69_H
-#define EGL_RFM69_H
+#ifndef EGL_RFM69_DRIVER_H
+#define EGL_RFM69_DRIVER_H
 
 #include "egl_result.h"
 #include "egl_pm.h"
@@ -101,7 +101,7 @@
 typedef enum
 {
     EGL_RFM69_SLEEP_MODE,
-    EGL_RFM69_STANDBY_MODE,
+    EGL_RFM69_STDBY_MODE,
     EGL_RFM69_FS_MODE,
     EGL_RFM69_TX_MODE,
     EGL_RFM69_RX_MODE
@@ -415,6 +415,7 @@ typedef struct
     egl_pio_t       *dio3;
     egl_pio_t       *dio4;
     egl_pio_t       *dio5;
+    uint32_t        pm_wait;
 }egl_rfm69_t;
 
 egl_result_t egl_rfm69_init(egl_rfm69_t *rfm);
