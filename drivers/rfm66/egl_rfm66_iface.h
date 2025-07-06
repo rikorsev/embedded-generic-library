@@ -16,10 +16,16 @@ typedef struct
     uint8_t sync_size;
 }egl_rfm66_config_t;
 
-egl_result_t egl_rfm66_iface_init(egl_rfm66_t *rfm, egl_rfm66_config_t *config);
-egl_result_t egl_rfm66_iface_write(egl_rfm66_t *rfm, void *data, size_t *len);
-egl_result_t egl_rfm66_iface_read(egl_rfm66_t *rfm, void *data, size_t *len);
-egl_result_t egl_rfm66_iface_ioctl(egl_rfm66_t *rfm, uint8_t opcode, void *data, size_t len);
-egl_result_t egl_rfm66_iface_deinit(egl_rfm66_t *rfm);
+typedef struct
+{
+    egl_rfm66_t *rfm;
+    uint32_t    pm_wait;
+}egl_rfm66_iface_t;
+
+egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *config);
+egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t *len);
+egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *len);
+egl_result_t egl_rfm66_iface_ioctl(egl_rfm66_iface_t *iface, uint8_t opcode, void *data, size_t len);
+egl_result_t egl_rfm66_iface_deinit(egl_rfm66_iface_t *iface);
 
 #endif

@@ -482,7 +482,6 @@ typedef struct
     egl_pio_t       *dio3;
     egl_pio_t       *dio4;
     egl_pio_t       *dio5;
-    uint32_t        pm_wait;
 }egl_rfm66_t;
 
 egl_result_t egl_rfm66_init(egl_rfm66_t *rfm);
