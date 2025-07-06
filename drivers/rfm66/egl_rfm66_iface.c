@@ -84,16 +84,16 @@ egl_result_t egl_rfm66_iface_init(egl_rfm66_t *rfm, egl_rfm66_config_t *config)
     return result;
 }
 
-size_t egl_rfm66_iface_write(egl_rfm66_t *rfm, void *data, size_t len)
+egl_result_t egl_rfm66_iface_write(egl_rfm66_t *rfm, void *data, size_t *len)
 {
     egl_result_t result;
 
     /* Push size to fifo */
-    result = egl_rfm66_write_burst(rfm, EGL_RFM66_REG_FIFO, &len, sizeof(uint8_t));
+    result = egl_rfm66_write_burst(rfm, EGL_RFM66_REG_FIFO, len, sizeof(uint8_t));
     EGL_RESULT_CHECK(result);
 
     /* Push data to fifo */
-    result = egl_rfm66_write_burst(rfm, EGL_RFM66_REG_FIFO, data, len);
+    result = egl_rfm66_write_burst(rfm, EGL_RFM66_REG_FIFO, data, *len);
     EGL_RESULT_CHECK(result);
 
     /* Set TX mode */
@@ -110,12 +110,12 @@ size_t egl_rfm66_iface_write(egl_rfm66_t *rfm, void *data, size_t len)
     result = egl_rfm66_iface_mode_set(rfm, EGL_RFM66_STDBY_MODE);
     EGL_RESULT_CHECK(result);
 
-    return len;
+    return result;
 }
 
-size_t egl_rfm66_iface_read(egl_rfm66_t *rfm, void *data, size_t *len)
+egl_result_t egl_rfm66_iface_read(egl_rfm66_t *rfm, void *data, size_t *len)
 {
-    return 0;
+    return EGL_FAIL;
 }
 
 egl_result_t egl_rfm66_iface_ioctl(egl_rfm66_t *rfm, uint8_t opcode, void *data, size_t len)

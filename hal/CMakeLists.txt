@@ -1,4 +1,4 @@
-add_subdirectory(interface)
+add_subdirectory(iface)
 add_subdirectory(pio)
 add_subdirectory(plat)
 add_subdirectory(timer)

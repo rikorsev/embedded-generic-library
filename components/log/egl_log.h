@@ -6,7 +6,7 @@
 #define EGL_LOG_H
 
 #include "egl_timer.h"
-#include "egl_interface.h"
+#include "egl_iface.h"
 
 typedef enum
 {
@@ -20,7 +20,7 @@ typedef enum
 
 typedef struct
 {
-    egl_interface_t   *iface;
+    egl_iface_t       *iface;
     egl_timer_t       *timer;
     char              buff[CONFIG_EGL_LOG_BUFF_SIZE];
 }egl_log_t;

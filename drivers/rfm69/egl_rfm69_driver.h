@@ -4,7 +4,7 @@
 #include "egl_result.h"
 #include "egl_pm.h"
 #include "egl_pio.h"
-#include "egl_interface.h"
+#include "egl_iface.h"
 #include "egl_clock.h"
 
 #define EGL_RFM69_REG_FIFO                  (0x00)
@@ -407,7 +407,7 @@ typedef union __attribute__((packed, aligned(1)))
 typedef struct
 {
     egl_pm_t        *pm;
-    egl_interface_t *iface;
+    egl_iface_t     *iface;
     egl_clock_t     *clock;
     egl_pio_t       *dio0;
     egl_pio_t       *dio1;

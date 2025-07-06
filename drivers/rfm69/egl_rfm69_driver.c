@@ -295,7 +295,7 @@ static egl_result_t egl_rfm69_hw_init(egl_rfm69_t *rfm)
     result = egl_pm_init(rfm->pm);
     EGL_RESULT_CHECK(result);
 
-    result = egl_itf_init(rfm->iface);
+    result = egl_iface_init(rfm->iface);
     EGL_RESULT_CHECK(result);
 
     result = egl_pio_init(rfm->dio0);
@@ -343,7 +343,7 @@ egl_result_t egl_rfm69_read_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t *value)
     egl_result_t result;
     size_t len = sizeof(*value);
 
-    result = egl_itf_read_addr(rfm->iface, (uint32_t)addr, value, &len);
+    result = egl_iface_read_addr(rfm->iface, (uint32_t)addr, value, &len);
     EGL_RESULT_CHECK(result);
     EGL_ASSERT_CHECK(len == sizeof(*value), EGL_FAIL);
 
@@ -355,7 +355,7 @@ egl_result_t egl_rfm69_write_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t value)
     egl_result_t result;
     size_t len = sizeof(value);
 
-    result = egl_itf_write_addr(rfm->iface, (uint32_t)addr, &value, &len);
+    result = egl_iface_write_addr(rfm->iface, (uint32_t)addr, &value, &len);
     EGL_RESULT_CHECK(result);
     EGL_ASSERT_CHECK(len == sizeof(value), EGL_FAIL);
 
@@ -364,12 +364,12 @@ egl_result_t egl_rfm69_write_byte(egl_rfm69_t *rfm, uint8_t addr, uint8_t value)
 
 egl_result_t egl_rfm69_write_burst(egl_rfm69_t *rfm, uint8_t addr, void *data, size_t len)
 {
-    return egl_itf_write_addr(rfm->iface, (uint32_t)addr, data, &len);
+    return egl_iface_write_addr(rfm->iface, (uint32_t)addr, data, &len);
 }
 
 egl_result_t egl_rfm69_read_burst(egl_rfm69_t *rfm, uint8_t addr, void *data, size_t len)
 {
-    return egl_itf_read_addr(rfm->iface, (uint32_t)addr, data, &len);
+    return egl_iface_read_addr(rfm->iface, (uint32_t)addr, data, &len);
 }
 
 egl_result_t egl_rfm69_bitrate_set(egl_rfm69_t *rfm, uint32_t bitrate)

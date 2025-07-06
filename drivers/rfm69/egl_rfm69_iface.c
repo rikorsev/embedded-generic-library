@@ -99,12 +99,12 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_t *rfm, egl_rfm69_config_t *config)
     return result;
 }
 
-size_t egl_rfm69_iface_write(egl_rfm69_t *rfm, void *data, size_t len)
+egl_result_t egl_rfm69_iface_write(egl_rfm69_t *rfm, void *data, size_t *len)
 {
     return EGL_FAIL;
 }
 
-size_t egl_rfm69_iface_read(egl_rfm69_t *rfm, void *data, size_t *len)
+egl_result_t egl_rfm69_iface_read(egl_rfm69_t *rfm, void *data, size_t *len)
 {
     egl_result_t result;
     egl_rfm69_irq_flags_t flags;
@@ -157,7 +157,7 @@ size_t egl_rfm69_iface_read(egl_rfm69_t *rfm, void *data, size_t *len)
         result = egl_rfm69_iface_mode_set(rfm, EGL_RFM69_STDBY_MODE);
         EGL_RESULT_CHECK(result);
 
-        return 0;
+        return EGL_FAIL;
     }
 
     /* Read a packet len */
@@ -171,7 +171,7 @@ size_t egl_rfm69_iface_read(egl_rfm69_t *rfm, void *data, size_t *len)
     result = egl_rfm69_iface_mode_set(rfm, EGL_RFM69_STDBY_MODE);
     EGL_RESULT_CHECK(result);
 
-    return *len;
+    return result;
 }
 
 egl_result_t egl_rfm69_iface_ioctl(egl_rfm69_t *rfm, uint8_t opcode, void *data, size_t len)

@@ -41,7 +41,7 @@ egl_result_t egl_log_init(egl_log_t *log)
 
     egl_result_t result;
 
-    result = egl_itf_init(log->iface);
+    result = egl_iface_init(log->iface);
     EGL_RESULT_CHECK(result);
 
     if(log->timer)
@@ -90,7 +90,7 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
     EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
     offset += result;
 
-    return egl_itf_write(log->iface, log->buff, &offset);
+    return egl_iface_write(log->iface, log->buff, &offset);
 }
 
 egl_result_t egl_log_deinit(egl_log_t *log)
@@ -100,7 +100,7 @@ egl_result_t egl_log_deinit(egl_log_t *log)
 
     egl_result_t result;
 
-    result = egl_itf_deinit(log->iface);
+    result = egl_iface_deinit(log->iface);
     EGL_RESULT_CHECK(result);
 
     if(log->timer)
