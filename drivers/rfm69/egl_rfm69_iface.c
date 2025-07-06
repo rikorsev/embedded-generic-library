@@ -3,10 +3,10 @@
 #include "egl_rfm69_iface.h"
 #include "egl_system.h"
 
-static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t *dio)
+static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t *dio, uint32_t *timeout)
 {
     egl_result_t result;
-    uint32_t timeout_time = egl_timer_get(SYSTIMER) + 1000;
+    uint32_t time_prev = egl_timer_get(SYSTIMER);
 
     do
     {
@@ -21,24 +21,26 @@ static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t
             /* Error */
             return result;
         }
-    }while(result != EGL_SET && egl_timer_get(SYSTIMER) <= timeout_time);
 
-    if(egl_timer_get(SYSTIMER) > timeout_time)
-    {
-        return EGL_TIMEOUT;
-    }
+        uint32_t time_curr = egl_timer_get(SYSTIMER);
+        uint32_t delta = time_curr - time_prev;
+        time_prev = time_curr;
 
-    return EGL_SUCCESS;
+        *timeout = delta < *timeout ? *timeout - delta : 0;
+
+    }while(result != EGL_SET && *timeout);
+
+    return *timeout > 0 ? EGL_SUCCESS : EGL_TIMEOUT;
 }
 
-static egl_result_t egl_rfm69_iface_mode_set(egl_rfm69_iface_t *iface, egl_rfm69_mode_t mode)
+static egl_result_t egl_rfm69_iface_mode_set(egl_rfm69_iface_t *iface, egl_rfm69_mode_t mode, uint32_t *timeout)
 {
     egl_result_t result;
 
     result = egl_rfm69_mode_set(iface->rfm, mode);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio5);
+    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio5, timeout);
     EGL_RESULT_CHECK(result);
 
     return result;
@@ -108,6 +110,7 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
 {
     egl_result_t result;
     egl_rfm69_irq_flags_t flags;
+    uint32_t timeout = iface->rx_timeout;
 
     result = egl_rfm69_flags_get(iface->rfm, &flags);
     EGL_RESULT_CHECK(result);
@@ -115,7 +118,7 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
     EGL_LOG_DEBUG("Flags[0]: %04x", flags.raw);
 
     /* Set RX */
-    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_RX_MODE);
+    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_RX_MODE, &timeout);
     EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_flags_get(iface->rfm, &flags);
@@ -138,7 +141,7 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
     // EGL_LOG_DEBUG("Data: %02x %02x %02x %02x %02x", buff[0], buff[1], buff[2], buff[3], buff[4]);
 
     /* Wait for packet receive event */
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0);
+    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, &timeout);
     // EGL_RESULT_CHECK(result);
 
     if(result != EGL_SUCCESS)
@@ -154,7 +157,7 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
         // uint8_t *buff = data;
         // EGL_LOG_DEBUG("Data: %02x %02x %02x %02x %02x", buff[0], buff[1], buff[2], buff[3], buff[4]);
 
-        result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE);
+        result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
         EGL_RESULT_CHECK(result);
 
         return EGL_FAIL;
@@ -168,7 +171,7 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
     result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, data, *len);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE);
+    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
     EGL_RESULT_CHECK(result);
 
     return result;

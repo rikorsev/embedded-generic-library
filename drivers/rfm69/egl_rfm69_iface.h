@@ -20,6 +20,8 @@ typedef struct
 {
     egl_rfm69_t *rfm;
     uint32_t    pm_wait;
+    uint32_t    rx_timeout;
+    uint32_t    tx_timeout;
 }egl_rfm69_iface_t;
 
 egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *config);
