@@ -48,11 +48,9 @@ typedef struct
 
 #define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
 
-#define EGL_RESULT_FATAL()  assert(0);
-#define EGL_ASSERT_CHECK(x, retval) if(!(x)) { return (retval); }
+#define EGL_ASSERT_CHECK(x, retval) if(!(x)) { __HOOK(EGL_ASSERT_FAIL, __FILENAME__, __LINE__); return retval; }
 #define EGL_RESULT_CHECK(x) if((x) != EGL_SUCCESS) { return __HOOK((x), __FILENAME__, __LINE__); }
 #else
-#define EGL_RESULT_FATAL()
 #define EGL_ASSERT_CHECK(x, retval)
 #define EGL_RESULT_CHECK(x) ((void)(x))
 #endif
