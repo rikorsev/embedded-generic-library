@@ -19,6 +19,7 @@ typedef struct
 typedef struct
 {
     egl_rfm66_t *rfm;
+    uint8_t     node_addr;
     uint32_t    pm_wait;
     uint32_t    rx_timeout;
     uint32_t    tx_timeout;
