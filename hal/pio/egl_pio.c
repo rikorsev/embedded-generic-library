@@ -21,30 +21,35 @@ egl_result_t egl_pio_set(egl_pio_t *pio, bool state)
     return pio->set(state);
 }
 
-egl_result_t egl_pio_get(egl_pio_t *pio)
+egl_result_t egl_pio_get(egl_pio_t *pio, bool *state)
 {
     EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
     EGL_ASSERT_CHECK(pio->get, EGL_NOT_SUPPORTED);
 
-    return pio->get();
+    return pio->get(state);
 }
 
 egl_result_t egl_pio_toggle(egl_pio_t *pio)
 {
     EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
 
-    egl_result_t state = egl_pio_get(pio);
+    bool state;
 
-    if(state == EGL_SET)
+    egl_result_t result = egl_pio_get(pio, &state);
+    EGL_RESULT_CHECK(result);
+
+    if(state)
     {
-        state = egl_pio_set(pio, false);
+        result = egl_pio_set(pio, false);
+        EGL_RESULT_CHECK(result);
     }
-    else if(state == EGL_RESET)
+    else
     {
-        state = egl_pio_set(pio, true);
+        result = egl_pio_set(pio, true);
+        EGL_RESULT_CHECK(result);
     }
 
-    return state;
+    return result;
 }
 
 egl_result_t egl_pio_callback_set(egl_pio_t *pio, egl_pio_callback_t callback)

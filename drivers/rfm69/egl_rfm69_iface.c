@@ -11,21 +11,20 @@ typedef struct
 
 static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t *dio, uint32_t *timeout)
 {
+    bool state;
     egl_result_t result;
     uint32_t time_prev = egl_timer_get(SYSTIMER);
 
     do
     {
-        result = egl_pio_get(dio);
-        if(result == EGL_RESET)
+        result = egl_pio_get(dio, &state);
+        EGL_RESULT_CHECK(result);
+
+        /* if DIO not set then wait */
+        if(state != true)
         {
             result = egl_pm_mode_set(SYSPM, iface->pm_wait);
             EGL_RESULT_CHECK(result);
-        }
-        else if(result != EGL_SET)
-        {
-            /* Error */
-            return result;
         }
 
         uint32_t time_curr = egl_timer_get(SYSTIMER);
@@ -34,7 +33,7 @@ static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t
 
         *timeout = delta < *timeout ? *timeout - delta : 0;
 
-    }while(result != EGL_SET && *timeout);
+    }while(state != true && *timeout);
 
     return *timeout > 0 ? EGL_SUCCESS : EGL_TIMEOUT;
 }
@@ -152,6 +151,7 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
 egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *len)
 {
     egl_result_t result;
+    egl_result_t result2;
     uint32_t timeout = iface->rx_timeout;
 
     /* Set RX */
@@ -160,20 +160,22 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
 
     /* Wait for packet receive event */
     result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, &timeout);
-    EGL_RESULT_CHECK(result);
+    if(result == EGL_SUCCESS)
+    {
+        /* Read a packet header */
+        packet_header_t header;
+        result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, &header, sizeof(header));
+        EGL_RESULT_CHECK(result);
 
-    /* Read a packet header */
-    packet_header_t header;
-    result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, &header, sizeof(header));
-    EGL_RESULT_CHECK(result);
+        /* Read packet payload */
+        *len = header.len - 1; // Exclude address byte
+        result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, data, *len);
+        EGL_RESULT_CHECK(result);
+    }
 
-    /* Read packet payload */
-    *len = header.len - 1; // Exclude address byte
-    result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, data, *len);
-    EGL_RESULT_CHECK(result);
-
-    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
-    EGL_RESULT_CHECK(result);
+    /* Save result in separate variable so that previous result will not be overwritten */
+    result2 = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
+    EGL_RESULT_CHECK(result2);
 
     return result;
 }
