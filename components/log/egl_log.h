@@ -68,6 +68,9 @@ egl_result_t egl_log_deinit(egl_log_t *log);
  */
 egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *format, ...);
 
+
+egl_result_t egl_log_buff(egl_log_t *log, egl_log_level_t lvl, char *name, uint8_t *buff, size_t len, size_t row);
+
 #else
 #define EGL_LOG_DEBUG(fmt, ...)
 #define EGL_LOG_INFO(fmt, ...)
@@ -78,6 +81,7 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
 egl_result_t egl_log_init(egl_log_t *log) { return EGL_SUCCESS; }
 egl_result_t egl_log_deinit(egl_log_t *log) { return EGL_SUCCESS; }
 egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *format, ...) { return EGL_SUCCESS; }
+egl_result_t egl_log_buff(egl_log_t *log, egl_log_level_t lvl, char *name, uint8_t *buff, size_t len, size_t row) { return EGL_SUCCESS; }
 #endif
 
 #endif /* EGL_LOG_H */

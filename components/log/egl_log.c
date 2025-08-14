@@ -93,6 +93,34 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
     return egl_iface_write(log->iface, log->buff, &offset);
 }
 
+egl_result_t egl_log_buff(egl_log_t *log, egl_log_level_t lvl, char *name, uint8_t *buff, size_t len, size_t row)
+{
+    EGL_ASSERT_CHECK(log, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(buff, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(name, EGL_NULL_POINTER);
+
+    egl_result_t result;
+    char formatted[row * 3 + 1]; // 2 hex digits + space + null terminator
+
+    result = egl_log(log, lvl, name, "Size(%u):", (unsigned int)len);
+    EGL_RESULT_CHECK(result);
+
+    for(size_t i = 0; i < len; i += row)
+    {
+        memset(formatted, 0, sizeof(formatted));
+
+        for(size_t j = 0; j < row; j++)
+        {
+            snprintf(formatted + j * 3, sizeof(formatted) - j * 3, "%02x ", buff[i + j]);
+        }
+
+        result = egl_log(log, lvl, name, "%s", formatted);
+        EGL_RESULT_CHECK(result);
+    }
+
+    return EGL_SUCCESS;
+}
+
 egl_result_t egl_log_deinit(egl_log_t *log)
 {
     EGL_ASSERT_CHECK(log, EGL_ASSERT_FAIL);

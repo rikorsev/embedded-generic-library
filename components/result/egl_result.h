@@ -39,6 +39,8 @@ typedef struct
 
 #define EGL_RESULT(x) egl_result_str_get((x))
 
+#define RETURN_VOID
+
 #if CONFIG_EGL_RESULT_CHECK_ENABLED
 #if CONFIG_EGL_RESULT_ERROR_HOOK_ENABLED
 #define __HOOK(result, file, line) egl_result_error_hook_call(result, file, line)
