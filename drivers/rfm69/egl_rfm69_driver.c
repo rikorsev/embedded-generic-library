@@ -3,9 +3,8 @@
 #include "egl_util.h"
 
 #define EGL_RFM69_FSTEP_COEF                (524288U)
-#define EGL_RFM69_MODE_MASK                 (0x1C)
-#define EGL_RFM69_MODE_SHIFT                (2U)
 #define EGL_RFM69_AFC_OFFSET_COEF           (488U)
+#define EGL_RFM69_FIFO_SIZE                 (66U)
 
 #pragma pack(push, 1)
 typedef union
@@ -1981,12 +1980,12 @@ egl_result_t egl_rfm69_packet_format_get(egl_rfm69_t *rfm, egl_rfm69_packet_form
     return result;
 }
 
-egl_result_t egl_rfm69_payload_length_set(egl_rfm69_t *rfm, uint8_t len)
+egl_result_t egl_rfm69_packet_length_set(egl_rfm69_t *rfm, uint8_t len)
 {
     return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_PAYLOAD_LENGTH, len);
 }
 
-egl_result_t egl_rfm69_payload_length_get(egl_rfm69_t *rfm, uint8_t *len)
+egl_result_t egl_rfm69_packet_length_get(egl_rfm69_t *rfm, uint8_t *len)
 {
     return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_PAYLOAD_LENGTH, len);
 }
@@ -2091,7 +2090,7 @@ egl_result_t egl_rfm69_enter_condition_get(egl_rfm69_t *rfm, egl_rfm69_enter_con
 
 egl_result_t egl_rfm69_fifo_thresh_set(egl_rfm69_t *rfm, uint8_t thresh)
 {
-    EGL_ASSERT_CHECK(thresh <= EGL_RFM69_FIFO_THRESH_MAX, EGL_OUT_OF_BOUNDARY);
+    EGL_ASSERT_CHECK(thresh <= EGL_RFM69_FIFO_SIZE, EGL_OUT_OF_BOUNDARY);
 
     egl_result_t result;
     egl_rfm69_reg_fifo_thresh_t regval;

@@ -52,9 +52,11 @@ typedef struct
 
 #define EGL_ASSERT_CHECK(x, retval) if(!(x)) { __HOOK(EGL_ASSERT_FAIL, __FILENAME__, __LINE__); return retval; }
 #define EGL_RESULT_CHECK(x) if((x) != EGL_SUCCESS) { return __HOOK((x), __FILENAME__, __LINE__); }
+#define EGL_RESULT_CHECK_EXIT(x) if((x) != EGL_SUCCESS) { x = __HOOK((x), __FILENAME__, __LINE__); goto exit; }
 #else
 #define EGL_ASSERT_CHECK(x, retval)
 #define EGL_RESULT_CHECK(x) ((void)(x))
+#define EGL_RESULT_CHECK_EXIT(x)
 #endif
 
 /**

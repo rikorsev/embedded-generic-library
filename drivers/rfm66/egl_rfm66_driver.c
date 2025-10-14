@@ -3,6 +3,7 @@
 #include "egl_util.h"
 
 #define EGL_RFM66_FSTEP_COEF                (524288U)
+#define EGL_RFM66_FIFO_SIZE                 (64U)
 
 #pragma pack(push, 1)
 
@@ -2149,7 +2150,7 @@ egl_result_t egl_rfm66_broadcast_address_get(egl_rfm66_t *rfm, uint8_t *address)
 
 egl_result_t egl_rfm66_fifo_thresh_set(egl_rfm66_t *rfm, uint8_t thresh)
 {
-    EGL_ASSERT_CHECK(thresh < 32, EGL_OUT_OF_BOUNDARY)
+    EGL_ASSERT_CHECK(thresh < EGL_RFM66_FIFO_SIZE, EGL_OUT_OF_BOUNDARY)
 
     egl_result_t result;
     egl_rfm66_reg_fifo_thresh_t regval;

@@ -14,3 +14,4 @@
 #include "egl_rfm66_iface.h"
 #include "egl_system.h"
 #include "egl_value.h"
+#include "egl_util.h"

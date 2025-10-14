@@ -94,7 +94,6 @@
 #define EGL_RFM69_MIN_OCP_MA                (45)
 #define EGL_RFM69_OCP_STEP                  (5)
 #define EGL_RFM69_SYNC_MAX_SIZE             (8)
-#define EGL_RFM69_FIFO_THRESH_MAX           (127)
 #define EGL_RFM69_INTERPACKET_DELAY_MAX     (15)
 #define EGL_RFM69_AES_KEY_SIZE              (16)
 
@@ -560,8 +559,8 @@ egl_result_t egl_rfm69_dc_free_set(egl_rfm69_t *rfm, egl_rfm69_dc_free_t type);
 egl_result_t egl_rfm69_dc_free_get(egl_rfm69_t *rfm, egl_rfm69_dc_free_t *type);
 egl_result_t egl_rfm69_packet_format_set(egl_rfm69_t *rfm, egl_rfm69_packet_format_t format);
 egl_result_t egl_rfm69_packet_format_get(egl_rfm69_t *rfm, egl_rfm69_packet_format_t *format);
-egl_result_t egl_rfm69_payload_length_set(egl_rfm69_t *rfm, uint8_t len);
-egl_result_t egl_rfm69_payload_length_get(egl_rfm69_t *rfm, uint8_t *len);
+egl_result_t egl_rfm69_packet_length_set(egl_rfm69_t *rfm, uint8_t len);
+egl_result_t egl_rfm69_packet_length_get(egl_rfm69_t *rfm, uint8_t *len);
 egl_result_t egl_rfm69_node_address_set(egl_rfm69_t *rfm, uint8_t addr);
 egl_result_t egl_rfm69_node_address_get(egl_rfm69_t *rfm, uint8_t *addr);
 egl_result_t egl_rfm69_broadcast_address_set(egl_rfm69_t *rfm, uint8_t addr);

@@ -3,25 +3,28 @@
 #include "egl_rfm69_iface.h"
 #include "egl_system.h"
 
+#define CHUNK_SIZE (32U)
+#define MAX_VARIABLE_PACKET_SIZE (255U)
+
 typedef struct
 {
     uint8_t len;
     uint8_t addr;
 }packet_header_t;
 
-static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t *dio, uint32_t *timeout)
+static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t *dio, bool target_state, uint32_t *timeout)
 {
-    bool state;
+    bool current_state;
     egl_result_t result;
     uint32_t time_prev = egl_timer_get(SYSTIMER);
 
     do
     {
-        result = egl_pio_get(dio, &state);
+        result = egl_pio_get(dio, &current_state);
         EGL_RESULT_CHECK(result);
 
         /* if DIO not set then wait */
-        if(state != true)
+        if(current_state != target_state)
         {
             result = egl_pm_mode_set(SYSPM, iface->pm_wait);
             EGL_RESULT_CHECK(result);
@@ -33,7 +36,7 @@ static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t
 
         *timeout = delta < *timeout ? *timeout - delta : 0;
 
-    }while(state != true && *timeout);
+    }while(current_state != target_state && *timeout);
 
     return *timeout > 0 ? EGL_SUCCESS : EGL_TIMEOUT;
 }
@@ -45,7 +48,7 @@ static egl_result_t egl_rfm69_iface_mode_set(egl_rfm69_iface_t *iface, egl_rfm69
     result = egl_rfm69_mode_set(iface->rfm, mode);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio5, timeout);
+    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio5, true, timeout);
     EGL_RESULT_CHECK(result);
 
     return result;
@@ -111,14 +114,22 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_dc_free_set(iface->rfm, EGL_RFM69_DC_FREE_WHITENING);
     EGL_RESULT_CHECK(result);
 
+    result = egl_rfm69_fifo_thresh_set(iface->rfm, CHUNK_SIZE);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_SIZE);
+    EGL_RESULT_CHECK(result);
+
     return result;
 }
 
 egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t *len)
 {
-    #define EGL_RFM69_MAX_PACKET_SIZE (64U)
+    EGL_ASSERT_CHECK(len != NULL && *len < MAX_VARIABLE_PACKET_SIZE, EGL_INVALID_PARAM);
 
+    size_t offset = 0;
     egl_result_t result;
+    egl_result_t result2;
     uint32_t timeout = iface->tx_timeout;
     packet_header_t header =
     {
@@ -126,24 +137,33 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
         .addr = iface->node_addr
     };
 
-    /* Push size to fifo */
+    /* Push header to fifo */
     result = egl_rfm69_write_burst(iface->rfm, EGL_RFM69_REG_FIFO, &header, sizeof(header));
-    EGL_RESULT_CHECK(result);
-
-    /* Push data to fifo */
-    result = egl_rfm69_write_burst(iface->rfm, EGL_RFM69_REG_FIFO, data, *len);
-    EGL_RESULT_CHECK(result);
+    EGL_RESULT_CHECK_EXIT(result);
 
     /* Set TX mode */
     result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_TX_MODE, &timeout);
-    EGL_RESULT_CHECK(result);
+    EGL_RESULT_CHECK_EXIT(result);
+
+    while(*len > offset)
+    {
+        result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio1, false, &timeout);
+        EGL_RESULT_CHECK_EXIT(result);
+
+        /* Push data to fifo */
+        size_t chunk = *len - offset > CHUNK_SIZE ? CHUNK_SIZE : *len - offset;
+        result = egl_rfm69_write_burst(iface->rfm, EGL_RFM69_REG_FIFO, data + offset, chunk);
+        EGL_RESULT_CHECK_EXIT(result);
+        offset += chunk;
+    }
 
     /* Wait for packet sent event */
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, &timeout);
-    EGL_RESULT_CHECK(result);
+    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, &timeout);
+    EGL_RESULT_CHECK_EXIT(result);
 
-    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
-    EGL_RESULT_CHECK(result);
+exit:
+    result2 = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
+    EGL_RESULT_CHECK(result2);
 
     return result;
 }
@@ -153,26 +173,59 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
     egl_result_t result;
     egl_result_t result2;
     uint32_t timeout = iface->rx_timeout;
+    packet_header_t header = {0};
+    size_t offset = 0;
 
     /* Set RX */
     result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_RX_MODE, &timeout);
-    EGL_RESULT_CHECK(result);
+    EGL_RESULT_CHECK_EXIT(result);
 
-    /* Wait for packet receive event */
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, &timeout);
-    if(result == EGL_SUCCESS)
+    /* Wait for header */
+    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, &timeout);
+    EGL_RESULT_CHECK_EXIT(result);
+
+    result = egl_rfm69_read_byte(iface->rfm, EGL_RFM69_REG_FIFO, &header.len);
+    EGL_RESULT_CHECK_EXIT(result);
+
+    /* Wait for address byte */
+    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, &timeout);
+    EGL_RESULT_CHECK_EXIT(result);
+
+    result = egl_rfm69_read_byte(iface->rfm, EGL_RFM69_REG_FIFO, &header.addr);
+    EGL_RESULT_CHECK_EXIT(result);
+
+    do
     {
-        /* Read a packet header */
-        packet_header_t header;
-        result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, &header, sizeof(header));
-        EGL_RESULT_CHECK(result);
+        size_t left = header.len - offset - 1; /* -1 for address byte */
+        uint8_t *data_ptr = (uint8_t *)data + offset;
+        size_t read_len;
 
-        /* Read packet payload */
-        *len = header.len - 1; // Exclude address byte
-        result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, data, *len);
-        EGL_RESULT_CHECK(result);
-    }
+        if(left > CHUNK_SIZE)
+        {
+            /* Wait for FIFO level */
+            result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio1, true, &timeout);
+            EGL_RESULT_CHECK_EXIT(result);
 
+            read_len = CHUNK_SIZE;
+        }
+        else
+        {
+            /* Wait for packet transmission end */
+            result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, &timeout);
+            EGL_RESULT_CHECK_EXIT(result);
+
+            read_len = left;
+        }
+
+        result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, data_ptr, read_len);
+        EGL_RESULT_CHECK_EXIT(result);
+
+        offset += read_len;
+    }while(timeout && offset < header.len - 1);
+
+    *len = offset;
+
+exit:
     /* Save result in separate variable so that previous result will not be overwritten */
     result2 = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
     EGL_RESULT_CHECK(result2);
