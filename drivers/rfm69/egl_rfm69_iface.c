@@ -41,6 +41,37 @@ static egl_result_t egl_rfm69_iface_dio_wait(egl_rfm69_iface_t *iface, egl_pio_t
     return *timeout > 0 ? EGL_SUCCESS : EGL_TIMEOUT;
 }
 
+static inline egl_result_t egl_rfm69_iface_mode_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio5, true, timeout);
+}
+
+static inline egl_result_t egl_rfm69_iface_fifo_level_drop_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio1, false, timeout);
+}
+
+static inline egl_result_t egl_rfm69_iface_fifo_level_reach_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio1, true, timeout);
+}
+
+static inline egl_result_t egl_rfm69_iface_packet_sent_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, timeout);
+}
+
+static inline egl_result_t egl_rfm69_iface_packet_recv_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, timeout);
+}
+
+
+static inline egl_result_t egl_rfm69_iface_fifo_not_empty_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, timeout);
+}
+
 static egl_result_t egl_rfm69_iface_mode_set(egl_rfm69_iface_t *iface, egl_rfm69_mode_t mode, uint32_t *timeout)
 {
     egl_result_t result;
@@ -147,7 +178,7 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
 
     while(*len > offset)
     {
-        result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio1, false, &timeout);
+        result = egl_rfm69_iface_fifo_level_drop_wait(iface, &timeout);
         EGL_RESULT_CHECK_EXIT(result);
 
         /* Push data to fifo */
@@ -158,7 +189,7 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
     }
 
     /* Wait for packet sent event */
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, &timeout);
+    result = egl_rfm69_iface_packet_sent_wait(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
 
 exit:
@@ -181,14 +212,14 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
     EGL_RESULT_CHECK_EXIT(result);
 
     /* Wait for header */
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, &timeout);
+    result = egl_rfm69_iface_fifo_not_empty_wait(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
 
     result = egl_rfm69_read_byte(iface->rfm, EGL_RFM69_REG_FIFO, &header.len);
     EGL_RESULT_CHECK_EXIT(result);
 
     /* Wait for address byte */
-    result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, &timeout);
+    result = egl_rfm69_iface_fifo_not_empty_wait(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
 
     result = egl_rfm69_read_byte(iface->rfm, EGL_RFM69_REG_FIFO, &header.addr);
@@ -202,16 +233,14 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
 
         if(left > CHUNK_SIZE)
         {
-            /* Wait for FIFO level */
-            result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio1, true, &timeout);
+            result = egl_rfm69_iface_fifo_level_reach_wait(iface, &timeout);
             EGL_RESULT_CHECK_EXIT(result);
 
             read_len = CHUNK_SIZE;
         }
         else
         {
-            /* Wait for packet transmission end */
-            result = egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, &timeout);
+            result = egl_rfm69_iface_packet_recv_wait(iface, &timeout);
             EGL_RESULT_CHECK_EXIT(result);
 
             read_len = left;

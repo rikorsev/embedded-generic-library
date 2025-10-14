@@ -41,6 +41,35 @@ static egl_result_t egl_rfm66_iface_dio_wait(egl_rfm66_iface_t *iface, egl_pio_t
     return *timeout > 0 ? EGL_SUCCESS : EGL_TIMEOUT;
 }
 
+static inline egl_result_t egl_rfm66_iface_mode_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio5, true, timeout);
+}
+
+static inline egl_result_t egl_rfm66_iface_fifo_level_drop_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio1, false, timeout);
+}
+
+static inline egl_result_t egl_rfm66_iface_fifo_level_reach_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio1, true, timeout);
+}
+
+static inline egl_result_t egl_rfm66_iface_packet_sent_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio0, true, timeout);
+}
+
+static inline egl_result_t egl_rfm66_iface_packet_recv_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio0, true, timeout);
+}
+
+static inline egl_result_t egl_rfm66_iface_fifo_not_empty_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio3, false, timeout);
+}
 
 static egl_result_t egl_rfm66_iface_mode_set(egl_rfm66_iface_t *iface, egl_rfm66_mode_t mode, uint32_t *timeout)
 {
@@ -49,7 +78,7 @@ static egl_result_t egl_rfm66_iface_mode_set(egl_rfm66_iface_t *iface, egl_rfm66
     result = egl_rfm66_mode_set(iface->rfm, mode);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio5, true, timeout);
+    result = egl_rfm66_iface_mode_wait(iface, timeout);
     EGL_RESULT_CHECK(result);
 
     return result;
@@ -145,7 +174,7 @@ egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t 
 
     while(*len > offset)
     {
-        result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio1, false, &timeout);
+        result = egl_rfm66_iface_fifo_level_drop_wait(iface, &timeout);
         EGL_RESULT_CHECK_EXIT(result);
 
         /* Push data to fifo */
@@ -155,8 +184,7 @@ egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t 
         offset += chunk;
     }
 
-    /* Wait for packet sent event */
-    result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio0, true, &timeout);
+    result = egl_rfm66_iface_packet_sent_wait(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
 
 exit:
@@ -182,14 +210,14 @@ egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *
     EGL_RESULT_CHECK_EXIT(result);
 
     /* Wait for header */
-    result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio3, false, &timeout);
+    result = egl_rfm66_iface_fifo_not_empty_wait(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
 
     result = egl_rfm66_read_byte(iface->rfm, EGL_RFM66_REG_FIFO, &header.len);
     EGL_RESULT_CHECK_EXIT(result);
 
     /* Wait for address byte */
-    result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio3, false, &timeout);
+    result = egl_rfm66_iface_fifo_not_empty_wait(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
 
     result = egl_rfm66_read_byte(iface->rfm, EGL_RFM66_REG_FIFO, &header.addr);
@@ -204,7 +232,7 @@ egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *
         if(left > CHUNK_SIZE)
         {
             /* Wait for FIFO level */
-            result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio1, true, &timeout);
+            result = egl_rfm66_iface_fifo_level_reach_wait(iface, &timeout);
             EGL_RESULT_CHECK_EXIT(result);
 
             read_len = CHUNK_SIZE;
@@ -212,7 +240,7 @@ egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *
         else
         {
             /* Wait for packet transmission end */
-            result = egl_rfm66_iface_dio_wait(iface, iface->rfm->dio0, true, &timeout);
+            result = egl_rfm66_iface_packet_recv_wait(iface, &timeout);
             EGL_RESULT_CHECK_EXIT(result);
 
             read_len = left;
