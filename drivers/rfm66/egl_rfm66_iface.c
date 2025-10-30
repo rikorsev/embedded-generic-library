@@ -161,6 +161,16 @@ egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t 
         .addr = iface->node_addr
     };
 
+    egl_rfm66_mode_t mode;
+    result = egl_rfm66_mode_get(iface->rfm, &mode);
+    EGL_RESULT_CHECK(result);
+
+    if(mode != EGL_RFM66_TX_MODE)
+    {
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_STDBY_MODE, &timeout);
+        EGL_RESULT_CHECK(result);
+    }
+
     /* Push header to fifo */
     result = egl_rfm66_write_burst(iface->rfm, EGL_RFM66_REG_FIFO, &header, sizeof(header));
     EGL_RESULT_CHECK_EXIT(result);
@@ -188,7 +198,7 @@ egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t 
     EGL_RESULT_CHECK_EXIT(result);
 
 exit:
-    result2 = egl_rfm66_iface_mode_set(iface, EGL_RFM66_STDBY_MODE, &timeout);
+    result2 = egl_rfm66_iface_mode_set(iface, iface->tx_exit_mode, &timeout);
     EGL_RESULT_CHECK(result2);
 
     return result;
@@ -202,12 +212,19 @@ egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *
     packet_header_t header = {0};
     size_t offset = 0;
 
-    /* Set RX */
-    result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_FS_RX_MODE, &timeout);
+    egl_rfm66_mode_t mode;
+    result = egl_rfm66_mode_get(iface->rfm, &mode);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_RX_MODE, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
+    if(mode != EGL_RFM66_RX_MODE)
+    {
+        /* Set RX */
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_FS_RX_MODE, &timeout);
+        EGL_RESULT_CHECK(result);
+
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_RX_MODE, &timeout);
+        EGL_RESULT_CHECK_EXIT(result);
+    }
 
     /* Wait for header */
     result = egl_rfm66_iface_fifo_not_empty_wait(iface, &timeout);
@@ -256,7 +273,7 @@ egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *
 
 exit:
     /* Save result in separate variable so that previous result will not be overwritten */
-    result2 = egl_rfm66_iface_mode_set(iface, EGL_RFM66_STDBY_MODE, &timeout);
+    result2 = egl_rfm66_iface_mode_set(iface, iface->rx_exit_mode, &timeout);
     EGL_RESULT_CHECK(result2);
 
     return result;

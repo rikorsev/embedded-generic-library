@@ -402,9 +402,15 @@ egl_result_t egl_rfm69_mode_set(egl_rfm69_t *rfm, egl_rfm69_mode_t mode)
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_MODE, &regval.raw);
     EGL_RESULT_CHECK(result);
 
-    regval.bitfield.mode = mode;
+    if(regval.bitfield.mode != mode)
+    {
+        regval.bitfield.mode = mode;
 
-    return egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, regval.raw);
+        result = egl_rfm69_write_byte(rfm, EGL_RFM69_REG_MODE, regval.raw);
+        EGL_RESULT_CHECK(result);
+    }
+
+    return result;
 }
 
 egl_result_t egl_rfm69_mode_get(egl_rfm69_t *rfm, egl_rfm69_mode_t *mode)

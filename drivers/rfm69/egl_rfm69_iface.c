@@ -66,7 +66,6 @@ static inline egl_result_t egl_rfm69_iface_packet_recv_wait(egl_rfm69_iface_t *i
     return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio0, true, timeout);
 }
 
-
 static inline egl_result_t egl_rfm69_iface_fifo_not_empty_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
 {
     return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, timeout);
@@ -112,7 +111,7 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_dio5_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_3);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_dio3_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_1);
+    result = egl_rfm69_dio3_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_2);
     EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_preamble_set(iface->rfm, config->preamble);
@@ -151,6 +150,9 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_SIZE);
     EGL_RESULT_CHECK(result);
 
+    result = egl_rfm69_rssi_thresh_set(iface->rfm, config->rssi_thresh);
+    EGL_RESULT_CHECK(result);
+
     return result;
 }
 
@@ -167,6 +169,16 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
         .len = (uint8_t)(*len + 1), // +1 for address byte
         .addr = iface->node_addr
     };
+
+    egl_rfm69_mode_t mode;
+    result = egl_rfm69_mode_get(iface->rfm, &mode);
+    EGL_RESULT_CHECK(result);
+
+    if(mode != EGL_RFM69_TX_MODE)
+    {
+        result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
+        EGL_RESULT_CHECK(result);
+    }
 
     /* Push header to fifo */
     result = egl_rfm69_write_burst(iface->rfm, EGL_RFM69_REG_FIFO, &header, sizeof(header));
@@ -193,7 +205,7 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
     EGL_RESULT_CHECK_EXIT(result);
 
 exit:
-    result2 = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
+    result2 = egl_rfm69_iface_mode_set(iface, iface->tx_exit_mode, &timeout);
     EGL_RESULT_CHECK(result2);
 
     return result;
@@ -256,7 +268,7 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
 
 exit:
     /* Save result in separate variable so that previous result will not be overwritten */
-    result2 = egl_rfm69_iface_mode_set(iface, EGL_RFM69_STDBY_MODE, &timeout);
+    result2 = egl_rfm69_iface_mode_set(iface, iface->rx_exit_mode, &timeout);
     EGL_RESULT_CHECK(result2);
 
     return result;

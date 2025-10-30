@@ -5,24 +5,27 @@
 
 typedef struct
 {
-    uint32_t frequency;
-    uint32_t deviation;
-    uint32_t bitrate;
-    uint16_t preamble;
+    uint32_t              frequency;
+    uint32_t              deviation;
+    uint32_t              bitrate;
+    uint16_t              preamble;
     egl_rfm66_bandwidth_t bandwidth;
-    uint8_t power;
-    uint8_t node_addr;
-    char *sync;
-    uint8_t sync_size;
+    uint8_t               power;
+    uint8_t               node_addr;
+    char                  *sync;
+    uint8_t               sync_size;
+    int8_t                rssi_thresh;
 }egl_rfm66_config_t;
 
 typedef struct
 {
-    egl_rfm66_t *rfm;
-    uint8_t     node_addr;
-    uint32_t    pm_wait;
-    uint32_t    rx_timeout;
-    uint32_t    tx_timeout;
+    egl_rfm66_t      *rfm;
+    uint8_t          node_addr;
+    uint32_t         pm_wait;
+    uint32_t         rx_timeout;
+    uint32_t         tx_timeout;
+    egl_rfm66_mode_t rx_exit_mode;
+    egl_rfm66_mode_t tx_exit_mode;
 }egl_rfm66_iface_t;
 
 egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *config);
