@@ -18,32 +18,32 @@ static const char *egl_result_str[] =
     "EGL_TIMEOUT"
 };
 
-#if CONFIG_EGL_RESULT_ERROR_HOOK_ENABLED
-static egl_result_error_hook_t *egl_result_error_hook = NULL;
+#if CONFIG_EGL_RESULT_ERROR_HANDLER_ENABLED
+static egl_result_error_handler_t *egl_result_error_handler = NULL;
 #endif
 
-void egl_result_error_hook_set(egl_result_error_hook_t *hook)
+void egl_result_error_handler_set(egl_result_error_handler_t *handler)
 {
-#if CONFIG_EGL_RESULT_ERROR_HOOK_ENABLED
-    egl_result_error_hook = hook;
+#if CONFIG_EGL_RESULT_ERROR_HANDLER_ENABLED
+    egl_result_error_handler = handler;
 #endif
 }
 
-egl_result_error_hook_t *egl_result_error_hook_get(void)
+egl_result_error_handler_t *egl_result_error_handler_get(void)
 {
-#if CONFIG_EGL_RESULT_ERROR_HOOK_ENABLED
-    return egl_result_error_hook;
+#if CONFIG_EGL_RESULT_ERROR_HANDLER_ENABLED
+    return egl_result_error_handler;
 #else
     return NULL;
 #endif
 }
 
-egl_result_t egl_result_error_hook_call(egl_result_t result, char *file, unsigned int line)
+egl_result_t egl_result_error_handler_call(egl_result_t result, char *file, unsigned int line)
 {
-#if CONFIG_EGL_RESULT_ERROR_HOOK_ENABLED
-    if(egl_result_error_hook != NULL && egl_result_error_hook->func != NULL)
+#if CONFIG_EGL_RESULT_ERROR_HANDLER_ENABLED
+    if(egl_result_error_handler != NULL && egl_result_error_handler->func != NULL)
     {
-        return egl_result_error_hook->func(result, file, line, egl_result_error_hook->ctx);
+        return egl_result_error_handler->func(result, file, line, egl_result_error_handler->ctx);
     }
 #endif
     return result;
