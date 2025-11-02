@@ -4,9 +4,9 @@
 #include "egl_system.h"
 
 #define CHUNK_SIZE (32U)
-#define MAX_VARIABLE_PACKET_SIZE (255U)
+#define MAX_VARIABLE_PACKET_PAYLOAD (254)
 
-typedef struct
+typedef struct __attribute__((packed))
 {
     uint8_t len;
     uint8_t addr;
@@ -141,7 +141,47 @@ egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *
     result = egl_rfm66_fifo_thresh_set(iface->rfm, CHUNK_SIZE);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm66_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_SIZE);
+    result = egl_rfm66_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_PAYLOAD + 1); // +1 address byte
+    EGL_RESULT_CHECK(result);
+
+    return result;
+}
+
+static egl_result_t egl_rfm66_packet_send(egl_rfm66_iface_t *iface, void *data, size_t *len, uint32_t *timeout)
+{
+    EGL_ASSERT_CHECK(len != NULL && *len <= MAX_VARIABLE_PACKET_PAYLOAD, EGL_INVALID_PARAM);
+
+    /* If payload size is 0, just return success */
+    if(*len == 0)
+    {
+        return EGL_SUCCESS;
+    }
+
+    size_t offset = 0;
+    egl_result_t result;
+    packet_header_t header =
+    {
+        .len = (uint8_t)(*len + 1), // +1 for address byte
+        .addr = iface->node_addr
+    };
+
+    /* Push header to fifo */
+    result = egl_rfm66_write_burst(iface->rfm, EGL_RFM66_REG_FIFO, &header, sizeof(header));
+    EGL_RESULT_CHECK(result);
+
+    while(*len > offset)
+    {
+        result = egl_rfm66_iface_fifo_level_drop_wait(iface, timeout);
+        EGL_RESULT_CHECK(result);
+
+        /* Push data to fifo */
+        size_t chunk = *len - offset > CHUNK_SIZE ? CHUNK_SIZE : *len - offset;
+        result = egl_rfm66_write_burst(iface->rfm, EGL_RFM66_REG_FIFO, data + offset, chunk);
+        EGL_RESULT_CHECK(result);
+        offset += chunk;
+    }
+
+    result = egl_rfm66_iface_packet_sent_wait(iface, timeout);
     EGL_RESULT_CHECK(result);
 
     return result;
@@ -149,55 +189,38 @@ egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *
 
 egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t *len)
 {
-    EGL_ASSERT_CHECK(len != NULL && *len < MAX_VARIABLE_PACKET_SIZE, EGL_INVALID_PARAM);
-
-    size_t offset = 0;
     egl_result_t result;
     egl_result_t result2;
     uint32_t timeout = iface->tx_timeout;
-    packet_header_t header =
-    {
-        .len = (uint8_t)(*len + 1), // +1 for address byte
-        .addr = iface->node_addr
-    };
+    size_t offset = 0;
 
     egl_rfm66_mode_t mode;
     result = egl_rfm66_mode_get(iface->rfm, &mode);
-    EGL_RESULT_CHECK(result);
+    EGL_RESULT_CHECK_EXIT(result);
 
+    /* Enable TX mode, if it is not enabled yet */
     if(mode != EGL_RFM66_TX_MODE)
     {
-        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_STDBY_MODE, &timeout);
-        EGL_RESULT_CHECK(result);
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_FS_TX_MODE, &timeout);
+        EGL_RESULT_CHECK_EXIT(result);
+
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_TX_MODE, &timeout);
+        EGL_RESULT_CHECK_EXIT(result);
     }
 
-    /* Push header to fifo */
-    result = egl_rfm66_write_burst(iface->rfm, EGL_RFM66_REG_FIFO, &header, sizeof(header));
-    EGL_RESULT_CHECK_EXIT(result);
-
-    /* Set TX mode */
-    result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_FS_TX_MODE, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
-
-    result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_TX_MODE, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
-
-    while(*len > offset)
+    do
     {
-        result = egl_rfm66_iface_fifo_level_drop_wait(iface, &timeout);
-        EGL_RESULT_CHECK_EXIT(result);
+        size_t chunk_size = *len - offset >= MAX_VARIABLE_PACKET_PAYLOAD ?
+                                             MAX_VARIABLE_PACKET_PAYLOAD : *len - offset;
 
-        /* Push data to fifo */
-        size_t chunk = *len - offset > CHUNK_SIZE ? CHUNK_SIZE : *len - offset;
-        result = egl_rfm66_write_burst(iface->rfm, EGL_RFM66_REG_FIFO, data + offset, chunk);
-        EGL_RESULT_CHECK_EXIT(result);
-        offset += chunk;
-    }
+        result = egl_rfm66_packet_send(iface, data + offset, &chunk_size, &timeout);
 
-    result = egl_rfm66_iface_packet_sent_wait(iface, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
+        offset += chunk_size;
+    }while(timeout && result == EGL_SUCCESS && offset < *len);
 
 exit:
+    *len = offset;
+
     result2 = egl_rfm66_iface_mode_set(iface, iface->tx_exit_mode, &timeout);
     EGL_RESULT_CHECK(result2);
 
