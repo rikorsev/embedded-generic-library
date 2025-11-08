@@ -147,7 +147,7 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_fifo_thresh_set(iface->rfm, CHUNK_SIZE);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_PAYLOAD); // +1 address byte
+    result = egl_rfm69_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_PAYLOAD + 1); // +1 address byte
     EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_rssi_thresh_set(iface->rfm, config->rssi_thresh);
@@ -156,7 +156,7 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     return result;
 }
 
-egl_result_t egl_rfm69_packet_send(egl_rfm69_iface_t *iface, void *data, size_t *len, uint32_t *timeout)
+egl_result_t egl_rfm69_iface_packet_send(egl_rfm69_iface_t *iface, void *data, size_t *len, uint32_t *timeout)
 {
     EGL_ASSERT_CHECK(len != NULL && *len <= MAX_VARIABLE_PACKET_PAYLOAD, EGL_INVALID_PARAM);
 
@@ -220,7 +220,7 @@ egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t 
         size_t chunk_size = *len - offset >= MAX_VARIABLE_PACKET_PAYLOAD ?
                                              MAX_VARIABLE_PACKET_PAYLOAD : *len - offset;
 
-        result = egl_rfm69_packet_send(iface, data + offset, &chunk_size, &timeout);
+        result = egl_rfm69_iface_packet_send(iface, data + offset, &chunk_size, &timeout);
 
         offset += chunk_size;
     }while(timeout && result == EGL_SUCCESS && offset < *len);
@@ -234,31 +234,25 @@ exit:
     return result;
 }
 
-egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *len)
+static egl_result_t egl_rfm69_iface_packet_recv(egl_rfm69_iface_t *iface, void *data, size_t *len, uint32_t *timeout)
 {
     egl_result_t result;
-    egl_result_t result2;
-    uint32_t timeout = iface->rx_timeout;
-    packet_header_t header = {0};
     size_t offset = 0;
-
-    /* Set RX */
-    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_RX_MODE, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
+    packet_header_t header = {0};
 
     /* Wait for header */
-    result = egl_rfm69_iface_fifo_not_empty_wait(iface, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
+    result = egl_rfm69_iface_fifo_not_empty_wait(iface, timeout);
+    EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_read_byte(iface->rfm, EGL_RFM69_REG_FIFO, &header.len);
-    EGL_RESULT_CHECK_EXIT(result);
+    EGL_RESULT_CHECK(result);
 
     /* Wait for address byte */
-    result = egl_rfm69_iface_fifo_not_empty_wait(iface, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
+    result = egl_rfm69_iface_fifo_not_empty_wait(iface, timeout);
+    EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_read_byte(iface->rfm, EGL_RFM69_REG_FIFO, &header.addr);
-    EGL_RESULT_CHECK_EXIT(result);
+    EGL_RESULT_CHECK(result);
 
     do
     {
@@ -268,31 +262,63 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
 
         if(left > CHUNK_SIZE)
         {
-            result = egl_rfm69_iface_fifo_level_reach_wait(iface, &timeout);
-            EGL_RESULT_CHECK_EXIT(result);
+            result = egl_rfm69_iface_fifo_level_reach_wait(iface, timeout);
+            EGL_RESULT_CHECK(result);
 
             read_len = CHUNK_SIZE;
         }
         else
         {
-            result = egl_rfm69_iface_packet_recv_wait(iface, &timeout);
-            EGL_RESULT_CHECK_EXIT(result);
+            result = egl_rfm69_iface_packet_recv_wait(iface, timeout);
+            EGL_RESULT_CHECK(result);
 
             read_len = left;
         }
 
         result = egl_rfm69_read_burst(iface->rfm, EGL_RFM69_REG_FIFO, data_ptr, read_len);
-        EGL_RESULT_CHECK_EXIT(result);
+        EGL_RESULT_CHECK(result);
 
         offset += read_len;
     }while(timeout && offset < header.len - 1);
 
     *len = offset;
 
+    return result;
+}
+
+egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *len)
+{
+    egl_result_t result;
+    uint32_t timeout = iface->rx_timeout;
+    size_t offset = 0;
+
+    /* Set RX */
+    result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_RX_MODE, &timeout);
+    EGL_RESULT_CHECK_EXIT(result);
+
+    do
+    {
+        size_t chunk_size = *len - offset >= MAX_VARIABLE_PACKET_PAYLOAD ?
+                                             MAX_VARIABLE_PACKET_PAYLOAD : *len - offset;
+
+        result = egl_rfm69_iface_packet_recv(iface, data + offset, &chunk_size, &timeout);
+        EGL_RESULT_CHECK_EXIT(result);
+
+        offset += chunk_size;
+    }while(timeout && offset < *len);
+
 exit:
-    /* Save result in separate variable so that previous result will not be overwritten */
-    result2 = egl_rfm69_iface_mode_set(iface, iface->rx_exit_mode, &timeout);
-    EGL_RESULT_CHECK(result2);
+    *len = offset;
+
+    EGL_LOG_DEBUG("partial: %d, len: %d, result: %s", iface->is_partial_receive, *len, EGL_RESULT(result));
+
+    /* If we receive at leas something, we may consider it as success*/
+    if(iface->is_partial_receive && (*len) > 0 && result == EGL_TIMEOUT)
+    {
+        result = EGL_SUCCESS;
+    }
+
+    egl_rfm69_iface_mode_set(iface, iface->rx_exit_mode, &timeout);
 
     return result;
 }

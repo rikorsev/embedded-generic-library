@@ -26,6 +26,7 @@ typedef struct
     uint32_t         tx_timeout;
     egl_rfm69_mode_t rx_exit_mode;
     egl_rfm69_mode_t tx_exit_mode;
+    bool             is_partial_receive;
 }egl_rfm69_iface_t;
 
 egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *config);
