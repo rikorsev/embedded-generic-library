@@ -305,6 +305,12 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
         EGL_RESULT_CHECK_EXIT(result);
 
         offset += chunk_size;
+
+        if(iface->is_rx_inc_tout)
+        {
+            timeout = iface->rx_timeout;
+        }
+
     }while(timeout && offset < *len);
 
 exit:

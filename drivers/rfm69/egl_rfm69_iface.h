@@ -27,6 +27,7 @@ typedef struct
     egl_rfm69_mode_t rx_exit_mode;
     egl_rfm69_mode_t tx_exit_mode;
     bool             is_partial_receive;
+    bool             is_rx_inc_tout;
 }egl_rfm69_iface_t;
 
 egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *config);
