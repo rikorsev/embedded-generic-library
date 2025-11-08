@@ -279,6 +279,11 @@ static egl_result_t egl_rfm69_iface_packet_recv(egl_rfm69_iface_t *iface, void *
         EGL_RESULT_CHECK(result);
 
         offset += read_len;
+
+        if(iface->is_rx_inc_tout)
+        {
+            *timeout = iface->rx_timeout;
+        }
     }while(timeout && offset < header.len - 1);
 
     *len = offset;
@@ -306,20 +311,13 @@ egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *
 
         offset += chunk_size;
 
-        if(iface->is_rx_inc_tout)
-        {
-            timeout = iface->rx_timeout;
-        }
-
     }while(timeout && offset < *len);
 
 exit:
     *len = offset;
 
-    EGL_LOG_DEBUG("partial: %d, len: %d, result: %s", iface->is_partial_receive, *len, EGL_RESULT(result));
-
     /* If we receive at leas something, we may consider it as success*/
-    if(iface->is_partial_receive && (*len) > 0 && result == EGL_TIMEOUT)
+    if(iface->is_rx_partial && (*len) > 0 && result == EGL_TIMEOUT)
     {
         result = EGL_SUCCESS;
     }

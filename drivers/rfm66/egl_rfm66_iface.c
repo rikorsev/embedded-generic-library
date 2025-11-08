@@ -227,18 +227,74 @@ exit:
     return result;
 }
 
+static egl_result_t egl_rfm66_iface_packet_recv(egl_rfm66_iface_t *iface, void *data, size_t *len, uint32_t *timeout)
+{
+    egl_result_t result;
+    size_t offset = 0;
+    packet_header_t header = {0};
+
+    /* Wait for header */
+    result = egl_rfm66_iface_fifo_not_empty_wait(iface, timeout);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm66_read_byte(iface->rfm, EGL_RFM66_REG_FIFO, &header.len);
+    EGL_RESULT_CHECK(result);
+
+    /* Wait for address byte */
+    result = egl_rfm66_iface_fifo_not_empty_wait(iface, timeout);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm66_read_byte(iface->rfm, EGL_RFM66_REG_FIFO, &header.addr);
+    EGL_RESULT_CHECK(result);
+
+    do
+    {
+        size_t left = header.len - offset - 1; /* -1 for address byte */
+        uint8_t *data_ptr = (uint8_t *)data + offset;
+        size_t read_len;
+
+        if(left > CHUNK_SIZE)
+        {
+            result = egl_rfm66_iface_fifo_level_reach_wait(iface, timeout);
+            EGL_RESULT_CHECK(result);
+
+            read_len = CHUNK_SIZE;
+        }
+        else
+        {
+            result = egl_rfm66_iface_packet_recv_wait(iface, timeout);
+            EGL_RESULT_CHECK(result);
+
+            read_len = left;
+        }
+
+        result = egl_rfm66_read_burst(iface->rfm, EGL_RFM66_REG_FIFO, data_ptr, read_len);
+        EGL_RESULT_CHECK(result);
+
+        offset += read_len;
+
+        if(iface->is_rx_inc_tout)
+        {
+            *timeout = iface->rx_timeout;
+        }
+    }while(timeout && offset < header.len - 1);
+
+    *len = offset;
+
+    return result;
+}
+
 egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *len)
 {
     egl_result_t result;
-    egl_result_t result2;
     uint32_t timeout = iface->rx_timeout;
-    packet_header_t header = {0};
     size_t offset = 0;
 
     egl_rfm66_mode_t mode;
     result = egl_rfm66_mode_get(iface->rfm, &mode);
     EGL_RESULT_CHECK(result);
 
+    /* Set RX */
     if(mode != EGL_RFM66_RX_MODE)
     {
         /* Set RX */
@@ -249,55 +305,27 @@ egl_result_t egl_rfm66_iface_read(egl_rfm66_iface_t *iface, void *data, size_t *
         EGL_RESULT_CHECK_EXIT(result);
     }
 
-    /* Wait for header */
-    result = egl_rfm66_iface_fifo_not_empty_wait(iface, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
-
-    result = egl_rfm66_read_byte(iface->rfm, EGL_RFM66_REG_FIFO, &header.len);
-    EGL_RESULT_CHECK_EXIT(result);
-
-    /* Wait for address byte */
-    result = egl_rfm66_iface_fifo_not_empty_wait(iface, &timeout);
-    EGL_RESULT_CHECK_EXIT(result);
-
-    result = egl_rfm66_read_byte(iface->rfm, EGL_RFM66_REG_FIFO, &header.addr);
-    EGL_RESULT_CHECK_EXIT(result);
-
     do
     {
-        size_t left = header.len - offset - 1; /* -1 for address byte */
-        uint8_t *data_ptr = (uint8_t *)data + offset;
-        size_t read_len;
+        size_t chunk_size = *len - offset >= MAX_VARIABLE_PACKET_PAYLOAD ?
+                                             MAX_VARIABLE_PACKET_PAYLOAD : *len - offset;
 
-        if(left > CHUNK_SIZE)
-        {
-            /* Wait for FIFO level */
-            result = egl_rfm66_iface_fifo_level_reach_wait(iface, &timeout);
-            EGL_RESULT_CHECK_EXIT(result);
-
-            read_len = CHUNK_SIZE;
-        }
-        else
-        {
-            /* Wait for packet transmission end */
-            result = egl_rfm66_iface_packet_recv_wait(iface, &timeout);
-            EGL_RESULT_CHECK_EXIT(result);
-
-            read_len = left;
-        }
-
-        result = egl_rfm66_read_burst(iface->rfm, EGL_RFM66_REG_FIFO, data_ptr, read_len);
+        result = egl_rfm66_iface_packet_recv(iface, data + offset, &chunk_size, &timeout);
         EGL_RESULT_CHECK_EXIT(result);
 
-        offset += read_len;
-    }while(timeout && offset < header.len - 1);
-
-    *len = offset;
+        offset += chunk_size;
+    }while(timeout && offset < *len);
 
 exit:
-    /* Save result in separate variable so that previous result will not be overwritten */
-    result2 = egl_rfm66_iface_mode_set(iface, iface->rx_exit_mode, &timeout);
-    EGL_RESULT_CHECK(result2);
+    *len = offset;
+
+    /* If we receive at leas something, we may consider it as success*/
+    if(iface->is_rx_partial && (*len) > 0 && result == EGL_TIMEOUT)
+    {
+        result = EGL_SUCCESS;
+    }
+
+    egl_rfm66_iface_mode_set(iface, iface->rx_exit_mode, &timeout);
 
     return result;
 }
