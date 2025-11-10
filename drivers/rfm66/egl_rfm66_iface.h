@@ -24,6 +24,7 @@ typedef struct
     uint32_t         pm_wait;
     uint32_t         rx_timeout;
     uint32_t         tx_timeout;
+    uint32_t         tx_inter_packet_delay;
     egl_rfm66_mode_t rx_exit_mode;
     egl_rfm66_mode_t tx_exit_mode;
     bool             is_rx_partial;

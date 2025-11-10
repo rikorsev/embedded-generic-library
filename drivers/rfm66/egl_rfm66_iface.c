@@ -216,6 +216,9 @@ egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t 
         result = egl_rfm66_packet_send(iface, data + offset, &chunk_size, &timeout);
 
         offset += chunk_size;
+
+        result = egl_sys_delay(iface->tx_inter_packet_delay);
+        EGL_RESULT_CHECK_EXIT(result);
     }while(timeout && result == EGL_SUCCESS && offset < *len);
 
 exit:
