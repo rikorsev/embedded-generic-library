@@ -330,9 +330,23 @@ exit:
     return result;
 }
 
-egl_result_t egl_rfm69_iface_ioctl(egl_rfm69_iface_t *iface, uint8_t opcode, void *data, size_t len)
+egl_result_t egl_rfm69_iface_ioctl(egl_rfm69_iface_t *iface, uint8_t opcode, void *data, size_t *len)
 {
-    return EGL_FAIL;
+    egl_result_t result;
+    uint32_t timeout;
+
+    switch(opcode)
+    {
+        case EGL_RFM69_IOCTL_RX_MODE_SET:
+            timeout = 100;
+            result = egl_rfm69_iface_mode_set(iface, EGL_RFM69_RX_MODE, &timeout);
+            break;
+
+        default:
+            result = EGL_NOT_SUPPORTED;
+    }
+
+    return result;
 }
 
 egl_result_t egl_rfm69_iface_deinit(egl_rfm69_iface_t *iface)

@@ -3,6 +3,11 @@
 
 #include "egl_rfm69_driver.h"
 
+enum
+{
+    EGL_RFM69_IOCTL_RX_MODE_SET = 1
+};
+
 typedef struct
 {
     uint32_t              frequency;
@@ -34,7 +39,7 @@ typedef struct
 egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *config);
 egl_result_t egl_rfm69_iface_write(egl_rfm69_iface_t *iface, void *data, size_t *len);
 egl_result_t egl_rfm69_iface_read(egl_rfm69_iface_t *iface, void *data, size_t *len);
-egl_result_t egl_rfm69_iface_ioctl(egl_rfm69_iface_t *iface, uint8_t opcode, void *data, size_t len);
+egl_result_t egl_rfm69_iface_ioctl(egl_rfm69_iface_t *iface, uint8_t opcode, void *data, size_t *len);
 egl_result_t egl_rfm69_iface_deinit(egl_rfm69_iface_t *iface);
 
 #endif

@@ -84,6 +84,27 @@ static egl_result_t egl_rfm66_iface_mode_set(egl_rfm66_iface_t *iface, egl_rfm66
     return result;
 }
 
+static egl_result_t egl_rfm66_iface_rx_mode_set(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    egl_result_t result;
+    egl_rfm66_mode_t mode;
+
+    result = egl_rfm66_mode_get(iface->rfm, &mode);
+    EGL_RESULT_CHECK(result);
+
+    /* Enable TX mode, if it is not enabled yet */
+    if(mode != EGL_RFM66_RX_MODE)
+    {
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_FS_RX_MODE, timeout);
+        EGL_RESULT_CHECK(result);
+
+        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_RX_MODE, timeout);
+        EGL_RESULT_CHECK(result);
+    }
+
+    return result;
+}
+
 egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *config)
 {
     egl_result_t result;
@@ -194,19 +215,8 @@ egl_result_t egl_rfm66_iface_write(egl_rfm66_iface_t *iface, void *data, size_t 
     uint32_t timeout = iface->tx_timeout;
     size_t offset = 0;
 
-    egl_rfm66_mode_t mode;
-    result = egl_rfm66_mode_get(iface->rfm, &mode);
+    result = egl_rfm66_iface_rx_mode_set(iface, &timeout);
     EGL_RESULT_CHECK_EXIT(result);
-
-    /* Enable TX mode, if it is not enabled yet */
-    if(mode != EGL_RFM66_TX_MODE)
-    {
-        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_FS_TX_MODE, &timeout);
-        EGL_RESULT_CHECK_EXIT(result);
-
-        result = egl_rfm66_iface_mode_set(iface, EGL_RFM66_TX_MODE, &timeout);
-        EGL_RESULT_CHECK_EXIT(result);
-    }
 
     do
     {
@@ -333,9 +343,23 @@ exit:
     return result;
 }
 
-egl_result_t egl_rfm66_iface_ioctl(egl_rfm66_iface_t *iface, uint8_t opcode, void *data, size_t len)
+egl_result_t egl_rfm66_iface_ioctl(egl_rfm66_iface_t *iface, uint8_t opcode, void *data, size_t *len)
 {
-    return EGL_FAIL;
+    egl_result_t result;
+    uint32_t timeout;
+
+    switch(opcode)
+    {
+        case EGL_RFM66_IOCTL_RX_MODE_SET:
+            timeout = 100;
+            result = egl_rfm66_iface_rx_mode_set(iface, &timeout);
+            break;
+
+        default:
+            result = EGL_NOT_SUPPORTED;
+    }
+
+    return result;
 }
 
 egl_result_t egl_rfm66_iface_deinit(egl_rfm66_iface_t *iface)
