@@ -178,9 +178,6 @@ egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *
     result = egl_rfm66_tx_start_condition_set(iface->rfm, EGL_RFM66_TX_START_CONDITION_FIFO_NOT_EMPTY);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm66_modulation_shaping_set(iface->rfm, EGL_RFM66_MODULATION_SHAPING_2);
-    EGL_RESULT_CHECK(result);
-
     result = egl_rfm66_fifo_thresh_set(iface->rfm, CHUNK_SIZE);
     EGL_RESULT_CHECK(result);
 

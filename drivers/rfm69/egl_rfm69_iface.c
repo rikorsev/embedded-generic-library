@@ -138,9 +138,6 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_tx_start_cond_set(iface->rfm, EGL_RFM69_TX_START_CONDITION_FIFO_NOT_EMPTY);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_modulation_shaping_set(iface->rfm, EGL_RFM69_MODULATION_SHAPING_2);
-    EGL_RESULT_CHECK(result);
-
     result = egl_rfm69_dc_free_set(iface->rfm, EGL_RFM69_DC_FREE_WHITENING);
     EGL_RESULT_CHECK(result);
 
