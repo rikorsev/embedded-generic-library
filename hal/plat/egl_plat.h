@@ -25,9 +25,9 @@
 
 typedef struct
 {
-    egl_result_t    (*init)(void);
-    egl_result_t    (*boot)(unsigned int slot_idx);
-    egl_result_t    (*deinit)(void);
+    egl_result_t (*init)(void);
+    egl_result_t (*cmd)(unsigned int id, void *data, size_t *len);
+    egl_result_t (*deinit)(void);
 }egl_platform_t;
 
 /**
@@ -40,6 +40,18 @@ typedef struct
 egl_result_t egl_plat_init(egl_platform_t *plat);
 
 /**
+ * @brief Execute platform command
+ *
+ * @param plat - pointer to platform instance
+ * @param id - the command ID
+ * @param data - the command additional data or context
+ * @param len - size of the data or context
+ *
+ * @return EGL_SUCCESS in case of successful execution
+ */
+egl_result_t egl_plat_cmd_exec(egl_platform_t *plat, unsigned int id, void *data, size_t *len);
+
+/**
  * @brief Deinitialize platform
  *
  * @param plat - pointer to platform instance
@@ -48,15 +60,5 @@ egl_result_t egl_plat_init(egl_platform_t *plat);
  */
 egl_result_t egl_plat_deinit(egl_platform_t *plat);
 
-/**
- * @brief Boot application from specific slot
- *
- * @param plat - pointer to platform instance
- * @param slot_idx - slot index to boot
- *
- * @return Usualli it shouldn't return from the function. If it returns, return value will carry
- *         some nrgative result
- */
-egl_result_t egl_plat_boot(egl_platform_t *plat, unsigned int slot_idx);
 
 #endif

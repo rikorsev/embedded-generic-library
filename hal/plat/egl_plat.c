@@ -29,12 +29,12 @@ egl_result_t egl_plat_init(egl_platform_t *plat)
     return plat->init();
 }
 
-egl_result_t egl_plat_boot(egl_platform_t *plat, unsigned int slot_idx)
+egl_result_t egl_plat_cmd_exec(egl_platform_t *plat, unsigned int id, void *data, size_t *len)
 {
     EGL_ASSERT_CHECK(plat, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(plat->boot, EGL_NOT_SUPPORTED);
+    EGL_ASSERT_CHECK(plat->cmd, EGL_NOT_SUPPORTED);
 
-    return plat->boot(slot_idx);
+    return plat->cmd(id, data, len);
 }
 
 egl_result_t egl_plat_deinit(egl_platform_t *plat)
