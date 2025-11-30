@@ -25,8 +25,6 @@
 typedef enum
 {
     EGL_SUCCESS = 0,       /// Operation is successful
-    EGL_RESET = 0,         /// The instance in reset state
-    EGL_SET,               /// The instance in set state
     EGL_UNKNOWN,           /// Result of operation is unknown
     EGL_FAIL,              /// Operation has failed
     EGL_PROCESS,           /// Operation still in process
@@ -37,6 +35,7 @@ typedef enum
     EGL_ASSERT_FAIL,       /// Assertion fail
     EGL_TIMEOUT,           /// Operation timeout
     EGL_NULL_POINTER,      /// NULL pointer fail
+    EGL_CHECKSUM_MISMATCH, /// Checksum mismatch
 
     EGL_LAST
 }egl_result_t;

@@ -24,7 +24,6 @@
 static const char *egl_result_str[] =
 {
     "EGL_SUCCESS",
-    "EGL_SET",
     "EGL_UNKNOWN",
     "EGL_FAIL",
     "EGL_PROCESS",
@@ -33,7 +32,9 @@ static const char *egl_result_str[] =
     "EGL_INVALID_PARAM",
     "EGL_INVALID_STATE",
     "EGL_ASSERT_FAIL",
-    "EGL_TIMEOUT"
+    "EGL_TIMEOUT",
+    "EGL_NULL_POINTER",
+    "EGL_CHECKSUM_MISMATCH",
 };
 
 #if CONFIG_EGL_RESULT_ERROR_HANDLER_ENABLED
