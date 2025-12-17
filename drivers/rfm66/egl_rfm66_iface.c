@@ -380,6 +380,11 @@ egl_result_t egl_rfm66_iface_ioctl(egl_rfm66_iface_t *iface, uint8_t opcode, voi
             result = egl_rfm66_iface_rx_mode_set(iface, &timeout);
             break;
 
+        case EGL_RFM66_IOCTL_RX_TIMEOUT_SET:
+            iface->rx_timeout = (uint32_t)data;
+            result = EGL_SUCCESS;
+            break;
+
         default:
             result = EGL_NOT_SUPPORTED;
     }

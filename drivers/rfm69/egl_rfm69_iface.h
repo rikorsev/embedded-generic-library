@@ -23,7 +23,8 @@
 
 enum
 {
-    EGL_RFM69_IOCTL_RX_MODE_SET = 1
+    EGL_RFM69_IOCTL_RX_MODE_SET = 1,
+    EGL_RFM69_IOCTL_RX_TIMEOUT_SET
 };
 
 typedef struct
