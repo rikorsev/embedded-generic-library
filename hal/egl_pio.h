@@ -27,6 +27,7 @@ typedef struct
 {
     egl_result_t (*init)   (void);
     egl_result_t (*set)    (bool state);
+    egl_result_t (*toggle) (void);
     egl_result_t (*get)    (bool *state);
     egl_result_t (*deinit) (void);
     egl_pio_callback_t callback;
@@ -39,7 +40,13 @@ typedef struct
  *
  * @return EGL_SUCCESS in case of successful initialization
  */
-egl_result_t egl_pio_init(egl_pio_t *pio);
+static inline egl_result_t egl_pio_init(egl_pio_t *pio)
+{
+    EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pio->init, EGL_NOT_SUPPORTED);
+
+    return pio->init();
+}
 
 /**
  * @brief Set state of PIO
@@ -49,7 +56,13 @@ egl_result_t egl_pio_init(egl_pio_t *pio);
  *
  * @return EGL_SUCCES in case of successful setting
  */
-egl_result_t egl_pio_set(egl_pio_t *pio, bool state);
+static inline egl_result_t egl_pio_set(egl_pio_t *pio, bool state)
+{
+    EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pio->set, EGL_NOT_SUPPORTED);
+
+    return pio->set(state);
+}
 
 /**
  * @brief Get PIO state
@@ -58,7 +71,28 @@ egl_result_t egl_pio_set(egl_pio_t *pio, bool state);
  *
  * @return EGL_SUCCES in case of successful getting
  */
-egl_result_t egl_pio_get(egl_pio_t *pio, bool *state);
+static inline egl_result_t egl_pio_get(egl_pio_t *pio, bool *state)
+{
+    EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pio->get, EGL_NOT_SUPPORTED);
+
+    return pio->get(state);
+}
+
+/**
+ * @brief Toggle PIO state
+ *
+ * @param pio - pointer to pio to toggle state
+ *
+ * @return EGL_SUCCESS in case of successfull toggling
+ */
+static inline egl_result_t egl_pio_toggle(egl_pio_t *pio)
+{
+    EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pio->toggle, EGL_NOT_SUPPORTED);
+
+    return pio->toggle();
+}
 
 /**
  * @brief Set callback for PIO
@@ -71,16 +105,14 @@ egl_result_t egl_pio_get(egl_pio_t *pio, bool *state);
  *
  * @return EGL_SUCCESS on case if callback has been set successfully
  */
-egl_result_t egl_pio_callback_set(egl_pio_t *pio, egl_pio_callback_t callback);
+static inline egl_result_t egl_pio_callback_set(egl_pio_t *pio, egl_pio_callback_t callback)
+{
+    EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
 
-/**
- * @brief Toggle PIO state
- *
- * @param pio - pointer to pio to toggle state
- *
- * @return EGL_SUCCESS in case of successfull toggling
- */
-egl_result_t egl_pio_toggle(egl_pio_t *pio);
+    pio->callback = callback;
+
+    return EGL_SUCCESS;
+}
 
 /**
  * @brief Deinit PIO
@@ -89,6 +121,12 @@ egl_result_t egl_pio_toggle(egl_pio_t *pio);
  *
  * @return EGL_SUCCESS in case of successful deinitialization
  */
-egl_result_t egl_pio_deinit(egl_pio_t *pio);
+static inline egl_result_t egl_pio_deinit(egl_pio_t *pio)
+{
+    EGL_ASSERT_CHECK(pio, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pio->deinit, EGL_NOT_SUPPORTED);
+
+    return pio->deinit();
+}
 
 #endif

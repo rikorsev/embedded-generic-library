@@ -41,7 +41,13 @@ typedef struct
  *
  * @return EGL_SUCCESS in case of successful initialization
  */
-egl_result_t egl_pm_init(egl_pm_t *pm);
+static inline egl_result_t egl_pm_init(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->init, EGL_NOT_SUPPORTED);
+
+    return pm->init();
+}
 
 /**
  * @brief Power On specific unit
@@ -50,7 +56,13 @@ egl_result_t egl_pm_init(egl_pm_t *pm);
  *
  * @return EGL_SUCCESS in case of successful poweron
  */
-egl_result_t egl_pm_poweron(egl_pm_t *pm);
+static inline egl_result_t egl_pm_poweron(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->poweron, EGL_NOT_SUPPORTED);
+
+    return pm->poweron();
+}
 
 /**
  * @brief Set specific power profile to the unit
@@ -60,7 +72,13 @@ egl_result_t egl_pm_poweron(egl_pm_t *pm);
  *
  * @return EGL_SUCCESS in case if the profile applied successfuly
  */
-egl_result_t egl_pm_mode_set(egl_pm_t *pm, uint32_t mode);
+static inline egl_result_t egl_pm_mode_set(egl_pm_t *pm, uint32_t mode)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->mode_set, EGL_NOT_SUPPORTED);
+
+    return pm->mode_set(mode);
+}
 
 /**
  * @brief Sleep for specified amoutn of time
@@ -70,7 +88,13 @@ egl_result_t egl_pm_mode_set(egl_pm_t *pm, uint32_t mode);
  *
  * @return EGL_SUCCESS in case of successful delay
  */
-egl_result_t egl_pm_sleep(egl_pm_t *pm, uint32_t delay);
+static inline egl_result_t egl_pm_sleep(egl_pm_t *pm, uint32_t delay)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->sleep, EGL_NOT_SUPPORTED);
+
+    return pm->sleep(delay);
+}
 
 /**
  * @brief Perform a unit reset
@@ -79,7 +103,13 @@ egl_result_t egl_pm_sleep(egl_pm_t *pm, uint32_t delay);
  *
  * @return EGL_SUCCESS in case of successful reset
  */
-egl_result_t egl_pm_reset(egl_pm_t *pm);
+static inline egl_result_t egl_pm_reset(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->reset, EGL_NOT_SUPPORTED);
+
+    return pm->reset();
+}
 
 /**
  * @brief Perform a unit shutdown
@@ -88,7 +118,13 @@ egl_result_t egl_pm_reset(egl_pm_t *pm);
  *
  * @return EGL_SUCCESS in case of successful shutdown
  */
-egl_result_t egl_pm_shutdown(egl_pm_t *pm);
+static inline egl_result_t egl_pm_shutdown(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->shutdown, EGL_NOT_SUPPORTED);
+
+    return pm->shutdown();
+}
 
 /**
  * @brief Denit specific power unit
@@ -97,6 +133,13 @@ egl_result_t egl_pm_shutdown(egl_pm_t *pm);
  *
  * @return EGL_SUCCESS in case of successful deinitialization
  */
-egl_result_t egl_pm_deinit(egl_pm_t *pm);
+static inline egl_result_t egl_pm_deinit(egl_pm_t *pm)
+{
+    EGL_ASSERT_CHECK(pm, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(pm->deinit, EGL_NOT_SUPPORTED);
+
+    return pm->deinit();
+}
+
 
 #endif

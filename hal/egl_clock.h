@@ -16,10 +16,27 @@
  * limitations under the License.
  */
 
-#include <stdlib.h>
-#include "egl_clock.h"
+#ifndef EGL_CLOCK_H
+#define EGL_CLOCK_H
 
-egl_result_t egl_clock_init(egl_clock_t *clock)
+#include <stdint.h>
+#include "egl_result.h"
+
+typedef struct
+{
+    egl_result_t (*init)(void);
+    uint32_t (*get)(void);
+    egl_result_t (*deinit)(void);
+}egl_clock_t;
+
+/**
+ * @brief Initi clock unit
+ *
+ * @param clock - pointer to clock unit to init
+ * 
+ * @return EGL_SUCCESS in case of successfull initialization
+ */
+static inline egl_result_t egl_clock_init(egl_clock_t *clock)
 {
     EGL_ASSERT_CHECK(clock, EGL_ASSERT_FAIL);
     EGL_ASSERT_CHECK(clock->init, EGL_NOT_SUPPORTED);
@@ -27,22 +44,29 @@ egl_result_t egl_clock_init(egl_clock_t *clock)
     return clock->init();
 }
 
-uint32_t egl_clock_get(egl_clock_t *clock)
+/**
+ * @brief Get frequency if the clock unit
+ *
+ * @param clock - pointer to clock to get frequency
+ *
+ * @return the clock unit frequency in Hz
+ */
+static inline uint32_t egl_clock_get(egl_clock_t *clock)
 {
-    if(clock == NULL)
-    {
-        return 0;
-    }
-
-    if(clock->get == NULL)
-    {
-        return 0;
-    }
+    EGL_ASSERT_CHECK(clock, 0);
+    EGL_ASSERT_CHECK(clock->get, 0);
 
     return clock->get();
 }
 
-egl_result_t egl_clock_deinit(egl_clock_t *clock)
+/**
+ * @brief Deinit clock unit
+ *
+ * @param clock - pointer to clock unit to deinit
+ *
+ * @return EGL_SUCCESS in case of successfull deinitialization
+ */
+static inline egl_result_t egl_clock_deinit(egl_clock_t *clock)
 {
     EGL_ASSERT_CHECK(clock, EGL_ASSERT_FAIL);
     EGL_ASSERT_CHECK(clock->deinit, EGL_NOT_SUPPORTED);
@@ -50,3 +74,4 @@ egl_result_t egl_clock_deinit(egl_clock_t *clock)
     return clock->deinit();
 }
 
+#endif
