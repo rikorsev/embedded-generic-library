@@ -202,6 +202,9 @@ egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *
     result = egl_rfm66_packet_length_set(iface->rfm, MAX_VARIABLE_PACKET_PAYLOAD + 1); // +1 address byte
     EGL_RESULT_CHECK(result);
 
+    result = egl_rfm66_rssi_threshold_set(iface->rfm, config->rssi_thresh);
+    EGL_RESULT_CHECK(result);
+
     return result;
 }
 

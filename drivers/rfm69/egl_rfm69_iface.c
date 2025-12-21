@@ -123,9 +123,6 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_rx_bandwidth_set(iface->rfm, config->bandwidth);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_afc_bandwidth_set(iface->rfm, config->bandwidth);
-    EGL_RESULT_CHECK(result);
-
     result = egl_rfm69_dio5_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_3);
     EGL_RESULT_CHECK(result);
 
