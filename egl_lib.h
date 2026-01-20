@@ -33,3 +33,5 @@
 #include "egl_system.h"
 #include "egl_value.h"
 #include "egl_util.h"
+#include "egl_os.h"
+#include "egl_os_threadx.h"

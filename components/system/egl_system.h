@@ -25,12 +25,14 @@
 #include "egl_pm.h"
 #include "egl_timer.h"
 #include "egl_plat.h"
+#include "egl_os.h"
 
 #define SYSPLAT egl_sys_plat_get()
 #define SYSLOG egl_sys_log_get()
 #define SYSCLOCK egl_sys_clock_get()
 #define SYSPM egl_sys_pm_get()
 #define SYSTIMER egl_sys_timer_get()
+#define SYSOS egl_sys_os_get()
 
 typedef struct
 {
@@ -39,6 +41,7 @@ typedef struct
     egl_clock_t *sysclock;
     egl_pm_t *syspm;
     egl_timer_t *systimer;
+    egl_os_t *sysos;
 }egl_system_t;
 
 egl_result_t   egl_system_init(egl_system_t *system);
@@ -49,5 +52,6 @@ egl_pm_t       *egl_sys_pm_get(void);
 egl_timer_t    *egl_sys_timer_get(void);
 egl_result_t   egl_sys_delay(uint32_t ms);
 egl_result_t   egl_system_deinit(void);
+egl_os_t       *egl_sys_os_get(void);
 
 #endif

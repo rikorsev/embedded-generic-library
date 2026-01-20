@@ -60,6 +60,14 @@ egl_result_t egl_system_init(egl_system_t *system)
     }
 #endif
 
+#if CONFIG_EGL_OS_ENABLED
+    if(system->sysos != NULL)
+    {
+        result = egl_os_init(system->sysos);
+        EGL_ASSERT_CHECK(result == EGL_SUCCESS || result == EGL_NOT_SUPPORTED, result);
+    }
+#endif
+
     return result;
 }
 
@@ -101,6 +109,11 @@ egl_result_t egl_sys_delay(uint32_t ms)
     EGL_RESULT_CHECK(result);
 
     return result;
+}
+
+egl_os_t *egl_sys_os_get(void)
+{
+    return system_ptr->sysos;
 }
 
 egl_result_t egl_system_deinit(void)
