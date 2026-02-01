@@ -5,8 +5,6 @@ target_sources(${PROJECT_NAME}
         ${CMAKE_CURRENT_LIST_DIR}/egl_os_threadx.h
 )
 
-message("!!! ${CONFIG_EGL_OS_THREADEX_PATH}")
-
 target_link_libraries(${PROJECT_NAME} PUBLIC threadx)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
