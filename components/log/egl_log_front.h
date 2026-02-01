@@ -25,5 +25,6 @@
 #include "egl_timer.h"
 
 egl_result_t egl_log_frontend_default_bare(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
+egl_result_t egl_log_frontend_default_os(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
 
 #endif

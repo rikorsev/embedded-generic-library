@@ -50,19 +50,79 @@ static const char *m_level_str[] =
 
 egl_result_t egl_log_frontend_default_bare(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg)
 {
-    EGL_ASSERT_CHECK(timer, EGL_NULL_POINTER);
-
     int result;
     unsigned int offset = 0;
 
-    result = snprintf(output, *size, BOLD "[%08u]",
-                                            (unsigned int)egl_timer_get(timer));
-    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
-    offset += result;
+    if(timer)
+    {
+        result = snprintf(output, *size, BOLD "[%08u]",
+                                                (unsigned int)egl_timer_get(timer));
+        EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+        offset += result;
+    }
 
     result = snprintf(output + offset, *size - offset, BOLD "[%s]", m_level_str[lvl]);
     EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
     offset += result;
+
+    result = snprintf(output + offset, *size - offset, "%s: " RESET, module);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+    offset += result;
+
+    result = vsnprintf(output + offset, *size - offset, fmt, arg);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+    offset += result;
+
+    result = snprintf(output + offset, *size - offset, "\r\n");
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+    offset += result;
+
+    *size = offset;
+
+    return EGL_SUCCESS;
+}
+
+egl_result_t egl_log_frontend_default_os(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg)
+{
+    int result;
+    unsigned int offset = 0;
+    void *thread_handle = NULL;
+
+    if(timer)
+    {
+        result = snprintf(output, *size, BOLD "[%08u]",
+                                                (unsigned int)egl_timer_get(timer));
+        EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+        offset += result;
+    }
+
+    result = snprintf(output + offset, *size - offset, BOLD "[%s]", m_level_str[lvl]);
+    EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+    offset += result;
+
+    result = egl_os_thread_get(SYSOS, &thread_handle);
+    EGL_RESULT_CHECK(result);
+
+    if(thread_handle)
+    {
+        char *thread_name = NULL;
+        unsigned int thread_prio = 0;
+
+        result = egl_os_thread_name_get(SYSOS, thread_handle, &thread_name);
+        EGL_RESULT_CHECK(result);
+
+        if(thread_name == NULL)
+        {
+            thread_name = "unnamed";
+        }
+
+        result = egl_os_thread_prio_get(SYSOS, thread_handle, &thread_prio);
+        EGL_RESULT_CHECK(result);
+
+        result = snprintf(output + offset, *size - offset, BOLD "[%s:%u]", thread_name, thread_prio);
+        EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);
+        offset += result;
+    }
 
     result = snprintf(output + offset, *size - offset, "%s: " RESET, module);
     EGL_ASSERT_CHECK(result > 0, EGL_ASSERT_FAIL);

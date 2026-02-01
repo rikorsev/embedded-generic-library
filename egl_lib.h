@@ -35,10 +35,10 @@
 #include "egl_value.h"
 #include "egl_util.h"
 
-#if EGL_OS_ENABLED
+#if CONFIG_EGL_OS_ENABLED
 #include "egl_os.h"
 #endif
 
-#if EGL_OS_THREADX_ENABLED
+#if CONFIG_EGL_OS_THREADX_ENABLED
 #include "egl_os_threadx.h"
 #endif

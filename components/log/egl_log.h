@@ -88,7 +88,28 @@ egl_result_t egl_log_deinit(egl_log_t *log);
  */
 egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *format, ...);
 
+/**
+ * @brief Setter for log frontend
+ *
+ * @param log - pointer to the log instance
+ * @param frontend - frontend function to set
+ *
+ * @return EGL_SUCCESS if log frontend has been set successfully
+ */
+egl_result_t egl_log_frontend_set(egl_log_t *log, egl_log_frontend_func_t frontend);
 
+/**
+ * @brief Helper function (uitil) for logging out different kind of buffers in hexedecemal format
+ *
+ * @param log - pointer to the log instance
+ * @param lvl - log level of the message like EGL_LOG_LEVEL_DEBUG, EGL_LOG_LEVEL_INFO etc
+ * @param name - name of output block (name of the buffer to logout)
+ * @param buff - buffer to logout
+ * @param len - length of the buffer
+ * @param row - number of elements in row
+ *
+ * @return EGL_SUCCESS in case if the buffer has been logged successfully
+ */
 egl_result_t egl_log_buff(egl_log_t *log, egl_log_level_t lvl, char *name, uint8_t *buff, size_t len, size_t row);
 
 #else

@@ -1,5 +1,5 @@
 if(CONFIG_EGL_OS_ENABLED EQUAL 1)
-    if(CONFIG_EGL_OS_THREADEX_ENABLED EQUAL 1)
+    if(CONFIG_EGL_OS_THREADX_ENABLED EQUAL 1)
         add_subdirectory(threadx)
     endif()
 endif()

@@ -5,10 +5,8 @@ target_sources(${PROJECT_NAME}
         ${CMAKE_CURRENT_LIST_DIR}/egl_os_threadx.h
 )
 
-add_definitions(-DEGL_OS_THREADX_ENABLED=1)
-
 target_link_libraries(${PROJECT_NAME} PUBLIC threadx)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CONFIG_EGL_OS_THREADEX_PATH}/common/inc)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CONFIG_EGL_OS_THREADEX_PATH}/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN}/inc)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CONFIG_EGL_OS_THREADX_PATH}/common/inc)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CONFIG_EGL_OS_THREADX_PATH}/ports/${THREADX_ARCH}/${THREADX_TOOLCHAIN}/inc)
