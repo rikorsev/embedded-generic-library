@@ -22,6 +22,7 @@
 #include "egl_plat.h"
 #include "egl_timer.h"
 #include "egl_log.h"
+#include "egl_log_front.h"
 #include "egl_crc.h"
 #include "egl_block.h"
 #include "egl_clock.h"
@@ -33,5 +34,11 @@
 #include "egl_system.h"
 #include "egl_value.h"
 #include "egl_util.h"
+
+#if EGL_OS_ENABLED
 #include "egl_os.h"
+#endif
+
+#if EGL_OS_THREADX_ENABLED
 #include "egl_os_threadx.h"
+#endif
