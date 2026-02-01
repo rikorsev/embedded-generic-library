@@ -19,6 +19,8 @@
 #ifndef EGL_LOG_H
 #define EGL_LOG_H
 
+#include <stdarg.h>
+
 #include "egl_timer.h"
 #include "egl_iface.h"
 
@@ -32,11 +34,15 @@ typedef enum
     EGL_LOG_LEVEL_LAST
 }egl_log_level_t;
 
+typedef egl_result_t (*egl_log_frontend_func_t)(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
+
 typedef struct
 {
-    egl_iface_t       *iface;
-    egl_timer_t       *timer;
-    char              buff[CONFIG_EGL_LOG_BUFF_SIZE];
+    egl_log_frontend_func_t frontend;
+    egl_iface_t             *iface;
+    egl_timer_t             *timer;
+    char                    *buff;
+    size_t                  size;
 }egl_log_t;
 
 #if CONFIG_EGL_LOG_ENABLED
