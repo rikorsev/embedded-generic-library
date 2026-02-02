@@ -63,6 +63,22 @@ static egl_result_t egl_os_threadx_thread_current(void **handle)
     return EGL_SUCCESS;
 }
 
+static egl_result_t egl_os_threadx_state(egl_os_state_t *state)
+{
+    extern ULONG _tx_thread_system_state;
+
+    if(_tx_thread_system_state == 0)
+    {
+        *state = EGL_OS_RUNNING;
+    }
+    else
+    {
+        *state = EGL_OS_NOT_INITED;
+    }
+
+    return EGL_SUCCESS;
+}
+
 static egl_result_t egl_os_threadex_thread_create(void **handle, char *name,
                             egl_os_thread_entry_func_t entry,
                             void *param, void *stack,
@@ -343,7 +359,7 @@ static egl_result_t egl_os_threadx_queue_create(void **handle, char *name, unsig
 {
     UINT tx_result;
 
-    tx_result = tx_queue_create(ctx, name, size, mem, memsize);
+    tx_result = tx_queue_create(ctx, name, size / 4, mem, memsize);
     EGL_ASSERT_CHECK(tx_result == TX_SUCCESS, EGL_FAIL);
 
     *handle = ctx;
@@ -435,6 +451,7 @@ const egl_os_t egl_os_threadx_port =
     .start   = egl_os_threadx_start,
     .sleep   = egl_os_threadx_thread_sleep,
     .current = egl_os_threadx_thread_current,
+    .state   = egl_os_threadx_state,
 
     .thread =
     {

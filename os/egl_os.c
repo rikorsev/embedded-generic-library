@@ -61,6 +61,15 @@ egl_result_t egl_os_thread_sleep(egl_os_t *os, unsigned int ticks)
     return os->sleep(ticks);
 }
 
+egl_result_t egl_os_state_get(egl_os_t *os, egl_os_state_t *state)
+{
+    EGL_ASSERT_CHECK(os, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(os->state, EGL_NOT_SUPPORTED);
+    EGL_ASSERT_CHECK(state, EGL_NOT_SUPPORTED);
+
+    return os->state(state);
+}
+
 egl_result_t egl_os_thread_create(egl_os_t *os,
                                   void **handle, char *name,
                                   egl_os_thread_entry_func_t entry,

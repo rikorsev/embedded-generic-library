@@ -47,12 +47,21 @@ typedef enum
     EGL_OS_TIMER_TYPE_PERIODIC = 1
 }egl_os_timer_type_t;
 
+typedef enum
+{
+    EGL_OS_NOT_INITED = 0,
+    EGL_OS_RUNNING,
+    EGL_OS_SUSPEND,
+    EGL_OS_FAILED
+}egl_os_state_t;
+
 typedef struct
 {
     egl_result_t (*init)(void);
     egl_result_t (*start)(void *param, ...);
     egl_result_t (*current)(void **handle);
     egl_result_t (*sleep)(unsigned int tick);
+    egl_result_t (*state)(egl_os_state_t *state);
 
     struct
     {
@@ -117,6 +126,7 @@ egl_result_t egl_os_init(egl_os_t *os);
 egl_result_t egl_os_start(egl_os_t *os, void *param, ...);
 egl_result_t egl_os_thread_get(egl_os_t *os, void **handle);
 egl_result_t egl_os_thread_sleep(egl_os_t *os, unsigned int ticks);
+egl_result_t egl_os_state_get(egl_os_t *os, egl_os_state_t *state);
 
 egl_result_t egl_os_thread_create(egl_os_t *os,
                                   void **handle, char *name,
@@ -164,5 +174,7 @@ egl_result_t egl_os_timer_create(egl_os_t *os, void **handle, char *name,
 egl_result_t egl_os_timer_start(egl_os_t *os, void *handle, unsigned int ticks);
 egl_result_t egl_os_timer_stop(egl_os_t *os, void *handle);
 egl_result_t egl_os_timer_destroy(egl_os_t *os, void *handle);
+
+// egl_result_t egl_os_stream_create(egl_os_t *os, void *handle, void *mem, size_t memsize, void *ctx);
 
 #endif
