@@ -36,13 +36,7 @@ typedef struct
  * 
  * @return EGL_SUCCESS in case of successfull initialization
  */
-static inline egl_result_t egl_clock_init(egl_clock_t *clock)
-{
-    EGL_ASSERT_CHECK(clock, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(clock->init, EGL_NOT_SUPPORTED);
-
-    return clock->init();
-}
+egl_result_t egl_clock_init(egl_clock_t *clock);
 
 /**
  * @brief Get frequency if the clock unit
@@ -51,13 +45,7 @@ static inline egl_result_t egl_clock_init(egl_clock_t *clock)
  *
  * @return the clock unit frequency in Hz
  */
-static inline uint32_t egl_clock_get(egl_clock_t *clock)
-{
-    EGL_ASSERT_CHECK(clock, 0);
-    EGL_ASSERT_CHECK(clock->get, 0);
-
-    return clock->get();
-}
+uint32_t egl_clock_get(egl_clock_t *clock);
 
 /**
  * @brief Deinit clock unit
@@ -66,12 +54,6 @@ static inline uint32_t egl_clock_get(egl_clock_t *clock)
  *
  * @return EGL_SUCCESS in case of successfull deinitialization
  */
-static inline egl_result_t egl_clock_deinit(egl_clock_t *clock)
-{
-    EGL_ASSERT_CHECK(clock, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(clock->deinit, EGL_NOT_SUPPORTED);
-
-    return clock->deinit();
-}
+egl_result_t egl_clock_deinit(egl_clock_t *clock);
 
 #endif

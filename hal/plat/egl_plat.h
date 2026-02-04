@@ -20,6 +20,7 @@
 #define EGL_PLAT_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #include "egl_result.h"
 
@@ -37,13 +38,7 @@ typedef struct
  *
  * @return EGL_SUCCESS in case of successful deinitialization
  */
-static inline egl_result_t egl_plat_init(egl_platform_t *plat)
-{
-    EGL_ASSERT_CHECK(plat, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(plat->init, EGL_NOT_SUPPORTED);
-
-    return plat->init();
-}
+egl_result_t egl_plat_init(egl_platform_t *plat);
 
 /**
  * @brief Execute platform command
@@ -55,13 +50,7 @@ static inline egl_result_t egl_plat_init(egl_platform_t *plat)
  *
  * @return EGL_SUCCESS in case of successful execution
  */
-static inline egl_result_t egl_plat_cmd_exec(egl_platform_t *plat, unsigned int id, void *data, size_t *len)
-{
-    EGL_ASSERT_CHECK(plat, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(plat->cmd, EGL_NOT_SUPPORTED);
-
-    return plat->cmd(id, data, len);
-}
+egl_result_t egl_plat_cmd_exec(egl_platform_t *plat, unsigned int id, void *data, size_t *len);
 
 /**
  * @brief Deinitialize platform
@@ -70,13 +59,6 @@ static inline egl_result_t egl_plat_cmd_exec(egl_platform_t *plat, unsigned int 
  *
  * @return EGL_SUCCESS in case of successful deinitialization
  */
-static inline egl_result_t egl_plat_deinit(egl_platform_t *plat)
-{
-    EGL_ASSERT_CHECK(plat, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(plat->deinit, EGL_NOT_SUPPORTED);
-
-    return plat->deinit();
-}
-
+egl_result_t egl_plat_deinit(egl_platform_t *plat);
 
 #endif

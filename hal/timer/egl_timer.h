@@ -39,13 +39,7 @@ typedef struct
  *
  * @return EGL_SUCCESS in case of successful initialization
  */
-static inline egl_result_t egl_timer_init(egl_timer_t *timer)
-{
-    EGL_ASSERT_CHECK(timer, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(timer->init, EGL_NOT_SUPPORTED);
-
-    return timer->init();
-}
+egl_result_t egl_timer_init(egl_timer_t *timer);
 
 /**
  * @brief Get timer value
@@ -54,13 +48,7 @@ static inline egl_result_t egl_timer_init(egl_timer_t *timer)
  *
  * @return current value of the timer
  */
-static inline uint32_t egl_timer_get(egl_timer_t *timer)
-{
-    EGL_ASSERT_CHECK(timer, 0);
-    EGL_ASSERT_CHECK(timer->get, 0);
-
-    return timer->get();
-}
+uint32_t egl_timer_get(egl_timer_t *timer);
 
 /**
  * @brief Set timer value
@@ -70,13 +58,7 @@ static inline uint32_t egl_timer_get(egl_timer_t *timer)
  *
  * @return EGL_SUCCES in case of successfull setting
  */
-static inline egl_result_t egl_timer_set(egl_timer_t *timer, uint32_t val)
-{
-    EGL_ASSERT_CHECK(timer, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(timer->set, EGL_NOT_SUPPORTED);
-
-    return timer->set(val);
-}
+egl_result_t egl_timer_set(egl_timer_t *timer, uint32_t val);
 
 /**
  * @brief Tick timer for a specified number of ticks
@@ -86,13 +68,7 @@ static inline egl_result_t egl_timer_set(egl_timer_t *timer, uint32_t val)
  *
  * @return EGL_SUCCESS in case of successful wait, or an error code if the wait failed
  */
-static inline egl_result_t egl_timer_wait(egl_timer_t *timer, uint32_t cnt)
-{
-    EGL_ASSERT_CHECK(timer, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(timer->wait, EGL_NOT_SUPPORTED);
-
-    return timer->wait(cnt);
-}
+egl_result_t egl_timer_wait(egl_timer_t *timer, uint32_t cnt);
 
 /**
  * @brief Deinit the timer
@@ -101,12 +77,6 @@ static inline egl_result_t egl_timer_wait(egl_timer_t *timer, uint32_t cnt)
  *
  * @return EGL_SUCCESS in case of successful deinitialization
  */
-static inline egl_result_t egl_timer_deinit(egl_timer_t *timer)
-{
-    EGL_ASSERT_CHECK(timer, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(timer->deinit, EGL_NOT_SUPPORTED);
-
-    return timer->deinit();
-}
+egl_result_t egl_timer_deinit(egl_timer_t *timer);
 
 #endif /* EGL_TIMER_H */
