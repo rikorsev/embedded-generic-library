@@ -89,6 +89,11 @@ static inline egl_result_t egl_rfm69_iface_fifo_not_empty_wait(egl_rfm69_iface_t
     return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio2, true, timeout);
 }
 
+static inline egl_result_t egl_rfm69_iface_rssi_wait(egl_rfm69_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm69_iface_dio_wait(iface, iface->rfm->dio3, true, timeout);
+}
+
 static egl_result_t egl_rfm69_iface_mode_set(egl_rfm69_iface_t *iface, egl_rfm69_mode_t mode, uint32_t *timeout)
 {
     egl_result_t result;
@@ -123,10 +128,12 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     result = egl_rfm69_rx_bandwidth_set(iface->rfm, config->bandwidth);
     EGL_RESULT_CHECK(result);
 
+    /* Mode ready */
     result = egl_rfm69_dio5_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_3);
     EGL_RESULT_CHECK(result);
 
-    result = egl_rfm69_dio3_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_2);
+    /* RSSI ready */
+    result = egl_rfm69_dio3_mode_set(iface->rfm, EGL_RFM69_DIO_MODE_1);
     EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_preamble_set(iface->rfm, config->preamble);
@@ -163,6 +170,12 @@ egl_result_t egl_rfm69_iface_init(egl_rfm69_iface_t *iface, egl_rfm69_config_t *
     EGL_RESULT_CHECK(result);
 
     result = egl_rfm69_rssi_thresh_set(iface->rfm, config->rssi_thresh);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_afc_auto_start_set(iface->rfm, true);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm69_afc_bandwidth_set(iface->rfm, config->bandwidth);
     EGL_RESULT_CHECK(result);
 
     return result;

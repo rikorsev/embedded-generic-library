@@ -1496,7 +1496,15 @@ egl_result_t egl_rfm69_rssi_state_get(egl_rfm69_t *rfm, bool *state)
 
 egl_result_t egl_rfm69_rssi_get(egl_rfm69_t *rfm, int8_t *db)
 {
-    return egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_VALUE, (uint8_t *)db);
+    uint8_t raw;
+    egl_result_t result;
+
+    result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_RSSI_VALUE, &raw);
+    EGL_RESULT_CHECK(result);
+
+    *db = -raw / 2;
+
+    return result;
 }
 
 egl_result_t egl_rfm69_dio0_mode_set(egl_rfm69_t *rfm, egl_rfm69_dio_mode_t mode)
@@ -2295,14 +2303,12 @@ egl_result_t egl_rfm69_temp_meas_state_get(egl_rfm69_t *rfm, bool *state)
 
 egl_result_t egl_rfm69_temp_get(egl_rfm69_t *rfm, int8_t *temp)
 {
-    #define EGL_RFM69_TEMP_CONSTANT (166)
-
     egl_result_t result;
     uint8_t raw;
 
     result = egl_rfm69_read_byte(rfm, EGL_RFM69_REG_TEMP2, &raw);
 
-    *temp = (int8_t)(EGL_RFM69_TEMP_CONSTANT - raw);
+    *temp = -(int8_t)raw;
 
     return result;
 }

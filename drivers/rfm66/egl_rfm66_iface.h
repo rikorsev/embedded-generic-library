@@ -53,6 +53,8 @@ typedef struct
     egl_rfm66_mode_t tx_exit_mode;
     bool             is_rx_partial;
     bool             is_rx_inc_tout;
+    int16_t          last_freq_error;
+    int8_t           last_rssi;
 }egl_rfm66_iface_t;
 
 egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *config);

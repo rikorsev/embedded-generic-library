@@ -89,6 +89,11 @@ static inline egl_result_t egl_rfm66_iface_fifo_not_empty_wait(egl_rfm66_iface_t
     return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio3, false, timeout);
 }
 
+static inline egl_result_t egl_rfm66_iface_rssi_preamble_wait(egl_rfm66_iface_t *iface, uint32_t *timeout)
+{
+    return egl_rfm66_iface_dio_wait(iface, iface->rfm->dio4, true, timeout);
+}
+
 static egl_result_t egl_rfm66_iface_mode_set(egl_rfm66_iface_t *iface, egl_rfm66_mode_t mode, uint32_t *timeout)
 {
     egl_result_t result;
@@ -166,7 +171,12 @@ egl_result_t egl_rfm66_iface_init(egl_rfm66_iface_t *iface, egl_rfm66_config_t *
     result = egl_rfm66_rx_bandwidth_set(iface->rfm, config->bandwidth);
     EGL_RESULT_CHECK(result);
 
+    /* Mode ready */
     result = egl_rfm66_dio5_mode_set(iface->rfm, EGL_RFM66_DIO_MODE_3);
+    EGL_RESULT_CHECK(result);
+
+    /* Preamble/RSSI detected */
+    result = egl_rfm66_dio4_mode_set(iface->rfm, EGL_RFM66_DIO_MODE_3);
     EGL_RESULT_CHECK(result);
 
     result = egl_rfm66_preamble_set(iface->rfm, config->preamble);
@@ -285,6 +295,15 @@ static egl_result_t egl_rfm66_iface_packet_recv(egl_rfm66_iface_t *iface, void *
     egl_result_t result;
     size_t offset = 0;
     packet_header_t header = {0};
+
+    result = egl_rfm66_iface_rssi_preamble_wait(iface, timeout);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm66_rssi_get(iface->rfm, &iface->last_rssi);
+    EGL_RESULT_CHECK(result);
+
+    result = egl_rfm66_fei_get(iface->rfm, &iface->last_freq_error);
+    EGL_RESULT_CHECK(result);
 
     /* Wait for header */
     result = egl_rfm66_iface_fifo_not_empty_wait(iface, timeout);

@@ -1163,7 +1163,7 @@ egl_result_t egl_rfm66_rssi_get(egl_rfm66_t *rfm, int8_t *rssi)
     result = egl_rfm66_read_byte(rfm, EGL_RFM66_REG_RSSI_VALUE, &raw);
     EGL_RESULT_CHECK(result);
 
-    *rssi = -raw;
+    *rssi = -raw / 2;
 
     return result;
 }
