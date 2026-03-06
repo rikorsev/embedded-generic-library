@@ -16,15 +16,14 @@
  * limitations under the License.
  */
 
-#ifndef EGL_LOG_FRONT_H
-#define EGL_LOG_FRONT_H
+#ifndef EGL_LOG_FRONT_BARE_H
+#define EGL_LOG_FRONT_BARE_H
 
-#include <stdarg.h>
+#include "egl_log.h"
 
-#include "egl_result.h"
-#include "egl_timer.h"
+#define EGL_LOG_BARE egl_log_front_bare_get()
 
-egl_result_t egl_log_frontend_default_bare(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
-egl_result_t egl_log_frontend_default_os(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
+egl_log_front_t *egl_log_front_bare_get(void);
+
 
 #endif

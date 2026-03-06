@@ -16,30 +16,13 @@
  * limitations under the License.
  */
 
-#include "egl_result.h"
-#include "egl_iface.h"
-#include "egl_pio.h"
-#include "egl_plat.h"
-#include "egl_timer.h"
+#ifndef EGL_LOG_FRONT_OS_H
+#define EGL_LOG_FRONT_OS_H
+
 #include "egl_log.h"
-#include "egl_log_front_bare.h"
-#include "egl_log_front_os.h"
-#include "egl_crc.h"
-#include "egl_block.h"
-#include "egl_clock.h"
-#include "egl_pm.h"
-#include "egl_rfm69_driver.h"
-#include "egl_rfm69_iface.h"
-#include "egl_rfm66_driver.h"
-#include "egl_rfm66_iface.h"
-#include "egl_system.h"
-#include "egl_value.h"
-#include "egl_util.h"
 
-#if CONFIG_EGL_OS_ENABLED
-#include "egl_os.h"
-#endif
+#define EGL_LOG_OS egl_log_front_os_get()
 
-#if CONFIG_EGL_OS_THREADX_ENABLED
-#include "egl_os_threadx.h"
+egl_log_front_t *egl_log_front_os_get(void);
+
 #endif

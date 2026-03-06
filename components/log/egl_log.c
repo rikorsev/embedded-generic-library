@@ -25,17 +25,18 @@
 
 egl_result_t egl_log_init(egl_log_t *log)
 {
-    EGL_ASSERT_CHECK(log, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(log->iface, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(log, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(log->iface, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(log->frontend, EGL_NULL_POINTER);
 
     egl_result_t result;
 
     result = egl_iface_init(log->iface);
     EGL_RESULT_CHECK(result);
 
-    if(log->timer)
+    if(log->frontend->init != NULL)
     {
-        result = egl_timer_init(log->timer);
+        result = log->frontend->init();
         EGL_RESULT_CHECK(result);
     }
 
@@ -49,24 +50,36 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
     EGL_ASSERT_CHECK(log, EGL_NULL_POINTER);
     EGL_ASSERT_CHECK(format, EGL_NULL_POINTER);
     EGL_ASSERT_CHECK(lvl < EGL_LOG_LEVEL_LAST, EGL_INVALID_PARAM);
-    EGL_ASSERT_CHECK(log->frontend, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(log->frontend->format, EGL_NULL_POINTER);
     EGL_ASSERT_CHECK(log->iface, EGL_NULL_POINTER);
 
     egl_result_t result;
     unsigned int size = log->size;
 
+    if(log->frontend->lock)
+    {
+        result = log->frontend->lock();
+        EGL_RESULT_CHECK(result);
+    }
+
     va_start(arg, format);
-    result = log->frontend(log->buff, &size, log->timer, lvl, module, format, arg);
+    result = log->frontend->format(log->buff, &size, lvl, module, format, arg);
     va_end(arg);
-    EGL_RESULT_CHECK(result);
+    EGL_RESULT_CHECK_EXIT(result);
 
     result = egl_iface_write(log->iface, log->buff, &size);
-    EGL_RESULT_CHECK(result);
+    EGL_RESULT_CHECK_EXIT(result);
+
+exit:
+    if(log->frontend->unlock)
+    {
+        log->frontend->unlock();
+    }
 
     return result;
 }
 
-egl_result_t egl_log_frontend_set(egl_log_t *log, egl_log_frontend_func_t frontend)
+egl_result_t egl_log_frontend_set(egl_log_t *log, egl_log_front_t * frontend)
 {
     EGL_ASSERT_CHECK(log, EGL_NULL_POINTER);
 
@@ -105,17 +118,18 @@ egl_result_t egl_log_buff(egl_log_t *log, egl_log_level_t lvl, char *name, uint8
 
 egl_result_t egl_log_deinit(egl_log_t *log)
 {
-    EGL_ASSERT_CHECK(log, EGL_ASSERT_FAIL);
-    EGL_ASSERT_CHECK(log->iface, EGL_ASSERT_FAIL);
+    EGL_ASSERT_CHECK(log, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(log->iface, EGL_NULL_POINTER);
+    EGL_ASSERT_CHECK(log->frontend, EGL_NULL_POINTER);
 
     egl_result_t result;
 
     result = egl_iface_deinit(log->iface);
     EGL_RESULT_CHECK(result);
 
-    if(log->timer)
+    if(log->frontend->deinit)
     {
-        result = egl_timer_deinit(log->timer);
+        result = log->frontend->deinit();
         EGL_RESULT_CHECK(result);
     }
 

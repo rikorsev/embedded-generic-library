@@ -34,15 +34,21 @@ typedef enum
     EGL_LOG_LEVEL_LAST
 }egl_log_level_t;
 
-typedef egl_result_t (*egl_log_frontend_func_t)(char *output, size_t *size, egl_timer_t *timer, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
+typedef struct
+{
+    egl_result_t (*init)(void);
+    egl_result_t (*lock)(void);
+    egl_result_t (*format)(char *output, size_t *size, egl_log_level_t lvl, char *module, char *fmt, va_list arg);
+    egl_result_t (*unlock)(void);
+    egl_result_t (*deinit)(void);
+}egl_log_front_t;
 
 typedef struct
 {
-    egl_log_frontend_func_t frontend;
-    egl_iface_t             *iface;
-    egl_timer_t             *timer;
-    char                    *buff;
-    size_t                  size;
+    egl_log_front_t *frontend;
+    egl_iface_t     *iface;
+    char            *buff;
+    size_t           size;
 }egl_log_t;
 
 #if CONFIG_EGL_LOG_ENABLED
@@ -92,11 +98,11 @@ egl_result_t egl_log(egl_log_t *log, egl_log_level_t lvl, char *module, char *fo
  * @brief Setter for log frontend
  *
  * @param log - pointer to the log instance
- * @param frontend - frontend function to set
+ * @param frontend - pointer to log frontend instance
  *
  * @return EGL_SUCCESS if log frontend has been set successfully
  */
-egl_result_t egl_log_frontend_set(egl_log_t *log, egl_log_frontend_func_t frontend);
+egl_result_t egl_log_frontend_set(egl_log_t *log, egl_log_front_t * frontend);
 
 /**
  * @brief Helper function (uitil) for logging out different kind of buffers in hexedecemal format

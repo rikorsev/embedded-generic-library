@@ -63,10 +63,12 @@ typedef struct
 #define __FILENAME__ (__builtin_strrchr(__FILE__, '/') ? __builtin_strrchr(__FILE__, '/') + 1 : __FILE__)
 
 #define EGL_ASSERT_CHECK(x, retval) if(!(x)) { (void)__HANDLER(EGL_ASSERT_FAIL, __FILENAME__, __LINE__); return retval; }
+#define EGL_ASSERT_CHECK_EXIT(x) if(!(x)) { (void)__HANDLER(EGL_ASSERT_FAIL, __FILENAME__, __LINE__); goto exit; }
 #define EGL_RESULT_CHECK(x) if((x) != EGL_SUCCESS) { return __HANDLER((x), __FILENAME__, __LINE__); }
 #define EGL_RESULT_CHECK_EXIT(x) if((x) != EGL_SUCCESS) { x = __HANDLER((x), __FILENAME__, __LINE__); goto exit; }
 #else
 #define EGL_ASSERT_CHECK(x, retval)
+#define EGL_ASSERT_CHECK_EXIT(x)
 #define EGL_RESULT_CHECK(x) ((void)(x))
 #define EGL_RESULT_CHECK_EXIT(x)
 #endif

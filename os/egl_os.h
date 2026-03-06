@@ -21,7 +21,7 @@
 #include <limits.h>
 #include "egl_result.h"
 
-#define EGL_OS_WAIT_FOREWER (UINT_MAX)
+#define EGL_OS_WAIT_FOREVER (UINT_MAX)
 #define EGL_OS_NO_WAIT (0)
 
 typedef void (egl_os_thread_entry_func_t)(void *data);

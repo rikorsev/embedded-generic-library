@@ -339,9 +339,9 @@ static egl_result_t egl_os_threadx_sem_wait(void *handle, unsigned int timeout)
     UINT tx_result;
 
     tx_result = tx_semaphore_get((TX_SEMAPHORE *)handle, timeout);
-    EGL_ASSERT_CHECK(tx_result == TX_SUCCESS, EGL_FAIL);
+    EGL_ASSERT_CHECK(tx_result == TX_SUCCESS || tx_result == TX_NO_INSTANCE, EGL_FAIL);
 
-    return EGL_SUCCESS;
+    return tx_result == TX_NO_INSTANCE ? EGL_TIMEOUT : EGL_SUCCESS;
 }
 
 static egl_result_t egl_os_threadx_sem_destroy(void *handle)
