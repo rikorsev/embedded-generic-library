@@ -43,10 +43,10 @@ static void *mux_handle = NULL;
 static const char *m_level_str[] =
 {
     BLUE   "DEBUG" WHITE,
-    GREEN  "INFO"  WHITE,
-    YELLOW "WARN"  WHITE,
+    GREEN  " INFO" WHITE,
+    YELLOW " WARN" WHITE,
     RED    "ERROR" WHITE,
-    RED    "FAIL"  WHITE
+    RED    " FAIL" WHITE
 };
 
 static egl_result_t egl_log_front_os_init(void)
@@ -109,6 +109,9 @@ static egl_result_t egl_log_front_os_format(char *output, size_t *size, egl_log_
     outlen = snprintf(output + offset, *size - offset, BOLD "[%s]", m_level_str[lvl]);
     EGL_ASSERT_CHECK(outlen > 0, EGL_ASSERT_FAIL);
     offset += outlen;
+
+    result = egl_os_thread_get(SYSOS, &thread_handle);
+    EGL_RESULT_CHECK(result);
 
     if(thread_handle != NULL)
     {
