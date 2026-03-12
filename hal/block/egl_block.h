@@ -25,8 +25,8 @@
 typedef struct
 {
     egl_result_t (*init)(void);
-    egl_result_t (*read)(uint32_t addr, void *data);
-    egl_result_t (*write)(uint32_t addr, void *data);
+    egl_result_t (*read)(void *addr, void *data);
+    egl_result_t (*write)(void *addr, void *data);
     egl_result_t (*deinit)(void);
 }egl_block_t;
 
@@ -48,7 +48,7 @@ egl_result_t egl_block_init(egl_block_t *block);
  *
  * @return EGL_SUCCESS in case of successfull read
  */
-egl_result_t egl_block_read(egl_block_t *block, uint32_t addr, void *data);
+egl_result_t egl_block_read(egl_block_t *block, void *addr, void *data);
 
 /**
  * @brief Write to block device
@@ -59,7 +59,7 @@ egl_result_t egl_block_read(egl_block_t *block, uint32_t addr, void *data);
  *
  * @return EGL_SUCCESS in case of successful write
  */
-egl_result_t egl_block_write(egl_block_t *block, uint32_t addr, void *data);
+egl_result_t egl_block_write(egl_block_t *block, void *addr, void *data);
 
 /**
  * @brief Deinit block device
